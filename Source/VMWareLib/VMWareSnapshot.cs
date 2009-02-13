@@ -43,7 +43,8 @@ namespace Vestris.VMWareLib
         /// </summary>
         public void RevertToSnapshot(int powerOnOptions, int timeoutInSeconds)
         {
-            VMWareJob job = new VMWareJob(_vm.RevertToSnapshot(_handle, powerOnOptions, null, null));
+            VMWareJobCallback callback = new VMWareJobCallback();
+            VMWareJob job = new VMWareJob(_vm.RevertToSnapshot(_handle, powerOnOptions, null, callback), callback);
             job.Wait(timeoutInSeconds);
         }
 
@@ -84,7 +85,8 @@ namespace Vestris.VMWareLib
             // resolve child snapshots that will move one level up
             IEnumerable<VMWareSnapshot> childSnapshots = ChildSnapshots;
             // remove the snapshot
-            VMWareJob job = new VMWareJob(_vm.RemoveSnapshot(_handle, 0, null));
+            VMWareJobCallback callback = new VMWareJobCallback();
+            VMWareJob job = new VMWareJob(_vm.RemoveSnapshot(_handle, 0, callback), callback);
             job.Wait(timeoutInSeconds);
             if (_parent != null)
             {

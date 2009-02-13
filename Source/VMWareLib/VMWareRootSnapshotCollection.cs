@@ -121,7 +121,8 @@ namespace Vestris.VMWareLib
         /// <param name="timeoutInSeconds">timeout in seconds</param>
         public void CreateSnapshot(string name, string description, int flags, int timeoutInSeconds)
         {
-            VMWareJob job = new VMWareJob(_vm.CreateSnapshot(name, description, 0, null, null));
+            VMWareJobCallback callback = new VMWareJobCallback();
+            VMWareJob job = new VMWareJob(_vm.CreateSnapshot(name, description, 0, null, callback), callback);
             job.Wait(timeoutInSeconds);
             _snapshots = null;
         }

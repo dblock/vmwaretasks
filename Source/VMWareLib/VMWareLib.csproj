@@ -41,6 +41,7 @@
     <Compile Include="VMWareInterop.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VMWareJob.cs" />
+    <Compile Include="VMWareJobCallback.cs" />
     <Compile Include="VMWareRootSnapshotCollection.cs" />
     <Compile Include="VMWareSharedFolder.cs" />
     <Compile Include="VMWareSharedFolderCollection.cs" />

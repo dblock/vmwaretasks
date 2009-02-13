@@ -7,10 +7,12 @@ namespace Vestris.VMWareLib
 {
     public class VMWareJob : VMWareVixHandle<IJob>
     {
-        public VMWareJob(IJob job)
+        private VMWareJobCallback _callback;
+
+        public VMWareJob(IJob job, VMWareJobCallback callback)
             : base(job)
         {
-
+            _callback = callback;
         }
 
         /// <summary>
@@ -27,7 +29,7 @@ namespace Vestris.VMWareLib
         /// <param name="timeoutInSeconds">timeout in seconds</param>
         public void Wait(int timeoutInSeconds)
         {
-            InternalWait(timeoutInSeconds);
+            _callback.WaitForCompletion(timeoutInSeconds * 1000);
             Wait();
         }
 
@@ -36,8 +38,8 @@ namespace Vestris.VMWareLib
         /// </summary>
         public T Wait<T>(object[] properties, int timeoutInSeconds)
         {
-            InternalWait(timeoutInSeconds);
-            return (T) Wait<T>(properties);
+            _callback.WaitForCompletion(timeoutInSeconds * 1000);
+            return (T)Wait<T>(properties);
         }
 
         /// <summary>
@@ -45,7 +47,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public IEnumerable<object[]> YieldWait(object[] properties, int timeoutInSeconds)
         {
-            Wait(timeoutInSeconds);
+            _callback.WaitForCompletion(timeoutInSeconds * 1000);
             for (int i = 0; i < GetNumProperties((int)properties[0]); i++)
             {
                 yield return GetNthProperties<object[]>(i, properties);
@@ -57,8 +59,8 @@ namespace Vestris.VMWareLib
         /// </summary>
         public T Wait<T>(object[] properties, int index, int timeoutInSeconds)
         {
-            InternalWait(timeoutInSeconds);
-            return (T) Wait<object[]>(properties)[index];
+            _callback.WaitForCompletion(timeoutInSeconds * 1000);
+            return (T)Wait<object[]>(properties)[index];
         }
 
         /// <summary>
@@ -66,7 +68,6 @@ namespace Vestris.VMWareLib
         /// </summary>
         public T Wait<T>(int propertyId, int timeoutInSeconds)
         {
-            InternalWait(timeoutInSeconds);
             object[] properties = { propertyId };
             return Wait<T>(properties, 0, timeoutInSeconds);
         }
@@ -74,7 +75,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Wait for the job to complete, return a result.
         /// </summary>
-        public T Wait<T>(object[] properties)
+        private T Wait<T>(object[] properties)
         {
             object result = null;
             VMWareInterop.Check(_handle.Wait(properties, ref result));
@@ -84,11 +85,15 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Get n-th properties.
         /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="index">property index</param>
+        /// <param name="properties">property objects</param>
+        /// <returns>N'th properties</returns>
         public T GetNthProperties<T>(int index, object[] properties)
         {
             object result = null;
             VMWareInterop.Check(_handle.GetNthProperties(index, properties, ref result));
-            return (T) result;
+            return (T)result;
         }
 
         /// <summary>
@@ -97,32 +102,6 @@ namespace Vestris.VMWareLib
         public int GetNumProperties(int property)
         {
             return _handle.GetNumProperties(property);
-        }
-        
-        /// <summary>
-        /// Wait for the job to complete with an active timeout.
-        /// </summary>
-        private void InternalWait(int timeoutInSeconds)
-        {
-            if (timeoutInSeconds == 0)
-            {
-                throw new ArgumentOutOfRangeException("timeoutInSeconds");
-            }
-
-            // active wait for the job to finish
-            bool isComplete = false;
-            while (!isComplete && timeoutInSeconds > 0)
-            {
-                VMWareInterop.Check(_handle.CheckCompletion(out isComplete));
-                if (isComplete) break;
-                Thread.Sleep(1000);
-                timeoutInSeconds--;
-            }
-
-            if (timeoutInSeconds == 0)
-            {
-                throw new TimeoutException();
-            }
         }
     }
 }

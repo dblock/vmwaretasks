@@ -98,10 +98,10 @@ namespace Vestris.VMWareLib
             string hostName, int hostPort, string username, string password, int timeout)
         {
             int serviceProvider = (int)serviceProviderType;
+            VMWareJobCallback callback = new VMWareJobCallback();
             VMWareJob job = new VMWareJob(VMWareInterop.Instance.Connect(
                 Constants.VIX_API_VERSION, serviceProvider, hostName, hostPort,
-                username, password, 0, null, null)
-                );
+                username, password, 0, null, callback), callback);
 
             _handle = job.Wait<IHost>(Constants.VIX_PROPERTY_JOB_RESULT_HANDLE, timeout);
             _serviceProviderType = serviceProviderType;
@@ -130,7 +130,8 @@ namespace Vestris.VMWareLib
                 throw new InvalidOperationException("No connection established");
             }
 
-            VMWareJob job = new VMWareJob(_handle.OpenVM(fileName, null));
+            VMWareJobCallback callback = new VMWareJobCallback();
+            VMWareJob job = new VMWareJob(_handle.OpenVM(fileName, callback), callback);
             return new VMWareVirtualMachine(job.Wait<IVM2>(
                 Constants.VIX_PROPERTY_JOB_RESULT_HANDLE,
                 timeoutInSeconds));
@@ -180,9 +181,14 @@ namespace Vestris.VMWareLib
                     throw new InvalidOperationException("No connection established");
                 }
 
-                VMWareJob job = new VMWareJob(_handle.FindItems(Constants.VIX_FIND_RUNNING_VMS, null, -1, null));
+                VMWareJobCallback callback = new VMWareJobCallback();
+                VMWareJob job = new VMWareJob(_handle.FindItems(
+                    Constants.VIX_FIND_RUNNING_VMS, null, -1, callback), 
+                    callback);
+                
                 object[] properties = { Constants.VIX_PROPERTY_FOUND_ITEM_LOCATION };
-                foreach (object[] runningVirtualMachine in job.YieldWait(properties, VMWareInterop.Timeouts.FindItemsTimeout))
+                foreach (object[] runningVirtualMachine in job.YieldWait(
+                    properties, VMWareInterop.Timeouts.FindItemsTimeout))
                 {
                     yield return this.Open((string) runningVirtualMachine[0]);
                 }
@@ -200,12 +206,17 @@ namespace Vestris.VMWareLib
                 switch (ConnectionType)
                 {
                     case ServiceProviderType.VirtualInfrastructureServer:
-                        VMWareJob job = new VMWareJob(_handle.FindItems(Constants.VIX_FIND_REGISTERED_VMS, null, -1, null));
+                        VMWareJobCallback callback = new VMWareJobCallback();
+                        VMWareJob job = new VMWareJob(_handle.FindItems(
+                            Constants.VIX_FIND_REGISTERED_VMS, null, -1, callback),
+                            callback);
+                        
                         object[] properties = { Constants.VIX_PROPERTY_FOUND_ITEM_LOCATION };
                         foreach (object[] runningVirtualMachine in job.YieldWait(properties, VMWareInterop.Timeouts.FindItemsTimeout))
                         {
                             yield return this.Open((string)runningVirtualMachine[0]);
                         }
+
                         break;
                     default:
                         throw new NotSupportedException(string.Format("RegisteredVirtualMachines is not supported on {0}",

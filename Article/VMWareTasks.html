@@ -64,38 +64,76 @@ License:     <a href="http://www.codeproject.com/info/licenses.aspx">CPOL</a>
   decisions that enable developers to drive virtual machines programmatically with
   an asynchronous, job-based programming model. Unfortunately that turns out to be
   too complicated for 99.9% of scenarios and most people want to have a simple object-oriented
-  interface for common VMWare tasks. This article implements that interface.
+  interface for common VMWare tasks. This article implements that interface and makes
+  programming against virtual machine a no brainer.
  </p>
  <h2>
   Background
  </h2>
  <p>
-  There're two types of VMWare APIs.
+  There're two types of VMWare APIs.</p>
   <ul>
    <li>VMWare Virtual Infrastructure SDK: a set of tools and APIs to manage a VMWare
     Infrastructure environment. A toolkit has also been released that contains managed
     wrappers on top of the SOAP interface provided by a VMWare deployment. It's focused
-    on VMWare ESX or VirtualCenter management and is beyond the scope of this post.
+    on VMWare ESX or VirtualCenter management and is beyond the scope of this article.
    </li>
-   <li>VMWare VIX API. The VIX API allows you to write programs and scripts that automate
+   <li>VMWare VIX API. The VIX API allows developers to write programs and scripts that automate
     virtual machine operations, as well as the guests within virtual machines. It runs
     on both Windows and Linux and supports management of VMware Server, Workstation,
     and Virtual Infrastructure (both ESX and vCenter). Bindings are provided for C,
     Perl, and COM (Visual Basic, VBscript, C#). In this post I'll focus on the C# implementation.
    </li>
   </ul>
-  In order to build and run the source code in this article you need the following
-  VMWare software.
+ <h2>
+  Using the Library</h2>
+ <p>
+  In order to use the library or build or run the source code you must install the
+  following VMWare software.
+ </p>
   <ul>
-   <li>VMWare ViX. This is the SDK, obtained from <a href="http://www.vmware.com/download/sdk/vmauto.html">
+   <li>VMWare VIX. This is the SDK, obtained from <a href="http://www.vmware.com/download/sdk/vmauto.html">
     http://www.vmware.com/download/sdk/vmauto.html</a>. The new 1.6.2 version is required
     for VI support.</li>
    <li>Either VMWare Workstation 6.5, a VI environment (I use ESX), or both.</li>
   </ul>
+ <p>
+  In your project add a reference to <code>Vestris.VMWareLib.dll</code> and a namespace reference.
  </p>
+  <pre lang="cs">using Vestris.VMWareLib;</pre>
+  You can now connect to a local VMWare Workstation or a remote ESX server and perform VMWare tasks. Here's an example
+  that creates, restores, powers on and removes a snapshot on a VMWare Workstation.
+  <pre lang="cs">
+// declare a virtual host
+VMWareVirtualHost virtualHost = new VMWareVirtualHost();
+// connect to a local (VMWare Workstation) virtual machine
+virtualHost.ConnectToVMWareWorkstation();
+// open an existing virtual machine
+VMWareVirtualMachine virtualMachine = virtualHost.Open("C:\Virtual Machines\xp\xp.vmx");
+// power on this virtual machine
+virtualMachine.PowerOn();
+// login to the virtual machine
+virtualMachine.Login("Administrator", "password");
+// run notepad
+virtualMachine.RunProgramInGuest("notepad.exe", string.Empty);
+// create a new snapshot
+string name = "New Snapshot";
+// take a snapshot at the current state
+virtualMachine.Snapshots.CreateSnapshot(name, "test snapshot");
+// power off
+virtualMachine.PowerOff();
+// find the newly created snapshot
+VMWareSnapshot snapshot = virtualMachine.Snapshots.GetNamedSnapshot(name);
+// revert to the new snapshot
+snapshot.RevertToSnapshot();
+// delete snapshot
+snapshot.RemoveSnapshot();</pre>
  <h2>
   Implementation
  </h2>
+ <p>
+  The following sections describe VMWareTasks library implementation details. It's
+  absolutely not necessary to understand those in order to use the library.</p>
  <h3>
   Connecting to VMWare in pure VIX API
  </h3>
@@ -103,7 +141,8 @@ License:     <a href="http://www.codeproject.com/info/licenses.aspx">CPOL</a>
   Connecting synchronously to either a local VMWare Workstation or an ESX server is
   virtually identical. The ESX server requires an URL to the SOAP SDK (eg. https://esxserver/sdk)
   and a username and password.
-  <pre lang="cs">public IHost ConnectToVMWareWorkstation()
+ </p>
+ <pre lang="cs">public IHost ConnectToVMWareWorkstation()
 {
     return Connect(Constants.VIX_SERVICEPROVIDER_VMWARE_WORKSTATION, string.Empty, 0, string.Empty, string.Empty);
 }
@@ -126,14 +165,16 @@ public IHost Connect(int hostType, string hostName, int hostPort, string usernam
     return (IHost) hostArray[0];
 }
   </pre>
- </p>
  <p>
-  You need to declare an array of properties that you want the job to produce, start
+  You have to declare an array of properties that you want the job to produce, start
   a VMWare job and examine the results for the host handle. You can see how cumbersome
-  this is. The API was originally designed for C, then extended to COM with a very
+  this is! The API was originally designed for C, then extended to COM with a very
   limited object model: a number of interfaces were declared, but no corresponding
   COM classes have been implemented. Also, because the job interface is generic, there're
-  no strongly typed results. We can easily fill this gap in our C# implementation.
+  no strongly typed results. 
+ </p>
+ <p>
+  We can easily fill this gap in our C# implementation.
  </p>
  <h3>
   Transforming Error Codes into Exceptions
@@ -144,8 +185,8 @@ public IHost Connect(int hostType, string hostName, int hostPort, string usernam
   an implementation for the IVixLib interface which contains a couple of helper methods
   (very C-programmer). We'll be interested in <code>IVixLib.ErrorIndicatesFailure</code>
   and <code>IVixLib.GetErrorText</code> combined with a new class, <code>VMWareException</code>.
-  <pre lang="cs">
-public abstract class VMWareInterop
+ </p>
+ <pre lang="cs">public abstract class VMWareInterop
 {
     public static VixLib Instance = new VixLib();
 
@@ -156,21 +197,19 @@ public abstract class VMWareInterop
             throw new VMWareException(errCode);
         }
     }
-}
-  </pre>
-  Aside from the abstract <code>VMWareInterop</code> our goal is to produce concrete
-  classes that wrap various aspects of VMWare functionality.
- </p>
+}  </pre>
+ Aside from the abstract <code>VMWareInterop</code> our goal is to produce concrete
+ classes that wrap various aspects of VMWare functionality.
  <h3>
   Base VMWareVixHandle
  </h3>
  <p>
   VMWare COM API returns interface pointers such as <span style="color: #990000; font-family: Courier New">
    ISnapshot</span>. The objects also implement <span style="color: #990000; font-family: Courier New">
-    IVixHandle</span> which gives access to a set of object properties. We will baseclass
+    IVixHandle</span> which gives access to a set of object properties. We will base-class
   everything on <span style="color: #990000; font-family: Courier New">VMWareVixHandle</span>.
-  <pre lang="cs">
-public class VMWareVixHandle&lt;T&gt;
+ </p>
+ <pre lang="cs">public class VMWareVixHandle&lt;T&gt;
 {
     protected T _handle = default(T);
     
@@ -206,7 +245,6 @@ public class VMWareVixHandle&lt;T&gt;
     }
 }
   </pre>
- </p>
  <h3>
   Implementing VMWareJob
  </h3>
@@ -231,12 +269,11 @@ public class VMWareVixHandle&lt;T&gt;
  }
   </pre>
  <p>
-  One very common mistake in VMWare API implementations that transform a asynchronous
-  job into a synchronous one is to use the blocking wait above. This is a poor design
+  One very common problem in VMWare API implementations that transform a asynchronous
+  job into a synchronous one is to use the blocking wait above. This is a bad design
   decision since this call may never return. VMWare server may timeout or someone
-  can pull the network cable, leaving your program hanging. An active timeout can
-  easily solve the problem and all externally visible waits are going to be based
-  on this <code>InternalWait</code>.
+  can pull the network cable, leaving your program hanging. I originally wrote a busy wait where all externally visible wait functions were based on the following
+  <code>InternalWait</code>.
  </p>
  <pre lang="cs">private void InternalWait(int timeoutInSeconds)
 {
@@ -260,7 +297,52 @@ public class VMWareVixHandle&lt;T&gt;
         throw new TimeoutException();
     }
 }
-  </pre>
+</pre>
+ <p>
+  A more elegant implementation combines a callback mechanism provided by VixCOM with
+  every asynchronous API and a blocking wait with a timeout. Wait is now signaled
+  and there's no CPU spin waiting for completion of an asynchronous API call.</p>
+ <pre lang="cs">public class VMWareJobCallback : ICallback
+{
+    #region ICallback Members
+
+    private EventWaitHandle _jobCompleted = new EventWaitHandle(
+         false, EventResetMode.ManualReset);
+
+    public void OnVixEvent(IJob job, int eventType, IVixHandle moreEventInfo)
+    {
+        switch (eventType)
+        {
+            case VixCOM.Constants.VIX_EVENTTYPE_JOB_COMPLETED:
+                _jobCompleted.Set();
+                break;
+        }
+    }
+
+    public bool TryWaitForCompletion(int timeoutInMilliseconds)
+    {
+        return _jobCompleted.WaitOne(timeoutInMilliseconds, false);
+    }
+
+    public void WaitForCompletion(int timeoutInMilliseconds)
+    {
+        if (!TryWaitForCompletion(timeoutInMilliseconds))
+        {
+            throw new TimeoutException();
+        }
+    }
+
+    #endregion
+}  
+ </pre>
+ <p>
+  This and some generic code in <code>VMWareJob</code> can now be used inside <code>Connect</code>.
+  I have modified <code>VMWareJob</code> to require a <code>VMWareCallback</code> in order to prevent callers from
+  ever having a blocking wait.</p>
+ <pre lang="cs">VMWareJobCallback callback = new VMWareJobCallback();
+VMWareJob job = new VMWareJob(VMWareInterop.Instance.Connect(
+    Constants.VIX_API_VERSION, Constants.VIX_SERVICEPROVIDER_VMWARE_SERVER, hostName, hostPort,
+    username, password, 0, null, callback), callback); </pre>
  <h3>
   VMWareVirtualHost
  </h3>
@@ -292,13 +374,14 @@ public class VMWareVixHandle&lt;T&gt;
 
     private void Connect(int hostType, string hostName, int hostPort, string username, string password, int timeout)
     {
-        VMWareJob job = new VMWareJob(VMWareInterop._vix.Connect(
-            Constants.VIX_API_VERSION,
-            hostType, hostName, hostPort,
-            username, password, 0, null, null)
-            );
-        object[] resultProperties = { Constants.VIX_PROPERTY_JOB_RESULT_HANDLE };
-        _host = job.Wait&lt;IHost&gt;(resultProperties, 0, timeout);
+        int serviceProvider = (int)serviceProviderType;
+        VMWareJobCallback callback = new VMWareJobCallback();
+        VMWareJob job = new VMWareJob(VMWareInterop.Instance.Connect(
+            Constants.VIX_API_VERSION, serviceProvider, hostName, hostPort,
+            username, password, 0, null, callback), callback);
+
+        _handle = job.Wait<ihost>(Constants.VIX_PROPERTY_JOB_RESULT_HANDLE, timeout);
+        _serviceProviderType = serviceProviderType;
     }
 }        
   </pre>
@@ -308,9 +391,11 @@ public class VMWareVixHandle&lt;T&gt;
  </p>
  <pre lang="cs">public VMWareVirtualMachine Open(string fileName, int timeoutInSeconds)
 {
-    VMWareJob job = new VMWareJob(_host.OpenVM(fileName, null));
-    object[] resultProperties = { Constants.VIX_PROPERTY_JOB_RESULT_HANDLE };
-    return new VMWareVirtualMachine(job.Wait&lt;IVM&gt;(resultProperties, 0, timeoutInSeconds));
+    VMWareJobCallback callback = new VMWareJobCallback();
+    VMWareJob job = new VMWareJob(_handle.OpenVM(fileName, callback), callback);
+    return new VMWareVirtualMachine(job.Wait<ivm2>(
+        Constants.VIX_PROPERTY_JOB_RESULT_HANDLE,
+        timeoutInSeconds));
 }
   </pre>
  <p>
@@ -321,7 +406,7 @@ public class VMWareVixHandle&lt;T&gt;
   <img src="VMWareClasses.jpg">
  </p>
  <h2>
-  Implementation Details
+  Advanced Implementation Details
  </h2>
  <h3>
   Yielding Property Arrays
@@ -332,8 +417,8 @@ public class VMWareVixHandle&lt;T&gt;
   <code>GetNthProperties</code>. The first returns the number of property arrays returned
   by the job and the second fetches a property array at a given index. The first obvious
   step is to wrap the functions within the job class.
-  <pre lang="cs">
-public T GetNthProperties&lt;T&gt;(int index, object[] properties)
+ </p>
+ <pre lang="cs">public T GetNthProperties&lt;T&gt;(int index, object[] properties)
 {
     object result = null;
     VMWareInterop.Check(_handle.GetNthProperties(index, properties, ref result));
@@ -345,14 +430,15 @@ public int GetNumProperties(int property)
     return _handle.GetNumProperties(property);
 }
   </pre>
-  We can now write such properties as <code>RunningVirtualMachines</code>.
-  <pre lang="cs">
-public IEnumerable&lt;VMWareVirtualMachine&gt; RunningVirtualMachines
+ We can now write such properties as <code>RunningVirtualMachines</code>.
+ <pre lang="cs">public IEnumerable&lt;VMWareVirtualMachine&gt; RunningVirtualMachines
 {
     get
-    {
-        VMWareJob job = new VMWareJob(_handle.FindItems(Constants.VIX_FIND_RUNNING_VMS, null, -1, null));
-        job.Wait(VMWareInterop.Timeouts.FindItemsTimeout);
+    {    
+        VMWareJobCallback callback = new VMWareJobCallback();
+        VMWareJob job = new VMWareJob(_handle.FindItems(
+            Constants.VIX_FIND_RUNNING_VMS, null, -1, callback), 
+            callback);
         object[] properties = { Constants.VIX_PROPERTY_FOUND_ITEM_LOCATION };
         for (int i = 0; i &lt; job.GetNumProperties((int) properties[0]); i++)
         {
@@ -362,10 +448,9 @@ public IEnumerable&lt;VMWareVirtualMachine&gt; RunningVirtualMachines
     }
 }
   </pre>
-  This is still not good enough. Let's combine the number of results and the results
-  themselves in a <code>YieldWait</code> method.
-  <pre lang="cs">
-public IEnumerable<object[]> YieldWait(object[] properties, int timeoutInSeconds)
+ This is nice, but still not good enough. Let's combine the number of results and the results
+ themselves in a <code>YieldWait</code> method.
+ <pre lang="cs">public IEnumerable<object[]> YieldWait(object[] properties, int timeoutInSeconds)
 {
     Wait(timeoutInSeconds);
     for (int i = 0; i < GetNumProperties((int)properties[0]); i++)
@@ -374,46 +459,29 @@ public IEnumerable<object[]> YieldWait(object[] properties, int timeoutInSeconds
     }
 }
   </pre>
-  This results in a nice improvement over the previous implementation.
-  <pre lang="cs">
-public IEnumerable&lt;VMWareVirtualMachine&gt; RunningVirtualMachines
+ This results in a nice improvement over the previous implementation.
+ <pre lang="cs">public IEnumerable&lt;VMWareVirtualMachine&gt; RunningVirtualMachines
 {
     get
     {
-        VMWareJob job = new VMWareJob(_handle.FindItems(Constants.VIX_FIND_RUNNING_VMS, null, -1, null));
-        object[] properties = { Constants.VIX_PROPERTY_FOUND_ITEM_LOCATION };
+        VMWareJobCallback callback = new VMWareJobCallback();
+        VMWareJob job = new VMWareJob(_handle.FindItems(
+            Constants.VIX_FIND_RUNNING_VMS, null, -1, callback), 
+            callback);
         foreach (object[] runningVirtualMachine in job.YieldWait(properties, VMWareInterop.Timeouts.FindItemsTimeout))
         {
             yield return this.Open((string) runningVirtualMachine[0]);
         }
     }
-}
-  </pre>
- </p>
+}  </pre>
  <h3>
   Dates and Times
  </h3>
  <p>
   Date/time in VMWare VIX is expressed in UNIX EPOCH (number of seconds since January
   1st, 1970).
-  <pre lang="cs">DateTime currentDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds((int) dt);</pre>
  </p>
- <h2>
-  Using VMWareLib
- </h2>
- <p>
-  The library exposes a very simple object model, easy to use. The following example
-  powers on the current snapshot of a virtual machine and executes a remote command.
- </p>
- <pre lang="cs">VMWareVirtualHost virtualHost = new VMWareVirtualHost();
-// connect to a local VM
-virtualHost.ConnectToVMWareWorkstation();
-VMWareVirtualMachine virtualMachine = virtualHost.Open(@"c:\vm\vm.vmx");
-// power-on current snapshot
-virtualMachine.PowerOn();
-virtualMachine.Login("Administrator", "password");
-virtualMachine.RunProgramInGuest("notepad.exe", string.Empty);
-  </pre>
+ <pre lang="cs">DateTime currentDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds((int) dt);</pre>
  <h2>
   Source Code and Patches
  </h2>
@@ -431,8 +499,8 @@ virtualMachine.RunProgramInGuest("notepad.exe", string.Empty);
  </h2>
  <p>
  </p>
- <li>12/22/2008: initial version
-  <h2>
+ <li>12/22/2008: initial version</li>
+ <li>02/11/2009: revised using VMWareTasks and implementing a blocking job wait<h2>
    License
   </h2>
   <p>
