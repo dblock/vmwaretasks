@@ -34,18 +34,26 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Connect to a WMWare Virtual Infrastructure Server (eg. ESX).
         /// </summary>
-        public void ConnectToVMWareVIServer(string hostName, int hostPort, string username, string password)
+        /// <param name="hostName">VMWare host name</param>
+        /// <param name="username">username</param>
+        /// <param name="password">password</param>
+        public void ConnectToVMWareVIServer(string hostName, string username, string password)
         {
-            ConnectToVMWareVIServer(hostName, hostPort, username, password, VMWareInterop.Timeouts.ConnectTimeout);
+            ConnectToVMWareVIServer(new Uri(string.Format("http://{0}/sdk", hostName)),
+                username, password, VMWareInterop.Timeouts.ConnectTimeout);
         }
 
         /// <summary>
         /// Connect to a WMWare Virtual Infrastructure Server (eg. ESX).
         /// </summary>
-        public void ConnectToVMWareVIServer(string hostName, int hostPort, string username, string password, int timeoutInSeconds)
+        /// <param name="hostUri">host SDK uri, eg. http://server/sdk</param>
+        /// <param name="username">username</param>
+        /// <param name="password">password</param>
+        /// <param name="hostPort">host port</param>
+        public void ConnectToVMWareVIServer(Uri hostUri, string username, string password, int timeoutInSeconds)
         {
             Connect(Constants.VIX_SERVICEPROVIDER_VMWARE_VI_SERVER,
-                hostName, hostPort, username, password, timeoutInSeconds);
+                hostUri.ToString(), 0, username, password, timeoutInSeconds);
         }
 
         /// <summary>
@@ -126,11 +134,9 @@ namespace Vestris.VMWareLib
             {
                 VMWareJob job = new VMWareJob(_handle.FindItems(Constants.VIX_FIND_RUNNING_VMS, null, -1, null));
                 object[] properties = { Constants.VIX_PROPERTY_FOUND_ITEM_LOCATION };
-                object[] virtualMachineNames = job.Wait<object[]>(properties, VMWareInterop.Timeouts.FindItemsTimeout);
-                List<VMWareVirtualMachine> vms = new List<VMWareVirtualMachine>();
-                foreach(string virtualMachineName in virtualMachineNames)
+                foreach (object[] runningVirtualMachine in job.YieldWait(properties, VMWareInterop.Timeouts.FindItemsTimeout))
                 {
-                    yield return this.Open(virtualMachineName);
+                    yield return this.Open((string) runningVirtualMachine[0]);
                 }
             }
         }

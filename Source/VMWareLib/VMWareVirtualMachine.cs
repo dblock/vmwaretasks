@@ -96,12 +96,12 @@ namespace Vestris.VMWareLib
 
 
         /// <summary>
-        /// Path to the virtual machine's confuguration (.vmx) file.
+        /// The path to the virtual machine configuration file.
         /// </summary>
         public string PathName
         {
             get
-            {                
+            {
                 return GetProperty<string>(Constants.VIX_PROPERTY_VM_VMX_PATHNAME);
             }
         }
@@ -118,7 +118,7 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// Returns virtual machine's memory size.
+        /// The memory size of the virtual machine. 
         /// </summary>
         public int MemorySize
         {
@@ -129,7 +129,7 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// Number of virtual CPUs.
+        /// The number of virtual CPUs configured for the virtual machine.
         /// </summary>
         public int CPUCount
         {
@@ -378,13 +378,13 @@ namespace Vestris.VMWareLib
             Process process = new Process(_handle);
             process.Name = Path.GetFileName(guestProgramName);
             process.Command = guestProgramName;
-            if (! string.IsNullOrEmpty(commandLineArgs))
+            if (!string.IsNullOrEmpty(commandLineArgs))
             {
                 process.Command += " ";
                 process.Command += commandLineArgs;
             }
-            process.ExitCode = (int) propertyValues[0];
-            process.Id = (long) propertyValues[1];
+            process.ExitCode = (int)propertyValues[0];
+            process.Id = (long)propertyValues[1];
             return process;
         }
 
@@ -485,11 +485,8 @@ namespace Vestris.VMWareLib
 
             try
             {
-                object[] propertyValues = job.Wait<object[]>(properties, timeoutInSeconds);
-                int count = job.GetNumProperties(Constants.VIX_PROPERTY_JOB_RESULT_ITEM_NAME);
-                for (int i = 0; i < count; i++)
+                foreach (object[] fileProperties in job.YieldWait(properties, timeoutInSeconds))
                 {
-                    object[] fileProperties = job.GetNthProperties<object[]>(i, properties);
                     string fileName = (string)fileProperties[0];
                     int flags = (int)fileProperties[1];
 
@@ -604,12 +601,8 @@ namespace Vestris.VMWareLib
                     Constants.VIX_PROPERTY_JOB_RESULT_PROCESS_BEING_DEBUGGED,
                 };
 
-                object[] propertyValues = job.Wait<object[]>(properties, VMWareInterop.Timeouts.ListProcessesTimeout);
-
-                int count = job.GetNumProperties(Constants.VIX_PROPERTY_JOB_RESULT_ITEM_NAME);
-                for (int i = 0; i < count; i++)
+                foreach (object[] processProperties in job.YieldWait(properties, VMWareInterop.Timeouts.ListProcessesTimeout))
                 {
-                    object[] processProperties = job.GetNthProperties<object[]>(i, properties);
                     Process process = new Process(_handle);
                     process.Id = (long)processProperties[0];
                     process.Name = (string)processProperties[1];

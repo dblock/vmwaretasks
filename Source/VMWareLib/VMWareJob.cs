@@ -41,6 +41,18 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
+        /// Wait for the job to complete and enumerate results.
+        /// </summary>
+        public IEnumerable<object[]> YieldWait(object[] properties, int timeoutInSeconds)
+        {
+            Wait(timeoutInSeconds);
+            for (int i = 0; i < GetNumProperties((int)properties[0]); i++)
+            {
+                yield return GetNthProperties<object[]>(i, properties);
+            }
+        }
+
+        /// <summary>
         /// Wait for the job to complete, return a result.
         /// </summary>
         public T Wait<T>(object[] properties, int index, int timeoutInSeconds)
@@ -84,7 +96,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public int GetNumProperties(int property)
         {
-            return _handle.GetNumProperties(Constants.VIX_PROPERTY_JOB_RESULT_ITEM_NAME);
+            return _handle.GetNumProperties(property);
         }
         
         /// <summary>

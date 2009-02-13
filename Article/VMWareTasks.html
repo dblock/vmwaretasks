@@ -324,6 +324,73 @@ public class VMWareVixHandle&lt;T&gt;
   Implementation Details
  </h2>
  <h3>
+  Yielding Property Arrays
+ </h3>
+ <p>
+  One of the peculiar VIX COM API constructs is the combination that returns arrays
+  of properties. This is done with two functions: <code>GetNumProperties</code> and
+  <code>GetNthProperties</code>. The first returns the number of property arrays returned
+  by the job and the second fetches a property array at a given index. The first obvious
+  step is to wrap the functions within the job class.
+  <pre lang="cs">
+public T GetNthProperties&lt;T&gt;(int index, object[] properties)
+{
+    object result = null;
+    VMWareInterop.Check(_handle.GetNthProperties(index, properties, ref result));
+    return (T) result;
+}
+
+public int GetNumProperties(int property)
+{
+    return _handle.GetNumProperties(property);
+}
+  </pre>
+  We can now write such properties as <code>RunningVirtualMachines</code>.
+  <pre lang="cs">
+public IEnumerable&lt;VMWareVirtualMachine&gt; RunningVirtualMachines
+{
+    get
+    {
+        VMWareJob job = new VMWareJob(_handle.FindItems(Constants.VIX_FIND_RUNNING_VMS, null, -1, null));
+        job.Wait(VMWareInterop.Timeouts.FindItemsTimeout);
+        object[] properties = { Constants.VIX_PROPERTY_FOUND_ITEM_LOCATION };
+        for (int i = 0; i &lt; job.GetNumProperties((int) properties[0]); i++)
+        {
+            yield return this.Open(
+                (string) job.GetNthProperties&lt;object[]&gt;(i, properties)[0]);
+        }
+    }
+}
+  </pre>
+  This is still not good enough. Let's combine the number of results and the results
+  themselves in a <code>YieldWait</code> method.
+  <pre lang="cs">
+public IEnumerable<object[]> YieldWait(object[] properties, int timeoutInSeconds)
+{
+    Wait(timeoutInSeconds);
+    for (int i = 0; i < GetNumProperties((int)properties[0]); i++)
+    {
+        yield return GetNthProperties&lt;object[]&gt;(i, properties);
+    }
+}
+  </pre>
+  This results in a nice improvement over the previous implementation.
+  <pre lang="cs">
+public IEnumerable&lt;VMWareVirtualMachine&gt; RunningVirtualMachines
+{
+    get
+    {
+        VMWareJob job = new VMWareJob(_handle.FindItems(Constants.VIX_FIND_RUNNING_VMS, null, -1, null));
+        object[] properties = { Constants.VIX_PROPERTY_FOUND_ITEM_LOCATION };
+        foreach (object[] runningVirtualMachine in job.YieldWait(properties, VMWareInterop.Timeouts.FindItemsTimeout))
+        {
+            yield return this.Open((string) runningVirtualMachine[0]);
+        }
+    }
+}
+  </pre>
+ </p>
+ <h3>
   Dates and Times
  </h3>
  <p>
