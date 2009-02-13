@@ -33,5 +33,20 @@ namespace Vestris.VMWareLibUnitTests
             virtualHost.Disconnect();
             virtualHost.Disconnect();
         }
+
+        [Test]
+        public void TestRunningVirtualMachines()
+        {
+            using (VMWareVirtualHost virtualHost = new VMWareVirtualHost())
+            {
+                virtualHost.ConnectToVMWareWorkstation();
+                foreach (VMWareVirtualMachine virtualMachine in virtualHost.RunningVirtualMachines)
+                {
+                    Console.WriteLine("{0}: running={1}, memory={2}, CPUs={3}",
+                        virtualMachine.PathName, virtualMachine.IsRunning, 
+                        virtualMachine.MemorySize, virtualMachine.CPUCount);
+                }
+            }
+        }
     }
 }

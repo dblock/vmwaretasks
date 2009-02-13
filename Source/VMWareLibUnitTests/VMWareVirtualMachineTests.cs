@@ -144,14 +144,21 @@ namespace Vestris.VMWareLibUnitTests
         }
 
         [Test]
-        public void TestListProcesses()
+        public void TestListAndKillProcesses()
         {
-            foreach (KeyValuePair<long, VMWareVirtualMachine.Process> process in VMWareTestVirtualMachine.VM.PoweredVirtualMachine.GuestProcesses)
+            VMWareVirtualMachine.Process notepadProcess = VMWareTestVirtualMachine.VM.PoweredVirtualMachine.DetachProgramInGuest("notepad.exe");
+            Console.WriteLine("Notepad.exe: {0}", notepadProcess.Id);
+            Dictionary<long, VMWareVirtualMachine.Process> guestProcesses = VMWareTestVirtualMachine.VM.PoweredVirtualMachine.GuestProcesses;
+            Assert.IsTrue(guestProcesses.ContainsKey(notepadProcess.Id));
+            foreach (KeyValuePair<long, VMWareVirtualMachine.Process> process in guestProcesses)
             {
                 Assert.IsTrue(process.Value.Id >= 0);
                 Assert.IsFalse(string.IsNullOrEmpty(process.Value.Name));
                 Console.WriteLine("{0}: {1} [{2}] ({3})", process.Value.Id, process.Value.Name, process.Value.Command, process.Value.Owner);
             }
+            notepadProcess.KillProcessInGuest();
+            Dictionary<long, VMWareVirtualMachine.Process> guestProcesses2 = VMWareTestVirtualMachine.VM.PoweredVirtualMachine.GuestProcesses;
+            Assert.IsFalse(guestProcesses2.ContainsKey(notepadProcess.Id));
         }
     }
 }

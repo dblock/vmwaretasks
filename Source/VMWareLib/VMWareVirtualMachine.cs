@@ -54,14 +54,28 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// A process running in the guest operating system.
         /// </summary>
-        public struct Process
+        public class Process
         {
             public long Id;
             public string Name;
             public string Owner;
             public DateTime StartDateTime;
             public string Command;
-            public bool IsBeingDebugged;
+            public bool IsBeingDebugged = false;
+            public int ExitCode = 0;
+
+            private IVM2 _vm;
+
+            public Process(IVM2 vm)
+            {
+                _vm = vm;
+            }
+
+            public void KillProcessInGuest()
+            {
+                VMWareJob job = new VMWareJob(_vm.KillProcessInGuest(Convert.ToUInt64(Id), 0, null));
+                job.Wait();
+            }
         }
 
         private VariableIndexer _guestEnvironmentVariables = null;
@@ -78,6 +92,51 @@ namespace Vestris.VMWareLib
             _guestVariables = new VariableIndexer(_handle, Constants.VIX_VM_GUEST_VARIABLE);
             _sharedFolders = new VMWareSharedFolderCollection(_handle);
             _snapshots = new VMWareRootSnapshotCollection(_handle);
+        }
+
+
+        /// <summary>
+        /// Path to the virtual machine's confuguration (.vmx) file.
+        /// </summary>
+        public string PathName
+        {
+            get
+            {                
+                return GetProperty<string>(Constants.VIX_PROPERTY_VM_VMX_PATHNAME);
+            }
+        }
+
+        /// <summary>
+        /// Returns true if the virtual machine is running.
+        /// </summary>
+        public bool IsRunning
+        {
+            get
+            {
+                return GetProperty<bool>(Constants.VIX_PROPERTY_VM_IS_RUNNING);
+            }
+        }
+
+        /// <summary>
+        /// Returns virtual machine's memory size.
+        /// </summary>
+        public int MemorySize
+        {
+            get
+            {
+                return GetProperty<int>(Constants.VIX_PROPERTY_VM_MEMORY_SIZE);
+            }
+        }
+
+        /// <summary>
+        /// Number of virtual CPUs.
+        /// </summary>
+        public int CPUCount
+        {
+            get
+            {
+                return GetProperty<int>(Constants.VIX_PROPERTY_VM_NUM_VCPUS);
+            }
         }
 
         /// <summary>
@@ -255,8 +314,9 @@ namespace Vestris.VMWareLib
 
         /// <summary>
         /// Runs a program in the guest operating system.
-        /// </summary>        
-        public int RunProgramInGuest(string guestProgramName)
+        /// </summary>       
+        /// <returns>process information</returns>
+        public Process RunProgramInGuest(string guestProgramName)
         {
             return RunProgramInGuest(guestProgramName, string.Empty);
         }
@@ -266,10 +326,35 @@ namespace Vestris.VMWareLib
         /// </summary>
         /// <param name="commandLineArgs">additional command line arguments</param>
         /// <param name="guestProgramName">program to execute</param>
-        public int RunProgramInGuest(string guestProgramName, string commandLineArgs)
+        /// <returns>process information</returns>
+        public Process RunProgramInGuest(string guestProgramName, string commandLineArgs)
         {
             return RunProgramInGuest(guestProgramName, commandLineArgs,
                 Constants.VIX_RUNPROGRAM_ACTIVATE_WINDOW,
+                VMWareInterop.Timeouts.RunProgramTimeout);
+        }
+
+        /// <summary>
+        /// Run a detached program in the guest operating system.
+        /// </summary>
+        /// <param name="commandLineArgs">additional command line arguments</param>
+        /// <param name="guestProgramName">program to execute</param>
+        /// <returns>process information</returns>
+        public Process DetachProgramInGuest(string guestProgramName)
+        {
+            return DetachProgramInGuest(guestProgramName, string.Empty);
+        }
+
+        /// <summary>
+        /// Run a detached program in the guest operating system.
+        /// </summary>
+        /// <param name="commandLineArgs">additional command line arguments</param>
+        /// <param name="guestProgramName">program to execute</param>
+        /// <returns>process information</returns>
+        public Process DetachProgramInGuest(string guestProgramName, string commandLineArgs)
+        {
+            return RunProgramInGuest(guestProgramName, commandLineArgs,
+                Constants.VIX_RUNPROGRAM_ACTIVATE_WINDOW | Constants.VIX_RUNPROGRAM_RETURN_IMMEDIATELY,
                 VMWareInterop.Timeouts.RunProgramTimeout);
         }
 
@@ -280,10 +365,27 @@ namespace Vestris.VMWareLib
         /// <param name="commandLineArgs">additional command line arguments</param>
         /// <param name="options">additional options, one of VIX_RUNPROGRAM_RETURN_IMMEDIATELY or VIX_RUNPROGRAM_ACTIVATE_WINDOW</param>
         /// <param name="timeoutInSeconds">timeout in seconds</param>
-        public int RunProgramInGuest(string guestProgramName, string commandLineArgs, int options, int timeoutInSeconds)
+        /// <returns>process information</returns>
+        public Process RunProgramInGuest(string guestProgramName, string commandLineArgs, int options, int timeoutInSeconds)
         {
             VMWareJob job = new VMWareJob(_handle.RunProgramInGuest(guestProgramName, commandLineArgs, options, null, null));
-            return job.Wait<int>(Constants.VIX_PROPERTY_JOB_RESULT_GUEST_PROGRAM_EXIT_CODE, timeoutInSeconds);
+            object[] properties = 
+            { 
+                Constants.VIX_PROPERTY_JOB_RESULT_GUEST_PROGRAM_EXIT_CODE, 
+                Constants.VIX_PROPERTY_JOB_RESULT_PROCESS_ID
+            };
+            object[] propertyValues = job.Wait<object[]>(properties, timeoutInSeconds);
+            Process process = new Process(_handle);
+            process.Name = Path.GetFileName(guestProgramName);
+            process.Command = guestProgramName;
+            if (! string.IsNullOrEmpty(commandLineArgs))
+            {
+                process.Command += " ";
+                process.Command += commandLineArgs;
+            }
+            process.ExitCode = (int) propertyValues[0];
+            process.Id = (long) propertyValues[1];
+            return process;
         }
 
         /// <summary>
@@ -508,7 +610,7 @@ namespace Vestris.VMWareLib
                 for (int i = 0; i < count; i++)
                 {
                     object[] processProperties = job.GetNthProperties<object[]>(i, properties);
-                    Process process = new Process();
+                    Process process = new Process(_handle);
                     process.Id = (long)processProperties[0];
                     process.Name = (string)processProperties[1];
                     process.Owner = (string)processProperties[2];

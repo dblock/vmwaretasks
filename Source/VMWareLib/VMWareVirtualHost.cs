@@ -116,5 +116,23 @@ namespace Vestris.VMWareLib
                 Disconnect();
             }
         }
+
+        /// <summary>
+        /// All running virtual machines.
+        /// </summary>
+        public IEnumerable<VMWareVirtualMachine> RunningVirtualMachines
+        {
+            get
+            {
+                VMWareJob job = new VMWareJob(_handle.FindItems(Constants.VIX_FIND_RUNNING_VMS, null, -1, null));
+                object[] properties = { Constants.VIX_PROPERTY_FOUND_ITEM_LOCATION };
+                object[] virtualMachineNames = job.Wait<object[]>(properties, VMWareInterop.Timeouts.FindItemsTimeout);
+                List<VMWareVirtualMachine> vms = new List<VMWareVirtualMachine>();
+                foreach(string virtualMachineName in virtualMachineNames)
+                {
+                    yield return this.Open(virtualMachineName);
+                }
+            }
+        }
     }
 }
