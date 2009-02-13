@@ -20,7 +20,9 @@ namespace Vestris.VMWareLibUnitTests
             string remoteBatFilename = string.Format(@"C:\{0}.bat", Path.GetFileNameWithoutExtension(localTempFilename));
             File.WriteAllText(localTempFilename, string.Format(@"dir C:\ > {0}", remoteTempFilename));
             VMWareTestVirtualMachine.VM.PoweredVirtualMachine.CopyFileFromHostToGuest(localTempFilename, remoteBatFilename);
-            Assert.AreEqual(0, VMWareTestVirtualMachine.VM.PoweredVirtualMachine.RunProgramInGuest(@"cmd.exe", string.Format("/C \"{0}\"", remoteBatFilename)));
+            VMWareVirtualMachine.Process cmdProcess = VMWareTestVirtualMachine.VM.PoweredVirtualMachine.RunProgramInGuest(@"cmd.exe", string.Format("/C \"{0}\"", remoteBatFilename));
+            Assert.IsNotNull(cmdProcess);
+            Assert.AreEqual(0, cmdProcess.ExitCode);
             VMWareTestVirtualMachine.VM.PoweredVirtualMachine.CopyFileFromGuestToHost(remoteTempFilename, localTempFilename);
             string remoteDirectoryListing = File.ReadAllText(localTempFilename);
             Console.WriteLine(remoteDirectoryListing);

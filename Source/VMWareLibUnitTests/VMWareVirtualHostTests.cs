@@ -14,6 +14,7 @@ namespace Vestris.VMWareLibUnitTests
             using (VMWareVirtualHost virtualHost = new VMWareVirtualHost())
             {
                 virtualHost.ConnectToVMWareWorkstation();
+                Assert.AreEqual(VMWareVirtualHost.ServiceProviderType.Workstation, virtualHost.ConnectionType);
             }
         }
 
@@ -21,8 +22,11 @@ namespace Vestris.VMWareLibUnitTests
         public void TestConnectDisconnect()
         {
             VMWareVirtualHost virtualHost = new VMWareVirtualHost();
+            Assert.AreEqual(VMWareVirtualHost.ServiceProviderType.None, virtualHost.ConnectionType);
             virtualHost.ConnectToVMWareWorkstation();
+            Assert.AreEqual(VMWareVirtualHost.ServiceProviderType.Workstation, virtualHost.ConnectionType);
             virtualHost.Disconnect();
+            Assert.AreEqual(VMWareVirtualHost.ServiceProviderType.None, virtualHost.ConnectionType);
         }
 
         [Test, ExpectedException(typeof(InvalidOperationException))]

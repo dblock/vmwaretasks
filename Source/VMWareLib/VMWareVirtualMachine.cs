@@ -507,8 +507,8 @@ namespace Vestris.VMWareLib
             {
                 switch (ex.ErrorCode)
                 {
-                    case 6000:
-                        // invalid properties, the directory exists, but contains no files
+                    case Constants.VIX_E_UNRECOGNIZED_PROPERTY:
+                        // unrecognized property returned by GetNumProperties, the directory exists, but contains no files
                         break;
                     default:
                         throw;

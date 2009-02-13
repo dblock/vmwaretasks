@@ -9,9 +9,45 @@ namespace Vestris.VMWareLib
     /// </summary>
     public class VMWareVirtualHost : VMWareVixHandle<IHost>, IDisposable
     {
+        /// <summary>
+        /// VMWare service provider type.
+        /// </summary>
+        public enum ServiceProviderType
+        {
+            /// <summary>
+            /// No service provider type, not connected.
+            /// </summary>
+            None = 0,
+            /// <summary>
+            /// VMWare Server.
+            /// </summary>
+            Server = Constants.VIX_SERVICEPROVIDER_VMWARE_SERVER,
+            /// <summary>
+            /// VMWare Workstation.
+            /// </summary>
+            Workstation = Constants.VIX_SERVICEPROVIDER_VMWARE_WORKSTATION,
+            /// <summary>
+            /// Virtual Infrastructure Server, eg. ESX.
+            /// </summary>
+            VirtualInfrastructureServer = Constants.VIX_SERVICEPROVIDER_VMWARE_VI_SERVER
+        }
+
+        private ServiceProviderType _serviceProviderType = ServiceProviderType.None;
+
         public VMWareVirtualHost()
         {
 
+        }
+
+        /// <summary>
+        /// Connected host type.
+        /// </summary>
+        public ServiceProviderType ConnectionType
+        {
+            get
+            {
+                return _serviceProviderType;
+            }
         }
 
         /// <summary>
@@ -27,8 +63,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public void ConnectToVMWareWorkstation(int timeoutInSeconds)
         {
-            Connect(Constants.VIX_SERVICEPROVIDER_VMWARE_WORKSTATION,
-                string.Empty, 0, string.Empty, string.Empty, timeoutInSeconds);
+            Connect(ServiceProviderType.Workstation, string.Empty, 0, string.Empty, string.Empty, timeoutInSeconds);
         }
 
         /// <summary>
@@ -52,22 +87,23 @@ namespace Vestris.VMWareLib
         /// <param name="hostPort">host port</param>
         public void ConnectToVMWareVIServer(Uri hostUri, string username, string password, int timeoutInSeconds)
         {
-            Connect(Constants.VIX_SERVICEPROVIDER_VMWARE_VI_SERVER,
+            Connect(ServiceProviderType.VirtualInfrastructureServer,
                 hostUri.ToString(), 0, username, password, timeoutInSeconds);
         }
 
         /// <summary>
         /// Connects to a VMWare Server or Workstation.
         /// </summary>
-        private void Connect(int hostType, string hostName, int hostPort, string username, string password, int timeout)
+        private void Connect(ServiceProviderType serviceProviderType, 
+            string hostName, int hostPort, string username, string password, int timeout)
         {
             VMWareJob job = new VMWareJob(VMWareInterop.Instance.Connect(
-                Constants.VIX_API_VERSION,
-                hostType, hostName, hostPort,
+                Constants.VIX_API_VERSION, (int) serviceProviderType, hostName, hostPort,
                 username, password, 0, null, null)
                 );
 
             _handle = job.Wait<IHost>(Constants.VIX_PROPERTY_JOB_RESULT_HANDLE, timeout);
+            _serviceProviderType = serviceProviderType;
         }
 
         /// <summary>
@@ -88,6 +124,11 @@ namespace Vestris.VMWareLib
         /// <returns>an instance of a virtual machine</returns>
         public VMWareVirtualMachine Open(string fileName, int timeoutInSeconds)
         {
+            if (_handle == null)
+            {
+                throw new InvalidOperationException("No connection established");
+            }
+
             VMWareJob job = new VMWareJob(_handle.OpenVM(fileName, null));
             return new VMWareVirtualMachine(job.Wait<IVM2>(
                 Constants.VIX_PROPERTY_JOB_RESULT_HANDLE,
@@ -115,6 +156,7 @@ namespace Vestris.VMWareLib
 
             _handle.Disconnect();
             _handle = null;
+            _serviceProviderType = ServiceProviderType.None;
         }
 
         ~VMWareVirtualHost()
@@ -132,6 +174,11 @@ namespace Vestris.VMWareLib
         {
             get
             {
+                if (_handle == null)
+                {
+                    throw new InvalidOperationException("No connection established");
+                }
+
                 VMWareJob job = new VMWareJob(_handle.FindItems(Constants.VIX_FIND_RUNNING_VMS, null, -1, null));
                 object[] properties = { Constants.VIX_PROPERTY_FOUND_ITEM_LOCATION };
                 foreach (object[] runningVirtualMachine in job.YieldWait(properties, VMWareInterop.Timeouts.FindItemsTimeout))
@@ -140,5 +187,31 @@ namespace Vestris.VMWareLib
                 }
             }
         }
+
+        /// <summary>
+        /// All registered virtual machines.
+        /// </summary>
+        /// <remarks>this function is only supported on Virtual Infrastructure servers</remarks>
+        public IEnumerable<VMWareVirtualMachine> RegisteredVirtualMachines
+        {
+            get
+            {
+                switch (ConnectionType)
+                {
+                    case ServiceProviderType.VirtualInfrastructureServer:
+                        VMWareJob job = new VMWareJob(_handle.FindItems(Constants.VIX_FIND_REGISTERED_VMS, null, -1, null));
+                        object[] properties = { Constants.VIX_PROPERTY_FOUND_ITEM_LOCATION };
+                        foreach (object[] runningVirtualMachine in job.YieldWait(properties, VMWareInterop.Timeouts.FindItemsTimeout))
+                        {
+                            yield return this.Open((string)runningVirtualMachine[0]);
+                        }
+                        break;
+                    default:
+                        throw new NotSupportedException(string.Format("RegisteredVirtualMachines is not supported on {0}",
+                            ConnectionType));
+                }
+            }
+        }
+
     }
 }
