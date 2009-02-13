@@ -14,11 +14,28 @@ namespace Vestris.VMWareLib
     {
         private IVM _vm = null;
         private VMWareSnapshotCollection _childSnapshots = null;
+        private VMWareSnapshot _parent = null;
 
-        public VMWareSnapshot(IVM vm, ISnapshot snapshot)
+        public VMWareSnapshot(IVM vm, ISnapshot snapshot, VMWareSnapshot parent)
             : base(snapshot)
         {
             _vm = vm;
+            _parent = parent;
+        }
+
+        /// <summary>
+        /// Parent snapshot.
+        /// </summary>
+        public VMWareSnapshot Parent
+        {
+            get
+            {
+                return _parent;
+            }
+            set
+            {
+                _parent = value;
+            }
         }
 
         /// <summary>
@@ -57,11 +74,23 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Remove/delete this snapshot.
         /// </summary>
+        /// <remarks>
+        /// If the snapshot is a member of a collection, the latter is updated with orphaned
+        /// snapshots appended to the parent.
+        /// </remarks>
         /// <param name="timeoutInSeconds">timeout in seconds</param>
         public void RemoveSnapshot(int timeoutInSeconds)
         {
+            // resolve child snapshots that will move one level up
+            IEnumerable<VMWareSnapshot> childSnapshots = ChildSnapshots;
+            // remove the snapshot
             VMWareJob job = new VMWareJob(_vm.RemoveSnapshot(_handle, 0, null));
             job.Wait(timeoutInSeconds);
+            if (_parent != null)
+            {
+                // child snapshots from this snapshot have now moved one level up
+                _parent.ChildSnapshots.Remove(this);
+            }
         }
 
         /// <summary>
@@ -73,14 +102,14 @@ namespace Vestris.VMWareLib
             {
                 if (_childSnapshots == null)
                 {
-                    VMWareSnapshotCollection childSnapshots = new VMWareSnapshotCollection(_vm);
+                    VMWareSnapshotCollection childSnapshots = new VMWareSnapshotCollection(_vm, this);
                     int nChildSnapshots = 0;
                     VMWareInterop.Check(_handle.GetNumChildren(out nChildSnapshots));
                     for (int i = 0; i < nChildSnapshots; i++)
                     {
                         ISnapshot childSnapshot = null;
                         VMWareInterop.Check(_handle.GetChild(i, out childSnapshot));
-                        childSnapshots.Add(new VMWareSnapshot(_vm, childSnapshot));
+                        childSnapshots.Add(new VMWareSnapshot(_vm, childSnapshot, this));
                     }
                     _childSnapshots = childSnapshots;
                 }
@@ -122,7 +151,7 @@ namespace Vestris.VMWareLib
                 switch ((ulError = _handle.GetParent(out parentSnapshot)))
                 {
                     case Constants.VIX_OK:
-                        return System.IO.Path.Combine(new VMWareSnapshot(_vm, parentSnapshot).Path, DisplayName);
+                        return System.IO.Path.Combine(new VMWareSnapshot(_vm, parentSnapshot, null).Path, DisplayName);
                     case Constants.VIX_E_SNAPSHOT_NOTFOUND: // no parent
                         return DisplayName;
                     case Constants.VIX_E_INVALID_ARG: // root snapshot

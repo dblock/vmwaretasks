@@ -15,7 +15,7 @@ namespace Vestris.VMWareLib
     public class VMWareRootSnapshotCollection : VMWareSnapshotCollection
     {
         public VMWareRootSnapshotCollection(IVM vm)
-            : base(vm)
+            : base(vm, null)
         {
 
         }
@@ -37,7 +37,7 @@ namespace Vestris.VMWareLib
                     {
                         ISnapshot snapshot = null;
                         VMWareInterop.Check(_vm.GetRootSnapshot(i, out snapshot));
-                        snapshots.Add(new VMWareSnapshot(_vm, snapshot));
+                        snapshots.Add(new VMWareSnapshot(_vm, snapshot, null));
                     }
                     _snapshots = snapshots;
                 }
@@ -50,12 +50,22 @@ namespace Vestris.VMWareLib
         /// Get the first snapshot by its exact name. 
         /// </summary>
         /// <param name="name">snapshot name</param>
-        /// <returns>a snapshot</returns>
+        /// <returns>a snapshot or null if the snapshot doesn't exist</returns>
         public VMWareSnapshot GetNamedSnapshot(string name)
         {
             ISnapshot snapshot = null;
-            VMWareInterop.Check(_vm.GetNamedSnapshot(name, out snapshot));
-            return new VMWareSnapshot(_vm, snapshot);
+            ulong rc = _vm.GetNamedSnapshot(name, out snapshot);
+            switch (rc)
+            {
+                case VixCOM.Constants.VIX_E_SNAPSHOT_NOTFOUND:
+                    break;
+                case VixCOM.Constants.VIX_OK:
+                    return new VMWareSnapshot(_vm, snapshot, null);
+                default:
+                    VMWareInterop.Check(rc);
+                    break;
+            }
+            return null;
         }
 
         /// <summary>
@@ -66,7 +76,7 @@ namespace Vestris.VMWareLib
         {
             ISnapshot snapshot = null;
             VMWareInterop.Check(_vm.GetCurrentSnapshot(out snapshot));
-            return new VMWareSnapshot(_vm, snapshot);
+            return new VMWareSnapshot(_vm, snapshot, null);
         }
 
         /// <summary>

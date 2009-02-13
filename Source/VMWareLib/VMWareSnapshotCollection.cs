@@ -14,10 +14,12 @@ namespace Vestris.VMWareLib
     {
         protected IVM _vm = null;
         protected List<VMWareSnapshot> _snapshots = null;
+        private VMWareSnapshot _parent = null;
 
-        public VMWareSnapshotCollection(IVM vm)
+        public VMWareSnapshotCollection(IVM vm, VMWareSnapshot parent)
         {
             _vm = vm;
+            _parent = parent;
         }
 
         /// <summary>
@@ -55,6 +57,50 @@ namespace Vestris.VMWareLib
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Find a snapshot by name. Unlike GetSnapshotByName this function 
+        /// doesn't throw an exception when there're two snapshots of the same name, it returns
+        /// the first snapshot found.
+        /// </summary>
+        /// <param name="name">name of a snapshot</param>
+        /// <returns>the first snapshot that matches the name, null if not found</returns>
+        public VMWareSnapshot FindSnapshotByName(string name)
+        {
+            foreach (VMWareSnapshot snapshot in this)
+            {
+                if (snapshot.DisplayName == name)
+                {
+                    return snapshot;
+                }
+
+                return snapshot.ChildSnapshots.FindSnapshotByName(name);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Find all snapshots by name. This can return multiple snapshots
+        /// that have the same name.
+        /// </summary>
+        /// <param name="name">name of a snapshot</param>
+        /// <returns>the first snapshot that matches the name, null if not found</returns>
+        public IEnumerable<VMWareSnapshot> FindSnapshotsByName(string name)
+        {
+            List<VMWareSnapshot> snapshots = new List<VMWareSnapshot>();
+            
+            foreach (VMWareSnapshot snapshot in this)
+            {
+                if (snapshot.DisplayName == name)
+                {
+                    snapshots.Add(snapshot);
+                }
+
+                snapshots.AddRange(snapshot.ChildSnapshots.FindSnapshotsByName(name));
+            }
+
+            return snapshots;
         }
 
         public void CopyTo(VMWareSnapshot[] array, int arrayIndex)
@@ -107,7 +153,26 @@ namespace Vestris.VMWareLib
         /// <param name="snapshot">snapshot to add</param>
         public void Add(VMWareSnapshot snapshot)
         {
+            if (snapshot.Parent != null && snapshot.Parent != _parent)
+            {
+                throw new InvalidOperationException("Snapshot already belongs to another collection.");
+            }
+
             Snapshots.Add(snapshot);
+        }
+
+        /// <summary>
+        /// Remove a snapshot from this collection, append orphaned children.
+        /// </summary>
+        /// <param name="snapshot">removed snapshot</param>
+        public void Remove(VMWareSnapshot snapshot)
+        {
+            _snapshots.Remove(snapshot);
+            foreach (VMWareSnapshot childSnapshot in snapshot.ChildSnapshots)
+            {
+                childSnapshot.Parent = _parent;
+                _snapshots.Add(childSnapshot);
+            }
         }
     }
 }
