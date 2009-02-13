@@ -49,7 +49,7 @@ namespace Vestris.VMWareLibUnitTests
         }
 
         [Test]
-        public void TestRunningVirtualMachines()
+        public void ShowRunningVirtualMachines()
         {
             foreach(VMWareVirtualHost virtualHost in VMWareTest.VirtualHosts)
             {
@@ -59,6 +59,20 @@ namespace Vestris.VMWareLibUnitTests
                         virtualMachine.PathName, virtualMachine.IsRunning, 
                         virtualMachine.MemorySize, virtualMachine.CPUCount);
                 }
+            }
+        }
+
+        [Test]
+        public void ShowVIRegisteredVirtualMachines()
+        {
+            if (!bool.Parse(ConfigurationManager.AppSettings["testVI"]))
+                Assert.Ignore("testVI = false");
+
+            foreach (VMWareVirtualMachine virtualMachine in TestVI.Instance.VirtualHost.RegisteredVirtualMachines)
+            {
+                Console.WriteLine("{0}: running={1}, memory={2}, CPUs={3}",
+                    virtualMachine.PathName, virtualMachine.IsRunning,
+                    virtualMachine.MemorySize, virtualMachine.CPUCount);
             }
         }
     }
