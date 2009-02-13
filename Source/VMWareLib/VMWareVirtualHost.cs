@@ -19,19 +19,35 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Connect to a WMWare Workstation.
         /// </summary>
-        public void ConnectToVMWareWorkstation(int timeout)
+        public void ConnectToVMWareWorkstation()
+        {
+            ConnectToVMWareWorkstation(VMWareTimeouts.defaultConnectTimeout);
+        }
+
+        /// <summary>
+        /// Connect to a WMWare Workstation.
+        /// </summary>
+        public void ConnectToVMWareWorkstation(int timeoutInSeconds)
         {
             Connect(Constants.VIX_SERVICEPROVIDER_VMWARE_WORKSTATION,
-                string.Empty, 0, string.Empty, string.Empty, timeout);
+                string.Empty, 0, string.Empty, string.Empty, timeoutInSeconds);
         }
 
         /// <summary>
         /// Connect to a WMWare Virtual Infrastructure Server (eg. ESX).
         /// </summary>
-        public void ConnectToVMWareVIServer(string hostName, int hostPort, string username, string password, int timeout)
+        public void ConnectToVMWareVIServer(string hostName, int hostPort, string username, string password)
+        {
+            ConnectToVMWareVIServer(hostName, hostPort, username, password, VMWareTimeouts.defaultConnectTimeout);
+        }
+
+        /// <summary>
+        /// Connect to a WMWare Virtual Infrastructure Server (eg. ESX).
+        /// </summary>
+        public void ConnectToVMWareVIServer(string hostName, int hostPort, string username, string password, int timeoutInSeconds)
         {
             Connect(Constants.VIX_SERVICEPROVIDER_VMWARE_VI_SERVER,
-                hostName, hostPort, username, password, timeout);
+                hostName, hostPort, username, password, timeoutInSeconds);
         }
 
         /// <summary>
@@ -45,7 +61,7 @@ namespace Vestris.VMWareLib
                 username, password, 0, null, null)
                 );
             object[] resultProperties = { Constants.VIX_PROPERTY_JOB_RESULT_HANDLE };
-            _host = job.Wait<IHost[]>(resultProperties, timeout)[0];
+            _host = job.Wait<IHost>(resultProperties, 0, timeout);
         }
 
         /// <summary>
@@ -55,9 +71,20 @@ namespace Vestris.VMWareLib
         /// <returns>an instance of a virtual machine</returns>
         public VMWareVirtualMachine Open(string fileName)
         {
+            return Open(fileName, VMWareTimeouts.defaultOpenFileTimeout);
+        }
+
+        /// <summary>
+        /// Open a .vmx file.
+        /// </summary>
+        /// <param name="fileName">Virtual Machine file, local .vmx or [storage] .vmx</param>
+        /// <param name="timeoutInSeconds">timeout in seconds</param>
+        /// <returns>an instance of a virtual machine</returns>
+        public VMWareVirtualMachine Open(string fileName, int timeoutInSeconds)
+        {
             VMWareJob job = new VMWareJob(_host.OpenVM(fileName, null));
             object[] resultProperties = { Constants.VIX_PROPERTY_JOB_RESULT_HANDLE };
-            return new VMWareVirtualMachine(job.Wait<IVM[]>(resultProperties)[0]);
+            return new VMWareVirtualMachine(job.Wait<IVM>(resultProperties, 0, timeoutInSeconds));
         }
     }
 }

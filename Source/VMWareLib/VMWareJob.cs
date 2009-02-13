@@ -38,16 +38,25 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Wait for the job to complete, return a result.
         /// </summary>
-        public T Wait<T>(Object[] properties, int timeoutInSeconds)
+        public T Wait<T>(object[] properties, int timeoutInSeconds)
         {
             InternalWait(timeoutInSeconds);
-            return Wait<T>(properties);
+            return (T) Wait<T>(properties);
         }
 
         /// <summary>
         /// Wait for the job to complete, return a result.
         /// </summary>
-        public T Wait<T>(Object[] properties)
+        public T Wait<T>(object[] properties, int index, int timeoutInSeconds)
+        {
+            InternalWait(timeoutInSeconds);
+            return (T) Wait<object[]>(properties)[index];
+        }
+
+        /// <summary>
+        /// Wait for the job to complete, return a result.
+        /// </summary>
+        public T Wait<T>(object[] properties)
         {
             object result = null;
             VMWareInterop.Check(_job.Wait(properties, ref result));
