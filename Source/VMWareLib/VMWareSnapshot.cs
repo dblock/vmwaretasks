@@ -121,7 +121,7 @@ namespace Vestris.VMWareLib
                 VMWareInterop.Check(_handle.GetParent(out parentSnapshot));
                 // hack: get the parent's parent snapshot: if this fails, we're looking at the root
                 ISnapshot parentsParentSnapshot = null;
-                return (parentSnapshot.GetParent(out parentsParentSnapshot) != VixCOM.Constants.VIX_OK)
+                return (parentSnapshot.GetParent(out parentsParentSnapshot) != Constants.VIX_OK)
                     ? DisplayName
                     : System.IO.Path.Combine(new VMWareSnapshot(_vm, parentSnapshot).Path, DisplayName);
             }

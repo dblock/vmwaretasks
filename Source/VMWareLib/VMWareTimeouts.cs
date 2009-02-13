@@ -16,7 +16,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public int PowerOnTimeout;
         public int PowerOffTimeout;
-        public int WaitForToolsInGuestTimeout;
+        public int WaitForToolsTimeout;
         /// <summary>
         /// the time to actually boot the machine
         /// </summary>
@@ -25,16 +25,22 @@ namespace Vestris.VMWareLib
         /// copy is very slow, see http://communities.vmware.com/thread/184489
         /// </summary>
         public int CopyFileTimeout;
-        public int DeleteTimeout;
-        public int RunProgramInGuestTimeout;
+        public int DeleteFileTimeout;
+        public int DeleteDirectoryTimeout;
+        public int RunProgramTimeout;
         public int FileExistsTimeout;
+        public int DirectoryExistsTimeout;
         public int LogoutTimeout;
-        public int ListDirectoryInGuestTimeout;
+        public int ListDirectoryTimeout;
         public int ReadVariableTimeout;
         public int WriteVariableTimeout;
         public int GetSharedFoldersTimeout;
         public int AddRemoveSharedFolderTimeout;
         public int CaptureScreenImageTimeout;
+        public int CreateDirectoryTimeout;
+        public int CreateTempFileTimeout;
+        public int ListProcessesTimeout;
+        public int FindItemsTimeout;
 
         public VMWareTimeouts()
             : this(60)
@@ -50,19 +56,25 @@ namespace Vestris.VMWareLib
             CreateSnapshotTimeout = baseTimeout * 10;
             PowerOnTimeout = baseTimeout;
             PowerOffTimeout = baseTimeout;
-            WaitForToolsInGuestTimeout = 5 * baseTimeout;
+            WaitForToolsTimeout = 5 * baseTimeout;
             LoginTimeout = baseTimeout;
             CopyFileTimeout = 20 * baseTimeout;
-            DeleteTimeout = baseTimeout;
-            RunProgramInGuestTimeout = 5 * baseTimeout;
+            DeleteFileTimeout = baseTimeout;
+            DeleteDirectoryTimeout = baseTimeout;
+            CreateDirectoryTimeout = baseTimeout;
+            RunProgramTimeout = 5 * baseTimeout;
             FileExistsTimeout = baseTimeout;
+            DirectoryExistsTimeout = baseTimeout;
             LogoutTimeout = baseTimeout;
-            ListDirectoryInGuestTimeout = baseTimeout;
+            ListDirectoryTimeout = baseTimeout;
             ReadVariableTimeout = baseTimeout;
             WriteVariableTimeout = baseTimeout;
             GetSharedFoldersTimeout = baseTimeout;
             AddRemoveSharedFolderTimeout = baseTimeout;
             CaptureScreenImageTimeout = baseTimeout;
+            CreateTempFileTimeout = baseTimeout;
+            ListProcessesTimeout = baseTimeout;
+            FindItemsTimeout = baseTimeout;
         }
     }
 }

@@ -50,6 +50,16 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
+        /// Wait for the job to complete, return a single result.
+        /// </summary>
+        public T Wait<T>(int propertyId, int timeoutInSeconds)
+        {
+            InternalWait(timeoutInSeconds);
+            object[] properties = { propertyId };
+            return Wait<T>(properties, 0, timeoutInSeconds);
+        }
+
+        /// <summary>
         /// Wait for the job to complete, return a result.
         /// </summary>
         public T Wait<T>(object[] properties)

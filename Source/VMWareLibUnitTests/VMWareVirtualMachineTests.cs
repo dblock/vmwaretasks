@@ -115,5 +115,43 @@ namespace Vestris.VMWareLibUnitTests
             Assert.IsTrue(image.Width > 0);
             Assert.IsTrue(image.Height > 0);
         }
+
+        [Test]
+        public void TestCreateDeleteDirectory()
+        {
+            string directoryName = string.Format(@"c:\{0}", Guid.NewGuid());
+            Assert.IsTrue(! VMWareTestVirtualMachine.VM.PoweredVirtualMachine.DirectoryExistsInGuest(directoryName));
+            Assert.IsTrue(! VMWareTestVirtualMachine.VM.PoweredVirtualMachine.FileExistsInGuest(directoryName));
+            VMWareTestVirtualMachine.VM.PoweredVirtualMachine.CreateDirectoryInGuest(directoryName);
+            Assert.IsTrue(VMWareTestVirtualMachine.VM.PoweredVirtualMachine.DirectoryExistsInGuest(directoryName));
+            Assert.IsTrue(!VMWareTestVirtualMachine.VM.PoweredVirtualMachine.FileExistsInGuest(directoryName));
+            VMWareTestVirtualMachine.VM.PoweredVirtualMachine.DeleteDirectoryFromGuest(directoryName);
+            Assert.IsTrue(!VMWareTestVirtualMachine.VM.PoweredVirtualMachine.DirectoryExistsInGuest(directoryName));
+            Assert.IsTrue(!VMWareTestVirtualMachine.VM.PoweredVirtualMachine.FileExistsInGuest(directoryName));
+        }
+
+        [Test]
+        public void TestCreateDeleteTempFile()
+        {
+            string fileName = VMWareTestVirtualMachine.VM.PoweredVirtualMachine.CreateTempFileInGuest();
+            Assert.IsFalse(string.IsNullOrEmpty(fileName));
+            Console.WriteLine("Temp filename: {0}", fileName);
+            Assert.IsTrue(!VMWareTestVirtualMachine.VM.PoweredVirtualMachine.DirectoryExistsInGuest(fileName));
+            Assert.IsTrue(VMWareTestVirtualMachine.VM.PoweredVirtualMachine.FileExistsInGuest(fileName));
+            VMWareTestVirtualMachine.VM.PoweredVirtualMachine.DeleteFileFromGuest(fileName);
+            Assert.IsTrue(!VMWareTestVirtualMachine.VM.PoweredVirtualMachine.DirectoryExistsInGuest(fileName));
+            Assert.IsTrue(!VMWareTestVirtualMachine.VM.PoweredVirtualMachine.FileExistsInGuest(fileName));
+        }
+
+        [Test]
+        public void TestListProcesses()
+        {
+            foreach (KeyValuePair<long, VMWareVirtualMachine.Process> process in VMWareTestVirtualMachine.VM.PoweredVirtualMachine.GuestProcesses)
+            {
+                Assert.IsTrue(process.Value.Id >= 0);
+                Assert.IsFalse(string.IsNullOrEmpty(process.Value.Name));
+                Console.WriteLine("{0}: {1} [{2}] ({3})", process.Value.Id, process.Value.Name, process.Value.Command, process.Value.Owner);
+            }
+        }
     }
 }

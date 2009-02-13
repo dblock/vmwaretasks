@@ -211,10 +211,10 @@ public class VMWareVixHandle&lt;T&gt;
   Implementing VMWareJob
  </h3>
  <p>
-  Since all operations in VMWare are job-based, let's wrap up a job. If we use the COM
-  API directly we would have to call <code>IVixLib.Wait</code> passing a job handle.
-  In an object-oriented library this operation belongs inside the job, plus a job is also a a 
-  <code>VMWareVixHandle</code>.
+  Since all operations in VMWare are job-based, let's wrap up a job. If we use the
+  COM API directly we would have to call <code>IVixLib.Wait</code> passing a job handle.
+  In an object-oriented library this operation belongs inside the job, plus a job
+  is also a a <code>VMWareVixHandle</code>.
  </p>
  <pre lang="cs"> public class VMWareJob : VMWareVixHandle&lt;IJob&gt;
  {
@@ -319,6 +319,17 @@ public class VMWareVixHandle&lt;T&gt;
  </p>
  <p>
   <img src="VMWareClasses.jpg">
+ </p>
+ <h2>
+  Implementation Details
+ </h2>
+ <h3>
+  Dates and Times
+ </h3>
+ <p>
+  Date/time in VMWare VIX is expressed in UNIX EPOCH (number of seconds since January
+  1st, 1970).
+  <pre lang="cs">DateTime currentDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds((int) dt);</pre>
  </p>
  <h2>
   Using VMWareLib

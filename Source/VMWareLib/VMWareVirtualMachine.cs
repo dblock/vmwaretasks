@@ -22,7 +22,7 @@ namespace Vestris.VMWareLib
             /// A variables indexer
             /// </summary>
             /// <param name="vm">virtual machine's variables to index</param>
-            /// <param name="variableType">variable type, VixCOM.Constants.VIX_VM_GUEST_VARIABLE, VIX_VM_CONFIG_RUNTIME_ONLY or VIX_GUEST_ENVIRONMENT_VARIABLE</param>
+            /// <param name="variableType">variable type, Constants.VIX_VM_GUEST_VARIABLE, VIX_VM_CONFIG_RUNTIME_ONLY or VIX_GUEST_ENVIRONMENT_VARIABLE</param>
             public VariableIndexer(IVM2 vm, int variableType)
             {
                 _handle = vm;
@@ -39,8 +39,9 @@ namespace Vestris.VMWareLib
                 get
                 {
                     VMWareJob job = new VMWareJob(_handle.ReadVariable(_variableType, name, 0, null));
-                    object[] properties = { Constants.VIX_PROPERTY_JOB_RESULT_VM_VARIABLE_STRING };
-                    return job.Wait<string>(properties, 0, VMWareInterop.Timeouts.ReadVariableTimeout);
+                    return job.Wait<string>(
+                        Constants.VIX_PROPERTY_JOB_RESULT_VM_VARIABLE_STRING,
+                        VMWareInterop.Timeouts.ReadVariableTimeout);
                 }
                 set
                 {
@@ -48,6 +49,19 @@ namespace Vestris.VMWareLib
                     job.Wait(VMWareInterop.Timeouts.WriteVariableTimeout);
                 }
             }
+        }
+
+        /// <summary>
+        /// A process running in the guest operating system.
+        /// </summary>
+        public struct Process
+        {
+            public long Id;
+            public string Name;
+            public string Owner;
+            public DateTime StartDateTime;
+            public string Command;
+            public bool IsBeingDebugged;
         }
 
         private VariableIndexer _guestEnvironmentVariables = null;
@@ -157,7 +171,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public void DeleteFileFromGuest(string guestPathName)
         {
-            DeleteFileFromGuest(guestPathName, VMWareInterop.Timeouts.DeleteTimeout);
+            DeleteFileFromGuest(guestPathName, VMWareInterop.Timeouts.DeleteFileTimeout);
         }
 
         /// <summary>
@@ -169,6 +183,22 @@ namespace Vestris.VMWareLib
             job.Wait(timeoutInSeconds);
         }
 
+        /// <summary>
+        /// Deletes a directory from guest directory system.
+        /// </summary>
+        public void DeleteDirectoryFromGuest(string guestPathName)
+        {
+            DeleteDirectoryFromGuest(guestPathName, VMWareInterop.Timeouts.DeleteDirectoryTimeout);
+        }
+
+        /// <summary>
+        /// Deletes a directory from guest directory system.
+        /// </summary>
+        public void DeleteDirectoryFromGuest(string guestPathName, int timeoutInSeconds)
+        {
+            VMWareJob job = new VMWareJob(_handle.DeleteDirectoryInGuest(guestPathName, 0, null));
+            job.Wait(timeoutInSeconds);
+        }
 
         /// <summary>
         /// Copies a file or directory from the guest operating system to the local system (where the Vix client is running).
@@ -190,6 +220,40 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
+        /// Creates a directory on the guest operating system.
+        /// </summary>
+        public void CreateDirectoryInGuest(string guestPathName)
+        {
+            CreateDirectoryInGuest(guestPathName, VMWareInterop.Timeouts.CreateDirectoryTimeout);
+        }
+
+        /// <summary>
+        /// Creates a directory on the guest operating system.
+        /// </summary>
+        public void CreateDirectoryInGuest(string guestPathName, int timeoutInSeconds)
+        {
+            VMWareJob job = new VMWareJob(_handle.CreateDirectoryInGuest(guestPathName, null, null));
+            job.Wait(timeoutInSeconds);
+        }
+
+        /// <summary>
+        /// Creates a temp file on the guest operating system.
+        /// </summary>
+        public string CreateTempFileInGuest()
+        {
+            return CreateTempFileInGuest(VMWareInterop.Timeouts.CreateTempFileTimeout);
+        }
+
+        /// <summary>
+        /// Creates a temp file on the guest operating system.
+        /// </summary>
+        public string CreateTempFileInGuest(int timeoutInSeconds)
+        {
+            VMWareJob job = new VMWareJob(_handle.CreateTempFileInGuest(0, null, null));
+            return job.Wait<string>(Constants.VIX_PROPERTY_JOB_RESULT_ITEM_NAME, timeoutInSeconds);
+        }
+
+        /// <summary>
         /// Runs a program in the guest operating system.
         /// </summary>        
         public int RunProgramInGuest(string guestProgramName)
@@ -204,8 +268,9 @@ namespace Vestris.VMWareLib
         /// <param name="guestProgramName">program to execute</param>
         public int RunProgramInGuest(string guestProgramName, string commandLineArgs)
         {
-            return RunProgramInGuest(guestProgramName, commandLineArgs, VixCOM.Constants.VIX_RUNPROGRAM_ACTIVATE_WINDOW, 
-                VMWareInterop.Timeouts.RunProgramInGuestTimeout);
+            return RunProgramInGuest(guestProgramName, commandLineArgs,
+                Constants.VIX_RUNPROGRAM_ACTIVATE_WINDOW,
+                VMWareInterop.Timeouts.RunProgramTimeout);
         }
 
         /// <summary>
@@ -218,8 +283,7 @@ namespace Vestris.VMWareLib
         public int RunProgramInGuest(string guestProgramName, string commandLineArgs, int options, int timeoutInSeconds)
         {
             VMWareJob job = new VMWareJob(_handle.RunProgramInGuest(guestProgramName, commandLineArgs, options, null, null));
-            object[] properties = { Constants.VIX_PROPERTY_JOB_RESULT_GUEST_PROGRAM_EXIT_CODE };
-            return job.Wait<int>(properties, 0, timeoutInSeconds);
+            return job.Wait<int>(Constants.VIX_PROPERTY_JOB_RESULT_GUEST_PROGRAM_EXIT_CODE, timeoutInSeconds);
         }
 
         /// <summary>
@@ -236,8 +300,24 @@ namespace Vestris.VMWareLib
         public bool FileExistsInGuest(string guestPathName, int timeoutInSeconds)
         {
             VMWareJob job = new VMWareJob(_handle.FileExistsInGuest(guestPathName, null));
-            object[] properties = { Constants.VIX_PROPERTY_JOB_RESULT_GUEST_OBJECT_EXISTS };
-            return job.Wait<bool>(properties, 0, timeoutInSeconds);
+            return job.Wait<bool>(Constants.VIX_PROPERTY_JOB_RESULT_GUEST_OBJECT_EXISTS, timeoutInSeconds);
+        }
+
+        /// <summary>
+        /// Tests the existence of a directory in the guest operating system.
+        /// </summary>
+        public bool DirectoryExistsInGuest(string guestPathName)
+        {
+            return DirectoryExistsInGuest(guestPathName, VMWareInterop.Timeouts.DirectoryExistsTimeout);
+        }
+
+        /// <summary>
+        /// Tests the existence of a directory in the guest operating system.
+        /// </summary>
+        public bool DirectoryExistsInGuest(string guestPathName, int timeoutInSeconds)
+        {
+            VMWareJob job = new VMWareJob(_handle.DirectoryExistsInGuest(guestPathName, null));
+            return job.Wait<bool>(Constants.VIX_PROPERTY_JOB_RESULT_GUEST_OBJECT_EXISTS, timeoutInSeconds);
         }
 
         /// <summary>
@@ -270,7 +350,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public void PowerOff(int timeoutInSeconds)
         {
-            VMWareJob job = new VMWareJob(_handle.PowerOff(VixCOM.Constants.VIX_VMPOWEROP_NORMAL, null));
+            VMWareJob job = new VMWareJob(_handle.PowerOff(Constants.VIX_VMPOWEROP_NORMAL, null));
             job.Wait(timeoutInSeconds);
         }
 
@@ -281,7 +361,7 @@ namespace Vestris.VMWareLib
         /// <param name="recurse">recruse into subdirectories</param>
         public List<string> ListDirectoryInGuest(string pathName, bool recurse)
         {
-            return ListDirectoryInGuest(pathName, recurse, VMWareInterop.Timeouts.ListDirectoryInGuestTimeout);
+            return ListDirectoryInGuest(pathName, recurse, VMWareInterop.Timeouts.ListDirectoryTimeout);
         }
 
         /// <summary>
@@ -395,10 +475,51 @@ namespace Vestris.VMWareLib
         /// <returns>A <see cref="System.Drawing.Image"/> object holding the captured screen image.</returns>
         public Image CaptureScreenImage()
         {
-            VMWareJob job = new VMWareJob(_handle.CaptureScreenImage(VixCOM.Constants.VIX_CAPTURESCREENFORMAT_PNG, null, null));
-            object[] properties = { Constants.VIX_PROPERTY_JOB_RESULT_SCREEN_IMAGE_DATA };
-            byte[] imageBytes = job.Wait<byte[]>(properties, 0, VMWareInterop.Timeouts.CaptureScreenImageTimeout);
+            VMWareJob job = new VMWareJob(_handle.CaptureScreenImage(
+                Constants.VIX_CAPTURESCREENFORMAT_PNG, null, null));
+            byte[] imageBytes = job.Wait<byte[]>(
+                Constants.VIX_PROPERTY_JOB_RESULT_SCREEN_IMAGE_DATA,
+                VMWareInterop.Timeouts.CaptureScreenImageTimeout);
             return Image.FromStream(new MemoryStream(imageBytes));
+        }
+
+        /// <summary>
+        /// Running processes in the guest operating system by process id.
+        /// </summary>
+        public Dictionary<long, Process> GuestProcesses
+        {
+            get
+            {
+                Dictionary<long, Process> processes = new Dictionary<long, Process>();
+                VMWareJob job = new VMWareJob(_handle.ListProcessesInGuest(0, null));
+                object[] properties = 
+                { 
+                    Constants.VIX_PROPERTY_JOB_RESULT_PROCESS_ID,
+                    Constants.VIX_PROPERTY_JOB_RESULT_ITEM_NAME,
+                    Constants.VIX_PROPERTY_JOB_RESULT_PROCESS_OWNER,
+                    Constants.VIX_PROPERTY_JOB_RESULT_PROCESS_START_TIME,
+                    Constants.VIX_PROPERTY_JOB_RESULT_PROCESS_COMMAND,
+                    Constants.VIX_PROPERTY_JOB_RESULT_PROCESS_BEING_DEBUGGED,
+                };
+
+                object[] propertyValues = job.Wait<object[]>(properties, VMWareInterop.Timeouts.ListProcessesTimeout);
+
+                int count = job.GetNumProperties(Constants.VIX_PROPERTY_JOB_RESULT_ITEM_NAME);
+                for (int i = 0; i < count; i++)
+                {
+                    object[] processProperties = job.GetNthProperties<object[]>(i, properties);
+                    Process process = new Process();
+                    process.Id = (long)processProperties[0];
+                    process.Name = (string)processProperties[1];
+                    process.Owner = (string)processProperties[2];
+                    process.StartDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds((int)processProperties[3]);
+                    process.Command = (string)processProperties[4];
+                    process.IsBeingDebugged = (bool)processProperties[5];
+                    processes.Add(process.Id, process);
+                }
+
+                return processes;
+            }
         }
     }
 }

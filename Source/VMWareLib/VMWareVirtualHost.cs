@@ -58,8 +58,8 @@ namespace Vestris.VMWareLib
                 hostType, hostName, hostPort,
                 username, password, 0, null, null)
                 );
-            object[] resultProperties = { Constants.VIX_PROPERTY_JOB_RESULT_HANDLE };
-            _handle = job.Wait<IHost>(resultProperties, 0, timeout);
+
+            _handle = job.Wait<IHost>(Constants.VIX_PROPERTY_JOB_RESULT_HANDLE, timeout);
         }
 
         /// <summary>
@@ -81,8 +81,9 @@ namespace Vestris.VMWareLib
         public VMWareVirtualMachine Open(string fileName, int timeoutInSeconds)
         {
             VMWareJob job = new VMWareJob(_handle.OpenVM(fileName, null));
-            object[] resultProperties = { Constants.VIX_PROPERTY_JOB_RESULT_HANDLE };
-            return new VMWareVirtualMachine(job.Wait<IVM2>(resultProperties, 0, timeoutInSeconds));
+            return new VMWareVirtualMachine(job.Wait<IVM2>(
+                Constants.VIX_PROPERTY_JOB_RESULT_HANDLE,
+                timeoutInSeconds));
         }
 
         public void Dispose()

@@ -41,7 +41,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Article", "Article", "{B0F0
 		Release.AspNetCompiler.Debug = "False"
 	EndProjectSection
 	ProjectSection(SolutionItems) = preProject
-		Article\VMWareClasses.jpg = Article\VMWareClasses.jpg
 		Article\VMWareLogo.jpg = Article\VMWareLogo.jpg
 		Article\VMWareTasks.html = Article\VMWareTasks.html
 	EndProjectSection

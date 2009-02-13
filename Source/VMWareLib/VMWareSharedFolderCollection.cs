@@ -45,8 +45,11 @@ namespace Vestris.VMWareLib
                 {
                     List<VMWareSharedFolder> sharedFolders = new List<VMWareSharedFolder>();
                     VMWareJob job = new VMWareJob(_vm.GetNumSharedFolders(null));
-                    object[] properties = { Constants.VIX_PROPERTY_JOB_RESULT_SHARED_FOLDER_COUNT };
-                    int nSharedFolders = job.Wait<int>(properties, 0, VMWareInterop.Timeouts.GetSharedFoldersTimeout);
+                    
+                    int nSharedFolders = job.Wait<int>(
+                        Constants.VIX_PROPERTY_JOB_RESULT_SHARED_FOLDER_COUNT, 
+                        VMWareInterop.Timeouts.GetSharedFoldersTimeout);
+                    
                     for (int i = 0; i < nSharedFolders; i++)
                     {
                         VMWareJob sharedFolderJob = new VMWareJob(_vm.GetSharedFolderState(i, null));
