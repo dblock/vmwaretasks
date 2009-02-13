@@ -4,6 +4,7 @@ using System.IO;
 using VixCOM;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
+using System.Drawing;
 
 namespace Vestris.VMWareLib
 {
@@ -14,7 +15,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public class VariableIndexer
         {
-            private IVM _vm;
+            private IVM2 _vm;
             private int _variableType;
 
             /// <summary>
@@ -22,7 +23,7 @@ namespace Vestris.VMWareLib
             /// </summary>
             /// <param name="vm">virtual machine's variables to index</param>
             /// <param name="variableType">variable type, VixCOM.Constants.VIX_VM_GUEST_VARIABLE, VIX_VM_CONFIG_RUNTIME_ONLY or VIX_GUEST_ENVIRONMENT_VARIABLE</param>
-            public VariableIndexer(IVM vm, int variableType)
+            public VariableIndexer(IVM2 vm, int variableType)
             {
                 _vm = vm;
                 _variableType = variableType;
@@ -49,21 +50,21 @@ namespace Vestris.VMWareLib
             }
         }
 
-        private IVM _vm = null;
+        private IVM2 _vm = null;
         private VariableIndexer _guestEnvironmentVariables = null;
         private VariableIndexer _runtimeConfigVariables = null;
         private VariableIndexer _guestVariables = null;
-        private VMWareSnapshotCollection _snapshots = null;
+        private VMWareRootSnapshotCollection _snapshots = null;
         private VMWareSharedFolderCollection _sharedFolders = null;
 
-        public VMWareVirtualMachine(IVM vm)
+        public VMWareVirtualMachine(IVM2 vm)
         {
             _vm = vm;
             _guestEnvironmentVariables = new VariableIndexer(_vm, Constants.VIX_GUEST_ENVIRONMENT_VARIABLE);
             _runtimeConfigVariables = new VariableIndexer(_vm, Constants.VIX_VM_CONFIG_RUNTIME_ONLY);
             _guestVariables = new VariableIndexer(_vm, Constants.VIX_VM_GUEST_VARIABLE);
             _sharedFolders = new VMWareSharedFolderCollection(_vm);
-            _snapshots = new VMWareSnapshotCollection(_vm);
+            _snapshots = new VMWareRootSnapshotCollection(_vm);
         }
 
         /// <summary>
@@ -102,7 +103,7 @@ namespace Vestris.VMWareLib
         /// Get all snapshots.
         /// </summary>
         /// <returns>a list of snapshots</returns>
-        public VMWareSnapshotCollection Snapshots
+        public VMWareRootSnapshotCollection Snapshots
         {
             get
             {
@@ -190,25 +191,40 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// Runs a program on the VM
-        /// </summary>
-        public int Execute(string path, string parameters)
+        /// Runs a program in the guest operating system.
+        /// </summary>        
+        public int RunProgramInGuest(string guestProgramName)
         {
-            return Execute(path, parameters, VMWareInterop.Timeouts.ExecuteTimeout);
+            return RunProgramInGuest(guestProgramName, string.Empty);
         }
 
         /// <summary>
-        /// Runs a program on the VM
+        /// Run a program in the guest operating system.
         /// </summary>
-        public int Execute(string path, string parameters, int timeoutInSeconds)
+        /// <param name="commandLineArgs">additional command line arguments</param>
+        /// <param name="guestProgramName">program to execute</param>
+        public int RunProgramInGuest(string guestProgramName, string commandLineArgs)
         {
-            VMWareJob job = new VMWareJob(_vm.RunProgramInGuest(path, parameters, VixCOM.Constants.VIX_RUNPROGRAM_ACTIVATE_WINDOW, null, null));
+            return RunProgramInGuest(guestProgramName, commandLineArgs, VixCOM.Constants.VIX_RUNPROGRAM_ACTIVATE_WINDOW, 
+                VMWareInterop.Timeouts.RunProgramInGuestTimeout);
+        }
+
+        /// <summary>
+        /// Run a program in the guest operating system.
+        /// </summary>
+        /// <param name="guestProgramName">guest program to run</param>
+        /// <param name="commandLineArgs">additional command line arguments</param>
+        /// <param name="options">additional options, one of VIX_RUNPROGRAM_RETURN_IMMEDIATELY or VIX_RUNPROGRAM_ACTIVATE_WINDOW</param>
+        /// <param name="timeoutInSeconds">timeout in seconds</param>
+        public int RunProgramInGuest(string guestProgramName, string commandLineArgs, int options, int timeoutInSeconds)
+        {
+            VMWareJob job = new VMWareJob(_vm.RunProgramInGuest(guestProgramName, commandLineArgs, options, null, null));
             object[] properties = { Constants.VIX_PROPERTY_JOB_RESULT_GUEST_PROGRAM_EXIT_CODE };
             return job.Wait<int>(properties, 0, timeoutInSeconds);
         }
 
         /// <summary>
-        /// This function tests the existence of a file in the guest operating system.
+        /// Tests the existence of a file in the guest operating system.
         /// </summary>
         public bool FileExistsInGuest(string guestPathName)
         {
@@ -216,7 +232,7 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// This function tests the existence of a file in the guest operating system.
+        /// Tests the existence of a file in the guest operating system.
         /// </summary>
         public bool FileExistsInGuest(string guestPathName, int timeoutInSeconds)
         {
@@ -226,7 +242,7 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// This function removes any guest operating system authentication context created by a previous call to LoginInGuest(). 
+        /// Remove any guest operating system authentication context created by a previous call to LoginInGuest(), ie. Logout.
         /// </summary>
         public void Logout()
         {
@@ -234,7 +250,7 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// This function removes any guest operating system authentication context created by a previous call to LoginInGuest(). 
+        /// Remove any guest operating system authentication context created by a previous call to LoginInGuest(), ie. Logout.
         /// </summary>
         public void Logout(int timeoutInSeconds)
         {
@@ -243,7 +259,7 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// Powers off a virtual machine.
+        /// Power off a virtual machine.
         /// </summary>
         public void PowerOff()
         {
@@ -251,7 +267,7 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// Powers off a virtual machine.
+        /// Power off a virtual machine.
         /// </summary>
         public void PowerOff(int timeoutInSeconds)
         {
@@ -260,26 +276,31 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// Lists files in a remote path.
+        /// List files in the guest operating system.
         /// </summary>
+        /// <param name="pathName">path in the guest operating system to list</param>
+        /// <param name="recurse">recruse into subdirectories</param>
         public List<string> ListDirectoryInGuest(string pathName, bool recurse)
         {
             return ListDirectoryInGuest(pathName, recurse, VMWareInterop.Timeouts.ListDirectoryInGuestTimeout);
         }
 
         /// <summary>
-        /// Lists files in a remote path, with or without subdirectories.
+        /// List files in the guest operating system.
         /// </summary>
+        /// <param name="pathName">path in the guest operating system to list</param>
+        /// <param name="recurse">recruse into subdirectories</param>
+        /// <param name="timeoutInSeconds">timeout in seconds</param>
         public List<string> ListDirectoryInGuest(string pathName, bool recurse, int timeoutInSeconds)
         {
             List<string> results = new List<string>();
             VMWareJob job = new VMWareJob(_vm.ListDirectoryInGuest(pathName, 0, null));
 
             object[] properties = 
-                { 
-                    Constants.VIX_PROPERTY_JOB_RESULT_ITEM_NAME, 
-                    Constants.VIX_PROPERTY_JOB_RESULT_FILE_FLAGS
-                };
+            { 
+                Constants.VIX_PROPERTY_JOB_RESULT_ITEM_NAME, 
+                Constants.VIX_PROPERTY_JOB_RESULT_FILE_FLAGS
+            };
 
             try
             {
@@ -367,6 +388,18 @@ namespace Vestris.VMWareLib
             {
                 return _sharedFolders;
             }
+        }
+
+        /// <summary>
+        /// Captures the screen of the guest operating system.
+        /// </summary>
+        /// <returns>A <see cref="System.Drawing.Image"/> object holding the captured screen image.</returns>
+        public Image CaptureScreenImage()
+        {
+            VMWareJob job = new VMWareJob(_vm.CaptureScreenImage(VixCOM.Constants.VIX_CAPTURESCREENFORMAT_PNG, null, null));
+            object[] properties = { Constants.VIX_PROPERTY_JOB_RESULT_SCREEN_IMAGE_DATA };
+            byte[] imageBytes = job.Wait<byte[]>(properties, 0, VMWareInterop.Timeouts.CaptureScreenImageTimeout);
+            return Image.FromStream(new MemoryStream(imageBytes));
         }
     }
 }

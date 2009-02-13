@@ -7,7 +7,7 @@ namespace Vestris.VMWareLib
     /// <summary>
     /// A VMWare virtual host.
     /// </summary>
-    public class VMWareVirtualHost
+    public class VMWareVirtualHost : IDisposable
     {
         private IHost _host = null;
 
@@ -84,7 +84,38 @@ namespace Vestris.VMWareLib
         {
             VMWareJob job = new VMWareJob(_host.OpenVM(fileName, null));
             object[] resultProperties = { Constants.VIX_PROPERTY_JOB_RESULT_HANDLE };
-            return new VMWareVirtualMachine(job.Wait<IVM>(resultProperties, 0, timeoutInSeconds));
+            return new VMWareVirtualMachine(job.Wait<IVM2>(resultProperties, 0, timeoutInSeconds));
+        }
+
+        public void Dispose()
+        {
+            if (_host != null)
+            {
+                Disconnect();
+            }
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Disconnect from a remote host.
+        /// </summary>
+        public void Disconnect()
+        {
+            if (_host == null)
+            {
+                throw new InvalidOperationException("No connection established");
+            }
+
+            _host.Disconnect();
+            _host = null;
+        }
+
+        ~VMWareVirtualHost()
+        {
+            if (_host != null)
+            {
+                Disconnect();
+            }
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public int CopyFileTimeout;
         public int DeleteTimeout;
-        public int ExecuteTimeout;
+        public int RunProgramInGuestTimeout;
         public int FileExistsTimeout;
         public int LogoutTimeout;
         public int ListDirectoryInGuestTimeout;
@@ -34,6 +34,7 @@ namespace Vestris.VMWareLib
         public int WriteVariableTimeout;
         public int GetSharedFoldersTimeout;
         public int AddRemoveSharedFolderTimeout;
+        public int CaptureScreenImageTimeout;
 
         public VMWareTimeouts()
             : this(60)
@@ -53,7 +54,7 @@ namespace Vestris.VMWareLib
             LoginTimeout = baseTimeout;
             CopyFileTimeout = 20 * baseTimeout;
             DeleteTimeout = baseTimeout;
-            ExecuteTimeout = 5 * baseTimeout;
+            RunProgramInGuestTimeout = 5 * baseTimeout;
             FileExistsTimeout = baseTimeout;
             LogoutTimeout = baseTimeout;
             ListDirectoryInGuestTimeout = baseTimeout;
@@ -61,6 +62,7 @@ namespace Vestris.VMWareLib
             WriteVariableTimeout = baseTimeout;
             GetSharedFoldersTimeout = baseTimeout;
             AddRemoveSharedFolderTimeout = baseTimeout;
+            CaptureScreenImageTimeout = baseTimeout;
         }
     }
 }

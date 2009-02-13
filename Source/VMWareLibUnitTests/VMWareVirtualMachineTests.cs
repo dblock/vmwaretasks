@@ -4,6 +4,7 @@ using NUnit.Framework;
 using Vestris.VMWareLib;
 using System.Configuration;
 using System.IO;
+using System.Drawing;
 
 namespace Vestris.VMWareLibUnitTests
 {
@@ -19,7 +20,7 @@ namespace Vestris.VMWareLibUnitTests
             string remoteBatFilename = string.Format(@"C:\{0}.bat", Path.GetFileNameWithoutExtension(localTempFilename));
             File.WriteAllText(localTempFilename, string.Format(@"dir C:\ > {0}", remoteTempFilename));
             VMWareTestVirtualMachine.VM.PoweredVirtualMachine.CopyFileFromHostToGuest(localTempFilename, remoteBatFilename);
-            Assert.AreEqual(0, VMWareTestVirtualMachine.VM.PoweredVirtualMachine.Execute(@"cmd.exe", string.Format("/C \"{0}\"", remoteBatFilename)));
+            Assert.AreEqual(0, VMWareTestVirtualMachine.VM.PoweredVirtualMachine.RunProgramInGuest(@"cmd.exe", string.Format("/C \"{0}\"", remoteBatFilename)));
             VMWareTestVirtualMachine.VM.PoweredVirtualMachine.CopyFileFromGuestToHost(remoteTempFilename, localTempFilename);
             string remoteDirectoryListing = File.ReadAllText(localTempFilename);
             Console.WriteLine(remoteDirectoryListing);
@@ -104,6 +105,15 @@ namespace Vestris.VMWareLibUnitTests
             // remove the shared folder
             VMWareTestVirtualMachine.VM.PoweredVirtualMachine.SharedFolders.Remove(currentDirectory);
             Assert.AreEqual(count, VMWareTestVirtualMachine.VM.PoweredVirtualMachine.SharedFolders.Count);
+        }
+
+        [Test]
+        public void TestCaptureScreenImage()
+        {
+            Image image = VMWareTestVirtualMachine.VM.PoweredVirtualMachine.CaptureScreenImage();
+            Console.WriteLine("Image: {0}x{1}", image.Width, image.Height);
+            Assert.IsTrue(image.Width > 0);
+            Assert.IsTrue(image.Height > 0);
         }
     }
 }
