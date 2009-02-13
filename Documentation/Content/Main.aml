@@ -5,7 +5,7 @@
    <para>
     The VMWare SDKs offer a rich set of programmable interfaces that enable developers to drive virtual machines programmatically with an asynchronous,
     job-based programming model. Unfortunately that turns out to be too complicated for 99.9% of scenarios and most developers want to use a simple
-    object-oriented interface for common VMWare tasks. The VMWareTasks library implements that interface and makes programming against virtual machine a no brainer.
+    object-oriented interface for common VMWare tasks. The VMWareTasks library implements that interface and makes programming against virtual machines a no brainer.
    </para>
   </introduction>
  </developerConceptualDocument>
