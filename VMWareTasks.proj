@@ -50,9 +50,14 @@
   <ItemGroup>
     <PackageFiles Include="$(ReleaseDir)/**/*" />
   </ItemGroup>
+  <ItemGroup>
+    <ArticleFiles Include="Article/**/*.html" />
+    <ArticleFiles Include="Article/**/*.jpg" />
+  </ItemGroup>
   <Target Name="zip" DependsOnTargets="version">
     <Copy SourceFiles="@(SourceCodeFiles)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)\Source\%(RecursiveDir)" />
     <Copy SourceFiles="@(BinaryFiles)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)\Bin" />
+    <Copy SourceFiles="@(ArticleFiles)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)\Article\%(RecursiveDir)" />
     <Zip ZipFileName="Vestris.VMWareTasks.zip" Files="@(PackageFiles)" />
   </Target>
 </Project>

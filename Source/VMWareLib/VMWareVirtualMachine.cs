@@ -246,7 +246,7 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// Lists files in a remote path.
+        /// Lists files in a remote path, with or without subdirectories.
         /// </summary>
         public List<string> ListDirectoryInGuest(string pathName, bool recurse, int timeoutInSeconds)
         {
