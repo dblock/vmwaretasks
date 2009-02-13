@@ -16,6 +16,12 @@ namespace Vestris.VMWareLib
         private VMWareSnapshotCollection _childSnapshots = null;
         private VMWareSnapshot _parent = null;
 
+        /// <summary>
+        /// A VMWare snapshot constructor.
+        /// </summary>
+        /// <param name="vm">virtual machine</param>
+        /// <param name="snapshot">snapshot</param>
+        /// <param name="parent">parent snapshot</param>
         public VMWareSnapshot(IVM vm, ISnapshot snapshot, VMWareSnapshot parent)
             : base(snapshot)
         {
@@ -26,6 +32,9 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Parent snapshot.
         /// </summary>
+        /// <remarks>
+        /// Root snapshots have a null parent.
+        /// </remarks>
         public VMWareSnapshot Parent
         {
             get
@@ -41,6 +50,8 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Restores the virtual machine to the state when the specified snapshot was created.
         /// </summary>
+        /// <param name="powerOnOptions">additional power-on options</param>
+        /// <param name="timeoutInSeconds">timeout in seconds</param>
         public void RevertToSnapshot(int powerOnOptions, int timeoutInSeconds)
         {
             VMWareJobCallback callback = new VMWareJobCallback();
@@ -51,6 +62,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Restores the virtual machine to the state when the specified snapshot was created.
         /// </summary>
+        /// <param name="timeoutInSeconds">timeout in seconds</param>
         public void RevertToSnapshot(int timeoutInSeconds)
         {
             RevertToSnapshot(Constants.VIX_VMPOWEROP_NORMAL, timeoutInSeconds);

@@ -17,13 +17,17 @@ namespace Vestris.VMWareLib
         private IVM _vm = null;
         private List<VMWareSharedFolder> _sharedFolders = null;
 
+        /// <summary>
+        /// A collection of shared folders that belong to a virtual machine.
+        /// </summary>
+        /// <param name="vm">virtual machine</param>
         public VMWareSharedFolderCollection(IVM vm)
         {
             _vm = vm;
         }
 
         /// <summary>
-        /// Add a shared folder.
+        /// Add (create) a shared folder.
         /// </summary>
         /// <param name="sharedFolder">the shared folder to add</param>
         public void Add(VMWareSharedFolder sharedFolder)
@@ -33,13 +37,13 @@ namespace Vestris.VMWareLib
                 sharedFolder.ShareName, sharedFolder.HostPath, sharedFolder.Flags, callback),
                 callback);
             job.Wait(VMWareInterop.Timeouts.AddRemoveSharedFolderTimeout);
-            _sharedFolders.Add(sharedFolder);
+            _sharedFolders = null;
         }
 
         /// <summary>
         /// Get shared folders.
         /// </summary>
-        /// <returns>a list of shared folders</returns>
+        /// <returns>A list of shared folders.</returns>
         private List<VMWareSharedFolder> SharedFolders
         {
             get
@@ -95,6 +99,12 @@ namespace Vestris.VMWareLib
             }
         }
 
+        /// <summary>
+        /// A function to copy shared folder objects between arrays.
+        /// Don't use externally.
+        /// </summary>
+        /// <param name="array">target array</param>
+        /// <param name="arrayIndex">array index</param>
         public void CopyTo(VMWareSharedFolder[] array, int arrayIndex) 
         { 
             SharedFolders.CopyTo(array, arrayIndex); 
@@ -104,7 +114,7 @@ namespace Vestris.VMWareLib
         /// Returns true if this virtual machine has the folder specified.
         /// </summary>
         /// <param name="item">shared folder</param>
-        /// <returns>true if the virtual machine contains the specified shared folder</returns>
+        /// <returns>True if the virtual machine contains the specified shared folder.</returns>
         public bool Contains(VMWareSharedFolder item)
         {
             return SharedFolders.Contains(item);
@@ -114,7 +124,7 @@ namespace Vestris.VMWareLib
         /// Delete a shared folder.
         /// </summary>
         /// <param name="item">shared folder to delete</param>
-        /// <returns>true if the folder was deleted</returns>
+        /// <returns>True if the folder was deleted.</returns>
         public bool Remove(VMWareSharedFolder item) 
         {
             VMWareJobCallback callback = new VMWareJobCallback();
@@ -136,6 +146,10 @@ namespace Vestris.VMWareLib
             } 
         }
 
+        /// <summary>
+        /// Returns true if the collection is read-only.
+        /// Shared folder collections are never read-only.
+        /// </summary>
         public bool IsReadOnly
         {
             get
@@ -144,11 +158,19 @@ namespace Vestris.VMWareLib
             }
         }
 
+        /// <summary>
+        /// A shared folder enumerator.
+        /// </summary>
+        /// <returns>Shared folders enumerator.</returns>
         IEnumerator<VMWareSharedFolder> IEnumerable<VMWareSharedFolder>.GetEnumerator() 
         { 
             return SharedFolders.GetEnumerator(); 
         }
 
+        /// <summary>
+        /// A shared folder enumerator.
+        /// </summary>
+        /// <returns>Shared folders enumerator.</returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return SharedFolders.GetEnumerator();

@@ -9,11 +9,17 @@ namespace Vestris.VMWareLib
 {
     /// <summary>
     /// A collection of root snapshots.
+    /// </summary>
+    /// <remarks>
     /// Shared snapshots will only be accessible inside the guest operating system if snapshots are 
     /// enabled for the virtual machine.
-    /// </summary>
+    /// </remarks>
     public class VMWareRootSnapshotCollection : VMWareSnapshotCollection
     {
+        /// <summary>
+        ///  A collection of snapshots that belong to a virtual machine.
+        /// </summary>
+        /// <param name="vm">a virtual machine instance</param>
         public VMWareRootSnapshotCollection(IVM vm)
             : base(vm, null)
         {
@@ -21,9 +27,12 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// Get snapshots.
+        /// A list of root snapshots on the current virtual machine.
         /// </summary>
-        /// <returns>a list of snapshots</returns>
+        /// <remarks>
+        /// The list is populated on first access, this may time some time.
+        /// </remarks>
+        /// <returns>A list of snapshots.</returns>
         protected override List<VMWareSnapshot> Snapshots
         {
             get
@@ -47,10 +56,11 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// Get the first snapshot by its exact name. 
+        /// Get a snapshot by its exact name. 
         /// </summary>
-        /// <param name="name">snapshot name</param>
-        /// <returns>a snapshot or null if the snapshot doesn't exist</returns>
+        /// <param name="name">Snapshot name.</param>
+        /// <returns>A snapshot or null if the snapshot doesn't exist.</returns>
+        /// <remarks>This function will throw an exception if more than one snapshot with the same exists.</remarks>
         public VMWareSnapshot GetNamedSnapshot(string name)
         {
             ISnapshot snapshot = null;
@@ -71,7 +81,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Current snapshot.
         /// </summary>
-        /// <returns>current snapshot</returns>
+        /// <returns>Current snapshot.</returns>
         public VMWareSnapshot GetCurrentSnapshot()
         {
             ISnapshot snapshot = null;
@@ -83,7 +93,7 @@ namespace Vestris.VMWareLib
         /// Delete/remove a snapshot.
         /// </summary>
         /// <param name="item">snapshot to delete</param>
-        /// <returns>true if the snapshot was deleted</returns>
+        /// <returns>True if the snapshot was deleted.</returns>
         public void RemoveSnapshot(VMWareSnapshot item)
         {
             item.RemoveSnapshot();
@@ -93,8 +103,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Delete a snapshot.
         /// </summary>
-        /// <param name="item">snapshot to delete</param>
-        /// <returns>true if the snapshot was deleted</returns>
+        /// <param name="name">name of the snapshot to delete</param>
         public void RemoveSnapshot(string name)
         {
             RemoveSnapshot(GetNamedSnapshot(name));
@@ -116,7 +125,9 @@ namespace Vestris.VMWareLib
         /// <param name="name">snapshot name</param>
         /// <param name="description">snapshot description</param>
         /// <param name="flags">flags, one of 
-        /// VIX_SNAPSHOT_INCLUDE_MEMORY: Captures the full state of a running virtual machine, including the memory
+        /// <list type="bullet">
+        ///  <item>VIX_SNAPSHOT_INCLUDE_MEMORY: Captures the full state of a running virtual machine, including the memory</item>
+        /// </list>
         /// </param>
         /// <param name="timeoutInSeconds">timeout in seconds</param>
         public void CreateSnapshot(string name, string description, int flags, int timeoutInSeconds)

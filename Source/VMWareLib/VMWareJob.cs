@@ -5,22 +5,23 @@ using VixCOM;
 
 namespace Vestris.VMWareLib
 {
+    /// <summary>
+    /// A VixCOM job.
+    /// Implements synchronous execution of VixCOM tasks.
+    /// </summary>
     public class VMWareJob : VMWareVixHandle<IJob>
     {
         private VMWareJobCallback _callback;
 
+        /// <summary>
+        /// A VMWare job created with a job completion callback.
+        /// </summary>
+        /// <param name="job">an instance of IJob</param>
+        /// <param name="callback">job completion callback</param>
         public VMWareJob(IJob job, VMWareJobCallback callback)
             : base(job)
         {
             _callback = callback;
-        }
-
-        /// <summary>
-        /// Wait for the job to complete.
-        /// </summary>
-        public void Wait()
-        {
-            VMWareInterop.Check(_handle.WaitWithoutResults());
         }
 
         /// <summary>
@@ -30,7 +31,7 @@ namespace Vestris.VMWareLib
         public void Wait(int timeoutInSeconds)
         {
             _callback.WaitForCompletion(timeoutInSeconds * 1000);
-            Wait();
+            VMWareInterop.Check(_handle.WaitWithoutResults());
         }
 
         /// <summary>
@@ -45,6 +46,8 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Wait for the job to complete and enumerate results.
         /// </summary>
+        /// <param name="properties">properties to yield</param>
+        /// <param name="timeoutInSeconds">timeout in seconds</param>
         public IEnumerable<object[]> YieldWait(object[] properties, int timeoutInSeconds)
         {
             _callback.WaitForCompletion(timeoutInSeconds * 1000);
@@ -57,6 +60,10 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Wait for the job to complete, return a result.
         /// </summary>
+        /// <param name="properties">properties to yield</param>
+        /// <param name="index">property index to yield</param>
+        /// <param name="timeoutInSeconds">timeout in seconds</param>
+        /// <typeparam name="T">type of the property to return</typeparam>
         public T Wait<T>(object[] properties, int index, int timeoutInSeconds)
         {
             _callback.WaitForCompletion(timeoutInSeconds * 1000);
@@ -66,6 +73,9 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Wait for the job to complete, return a single result.
         /// </summary>
+        /// <param name="propertyId">property id</param>
+        /// <param name="timeoutInSeconds">timeout in seconds</param>
+        /// <typeparam name="T">type of property to return</typeparam>
         public T Wait<T>(int propertyId, int timeoutInSeconds)
         {
             object[] properties = { propertyId };
@@ -75,6 +85,8 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Wait for the job to complete, return a result.
         /// </summary>
+        /// <param name="properties">properties to return</param>
+        /// <typeparam name="T">type of results</typeparam>
         private T Wait<T>(object[] properties)
         {
             object result = null;
@@ -85,10 +97,10 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Get n-th properties.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T">type of result</typeparam>
         /// <param name="index">property index</param>
         /// <param name="properties">property objects</param>
-        /// <returns>N'th properties</returns>
+        /// <returns>N'th properties.</returns>
         public T GetNthProperties<T>(int index, object[] properties)
         {
             object result = null;

@@ -18,12 +18,23 @@ namespace Vestris.VMWareLib
         private string _hostPath;
         private int _flags;
 
+        /// <summary>
+        /// A shared folder defined by share name and host path.
+        /// </summary>
+        /// <param name="shareName">share name</param>
+        /// <param name="hostPath">host path</param>
         public VMWareSharedFolder(string shareName, string hostPath)
             : this(shareName, hostPath, 0)
         {
 
         }
 
+        /// <summary>
+        /// A shared folder defined by share name, host path and additional flags.
+        /// </summary>
+        /// <param name="shareName">share name</param>
+        /// <param name="hostPath">host path</param>
+        /// <param name="flags">additional flags</param>
         public VMWareSharedFolder(string shareName, string hostPath, int flags)
         {
             _shareName = shareName;
@@ -56,7 +67,9 @@ namespace Vestris.VMWareLib
 
         /// <summary>
         /// Shared folder flags, one of the following.
-        /// VIX_SHAREDFOLDER_WRITE_ACCESS: allow write access
+        /// <list type="bullet">
+        ///  <item>VIX_SHAREDFOLDER_WRITE_ACCESS: allow write access</item>
+        /// </list>
         /// </summary>
         public int Flags
         {

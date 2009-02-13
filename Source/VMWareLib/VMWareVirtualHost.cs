@@ -34,6 +34,9 @@ namespace Vestris.VMWareLib
 
         private ServiceProviderType _serviceProviderType = ServiceProviderType.None;
 
+        /// <summary>
+        /// A VMWare virtual host.
+        /// </summary>
         public VMWareVirtualHost()
         {
 
@@ -84,7 +87,7 @@ namespace Vestris.VMWareLib
         /// <param name="hostUri">host SDK uri, eg. http://server/sdk</param>
         /// <param name="username">username</param>
         /// <param name="password">password</param>
-        /// <param name="hostPort">host port</param>
+        /// <param name="timeoutInSeconds">timeout in seconds</param>
         public void ConnectToVMWareVIServer(Uri hostUri, string username, string password, int timeoutInSeconds)
         {
             Connect(ServiceProviderType.VirtualInfrastructureServer,
@@ -111,7 +114,7 @@ namespace Vestris.VMWareLib
         /// Open a .vmx file.
         /// </summary>
         /// <param name="fileName">Virtual Machine file, local .vmx or [storage] .vmx</param>
-        /// <returns>an instance of a virtual machine</returns>
+        /// <returns>An instance of a virtual machine.</returns>
         public VMWareVirtualMachine Open(string fileName)
         {
             return Open(fileName, VMWareInterop.Timeouts.OpenFileTimeout);
@@ -122,7 +125,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         /// <param name="fileName">Virtual Machine file, local .vmx or [storage] .vmx</param>
         /// <param name="timeoutInSeconds">timeout in seconds</param>
-        /// <returns>an instance of a virtual machine</returns>
+        /// <returns>An instance of a virtual machine.</returns>
         public VMWareVirtualMachine Open(string fileName, int timeoutInSeconds)
         {
             if (_handle == null)
@@ -137,6 +140,9 @@ namespace Vestris.VMWareLib
                 timeoutInSeconds));
         }
 
+        /// <summary>
+        /// Dispose the object, hard-disconnect from the remote host.
+        /// </summary>
         public void Dispose()
         {
             if (_handle != null)
@@ -161,6 +167,9 @@ namespace Vestris.VMWareLib
             _serviceProviderType = ServiceProviderType.None;
         }
 
+        /// <summary>
+        /// Destructor.
+        /// </summary>
         ~VMWareVirtualHost()
         {
             if (_handle != null)
@@ -170,7 +179,7 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// All running virtual machines.
+        /// Returns all running virtual machines.
         /// </summary>
         public IEnumerable<VMWareVirtualMachine> RunningVirtualMachines
         {
@@ -198,7 +207,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// All registered virtual machines.
         /// </summary>
-        /// <remarks>this function is only supported on Virtual Infrastructure servers</remarks>
+        /// <remarks>This function is only supported on Virtual Infrastructure servers.</remarks>
         public IEnumerable<VMWareVirtualMachine> RegisteredVirtualMachines
         {
             get

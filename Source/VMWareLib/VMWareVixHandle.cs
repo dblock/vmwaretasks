@@ -6,12 +6,21 @@ using VixCOM;
 namespace Vestris.VMWareLib
 {
     /// <summary>
-    /// A wrapper for a VIX handle. Most VIX objects returned also implement IVixHandle.
+    /// A wrapper for a VixCOM handle. 
     /// </summary>
+    /// <remarks>
+    /// Most VixCOM objects returned from VixCOM API functions implement IVixHandle.
+    /// </remarks>
     public class VMWareVixHandle<T>
     {
+        /// <summary>
+        /// Raw VixCOM handle of implemented type.
+        /// </summary>
         protected T _handle = default(T);
         
+        /// <summary>
+        /// Pointer to the IVixHandle interface.
+        /// </summary>
         protected IVixHandle _vixhandle
         {
             get
@@ -20,11 +29,18 @@ namespace Vestris.VMWareLib
             }
         }
 
+        /// <summary>
+        /// A constructor for a null Vix handle.
+        /// </summary>
         public VMWareVixHandle()
         {
 
         }
 
+        /// <summary>
+        /// A constructor for an existing Vix handle.
+        /// </summary>
+        /// <param name="handle">handle value</param>
         public VMWareVixHandle(T handle)
         {
             _handle = handle;
@@ -34,7 +50,7 @@ namespace Vestris.VMWareLib
         /// Get an array of properties.
         /// </summary>
         /// <param name="properties">properties to fetch</param>
-        /// <returns>an array of property values</returns>
+        /// <returns>An array of property values.</returns>
         public object[] GetProperties(object[] properties)
         {
             object result = null;
@@ -45,9 +61,9 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Return the value of a single property.
         /// </summary>
-        /// <typeparam name="T">property value type</typeparam>
         /// <param name="propertyId">property id</param>
-        /// <returns>the value of a single property of type T</returns>
+        /// <typeparam name="R">property value type</typeparam>
+        /// <returns>The value of a single property of type R.</returns>
         public R GetProperty<R>(int propertyId)
         {
             object[] properties = { propertyId };

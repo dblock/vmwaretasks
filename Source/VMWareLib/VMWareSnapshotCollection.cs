@@ -12,10 +12,21 @@ namespace Vestris.VMWareLib
     /// </summary>
     public class VMWareSnapshotCollection : IEnumerable<VMWareSnapshot>
     {
+        /// <summary>
+        /// Virtual machine handle.
+        /// </summary>
         protected IVM _vm = null;
+        /// <summary>
+        /// Internal list of snapshots.
+        /// </summary>
         protected List<VMWareSnapshot> _snapshots = null;
         private VMWareSnapshot _parent = null;
 
+        /// <summary>
+        /// Snapshot collection constructor.
+        /// </summary>
+        /// <param name="vm">virtual machine</param>
+        /// <param name="parent">snapshot parent</param>
         public VMWareSnapshotCollection(IVM vm, VMWareSnapshot parent)
         {
             _vm = vm;
@@ -40,8 +51,8 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Find a snapshot.
         /// </summary>
-        /// <param name="name">path to a snapshot</param>
-        /// <returns>a snapshot, null if not found</returns>
+        /// <param name="pathToSnapshot">path to a snapshot</param>
+        /// <returns>A snapshot, null if not found.</returns>
         public VMWareSnapshot FindSnapshot(string pathToSnapshot)
         {
             string[] paths = pathToSnapshot.Split("\\".ToCharArray(), 2);
@@ -65,7 +76,7 @@ namespace Vestris.VMWareLib
         /// the first snapshot found.
         /// </summary>
         /// <param name="name">name of a snapshot</param>
-        /// <returns>the first snapshot that matches the name, null if not found</returns>
+        /// <returns>The first snapshot that matches the name, null if not found.</returns>
         public VMWareSnapshot FindSnapshotByName(string name)
         {
             foreach (VMWareSnapshot snapshot in this)
@@ -85,7 +96,7 @@ namespace Vestris.VMWareLib
         /// that have the same name.
         /// </summary>
         /// <param name="name">name of a snapshot</param>
-        /// <returns>the first snapshot that matches the name, null if not found</returns>
+        /// <returns>The first snapshot that matches the name, null if not found.</returns>
         public IEnumerable<VMWareSnapshot> FindSnapshotsByName(string name)
         {
             List<VMWareSnapshot> snapshots = new List<VMWareSnapshot>();
@@ -103,6 +114,11 @@ namespace Vestris.VMWareLib
             return snapshots;
         }
 
+        /// <summary>
+        /// Copy to an array of VMWareSnapshots.
+        /// </summary>
+        /// <param name="array">target array</param>
+        /// <param name="arrayIndex">array index</param>
         public void CopyTo(VMWareSnapshot[] array, int arrayIndex)
         {
             Snapshots.CopyTo(array, arrayIndex);
@@ -112,7 +128,7 @@ namespace Vestris.VMWareLib
         /// Returns true if this virtual machine has the snapshot specified.
         /// </summary>
         /// <param name="item">snapshot</param>
-        /// <returns>true if the virtual machine contains the specified snapshot</returns>
+        /// <returns>True if the virtual machine contains the specified snapshot.</returns>
         public bool Contains(VMWareSnapshot item)
         {
             return Snapshots.Contains(item);
@@ -129,6 +145,10 @@ namespace Vestris.VMWareLib
             }
         }
 
+        /// <summary>
+        /// Returns true if the collection is read-only.
+        /// A collection of snapshots is never read-only.
+        /// </summary>
         public bool IsReadOnly
         {
             get
@@ -137,11 +157,19 @@ namespace Vestris.VMWareLib
             }
         }
 
+        /// <summary>
+        /// A snapshot collection enumerator.
+        /// </summary>
+        /// <returns>Snapshots enumerator.</returns>
         IEnumerator<VMWareSnapshot> IEnumerable<VMWareSnapshot>.GetEnumerator()
         {
             return Snapshots.GetEnumerator();
         }
 
+        /// <summary>
+        /// A snapshot collection enumerator.
+        /// </summary>
+        /// <returns>Snapshots enumerator.</returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return Snapshots.GetEnumerator();

@@ -8,6 +8,9 @@ using System.Drawing;
 
 namespace Vestris.VMWareLib
 {
+    /// <summary>
+    /// A VMWare Virtual Machine.
+    /// </summary>
     public class VMWareVirtualMachine : VMWareVixHandle<IVM2>
     {
         /// <summary>
@@ -62,28 +65,65 @@ namespace Vestris.VMWareLib
         /// </summary>
         public class Process
         {
+            /// <summary>
+            /// Process ID.
+            /// </summary>
             public long Id;
+            /// <summary>
+            /// Process name.
+            /// </summary>
             public string Name;
+            /// <summary>
+            /// Process owner.
+            /// </summary>
             public string Owner;
+            /// <summary>
+            /// Process start date/time.
+            /// </summary>
             public DateTime StartDateTime;
+            /// <summary>
+            /// Process command line.
+            /// </summary>
             public string Command;
+            /// <summary>
+            /// True if process is being debugged.
+            /// </summary>
             public bool IsBeingDebugged = false;
+            /// <summary>
+            /// Process exit code for finished processes.
+            /// </summary>
             public int ExitCode = 0;
 
             private IVM2 _vm;
 
+            /// <summary>
+            /// A process running in the guest operating system on a virtual machine.
+            /// </summary>
+            /// <param name="vm">virtual machine</param>
             public Process(IVM2 vm)
             {
                 _vm = vm;
             }
 
+            /// <summary>
+            /// Kill a process in the guest operating system.
+            /// </summary>
             public void KillProcessInGuest()
+            {
+                KillProcessInGuest(VMWareInterop.Timeouts.KillProcessTimeout);
+            }
+
+            /// <summary>
+            /// Kill a process in the guest operating system.
+            /// </summary>
+            /// <param name="timeoutInSeconds">timeout in seconds</param>
+            public void KillProcessInGuest(int timeoutInSeconds)
             {
                 VMWareJobCallback callback = new VMWareJobCallback();
                 VMWareJob job = new VMWareJob(_vm.KillProcessInGuest(
                     Convert.ToUInt64(Id), 0, callback),
                     callback);
-                job.Wait();
+                job.Wait(timeoutInSeconds);
             }
         }
 
@@ -93,6 +133,10 @@ namespace Vestris.VMWareLib
         private VMWareRootSnapshotCollection _snapshots = null;
         private VMWareSharedFolderCollection _sharedFolders = null;
 
+        /// <summary>
+        /// A VMWare Virtual Machine.
+        /// </summary>
+        /// <param name="vm">a handle to a virtual machine</param>
         public VMWareVirtualMachine(IVM2 vm)
             : base(vm)
         {
@@ -189,7 +233,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Get all snapshots.
         /// </summary>
-        /// <returns>a list of snapshots</returns>
+        /// <returns>A list of snapshots.</returns>
         public VMWareRootSnapshotCollection Snapshots
         {
             get
@@ -215,6 +259,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         /// <param name="username">username</param>
         /// <param name="password">password</param>
+        /// <param name="timeoutInSeconds">timeout in seconds</param>
         public void Login(string username, string password, int timeoutInSeconds)
         {
             VMWareJobCallback callback = new VMWareJobCallback();
@@ -350,7 +395,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Runs a program in the guest operating system.
         /// </summary>       
-        /// <returns>process information</returns>
+        /// <returns>Process information.</returns>
         public Process RunProgramInGuest(string guestProgramName)
         {
             return RunProgramInGuest(guestProgramName, string.Empty);
@@ -361,7 +406,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         /// <param name="commandLineArgs">additional command line arguments</param>
         /// <param name="guestProgramName">program to execute</param>
-        /// <returns>process information</returns>
+        /// <returns>Process information.</returns>
         public Process RunProgramInGuest(string guestProgramName, string commandLineArgs)
         {
             return RunProgramInGuest(guestProgramName, commandLineArgs,
@@ -372,9 +417,8 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Run a detached program in the guest operating system.
         /// </summary>
-        /// <param name="commandLineArgs">additional command line arguments</param>
         /// <param name="guestProgramName">program to execute</param>
-        /// <returns>process information</returns>
+        /// <returns>Process information.</returns>
         public Process DetachProgramInGuest(string guestProgramName)
         {
             return DetachProgramInGuest(guestProgramName, string.Empty);
@@ -385,7 +429,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         /// <param name="commandLineArgs">additional command line arguments</param>
         /// <param name="guestProgramName">program to execute</param>
-        /// <returns>process information</returns>
+        /// <returns>Process information.</returns>
         public Process DetachProgramInGuest(string guestProgramName, string commandLineArgs)
         {
             return RunProgramInGuest(guestProgramName, commandLineArgs,
@@ -400,7 +444,7 @@ namespace Vestris.VMWareLib
         /// <param name="commandLineArgs">additional command line arguments</param>
         /// <param name="options">additional options, one of VIX_RUNPROGRAM_RETURN_IMMEDIATELY or VIX_RUNPROGRAM_ACTIVATE_WINDOW</param>
         /// <param name="timeoutInSeconds">timeout in seconds</param>
-        /// <returns>process information</returns>
+        /// <returns>Process information.</returns>
         public Process RunProgramInGuest(string guestProgramName, string commandLineArgs, int options, int timeoutInSeconds)
         {
             VMWareJobCallback callback = new VMWareJobCallback();
@@ -592,6 +636,10 @@ namespace Vestris.VMWareLib
         /// A "Guest Variable". This is a runtime-only value; it is never stored persistently. 
         /// This is the same guest variable that is exposed through the VMControl APIs, and is a simple 
         /// way to pass runtime values in and out of the guest. 
+        /// VMWare doesn't publish a list of known variables, the following guest variables have been observed.
+        /// <list type="bullet">
+        /// <item>ip: IP address of the guest operating system</item>
+        /// </list>
         /// </summary>
         public VariableIndexer GuestVariables
         {
