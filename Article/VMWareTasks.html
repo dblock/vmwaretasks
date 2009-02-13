@@ -72,7 +72,7 @@ Level:       Intermediate
 Description: A VMWare tasks library and primer
 Section      Suggest a section...
 SubSection   Suggest a subsection...
-License:     <a href="http://www.codeproject.com/info/licenses.aspx">CPOL</a>
+License:     MIT
 </pre>
  <ul class="download">
   <li><a href="Vestris.VMWareTasks.zip">Download binaries &amp; source - 25 Kb</a></li>
@@ -90,10 +90,11 @@ License:     <a href="http://www.codeproject.com/info/licenses.aspx">CPOL</a>
   the new SDKs and the level of programmable interfaces, making some excellent implementation
   decisions that enable developers to drive virtual machines programmatically with
   an asynchronous, job-based programming model. Unfortunately that turns out to be
-  too complicated for 99.9% of scenarios and most developers want to use a simple object-oriented
-  interface for common VMWare tasks. The VMWareTasks library implements that interface and makes
-  programming against virtual machine a no brainer. This article explains how to 
-  use the library and discusses some of its implementation details.</p>
+  too complicated for 99.9% of scenarios and most developers want to use a simple
+  object-oriented interface for common VMWare tasks. The VMWareTasks library implements
+  that interface and makes programming against virtual machine a no brainer. This
+  article explains how to use the library and discusses some of its implementation
+  details.</p>
  <h2>
   Background
  </h2>
@@ -531,32 +532,25 @@ public IEnumerable &lt;object[]&gt; YieldWait(object[] properties, int timeoutIn
   Source Code and Patches
  </h2>
  <p>
-  The latest version of this article and source code can always be found in <a href="http://subversion.tigris.org/">
-   Subversion</a> under <a href="svn://svn.vestris.com/codeproject/VMWareTasks/">svn://svn.vestris.com/codeproject/VMWareTasks</a>.
-  You can also <a href="http://svn.vestris.com/listing.php?repname=Vestris+SVN&path=%2Fcodeproject%2FVMWareTasks%2FSource%2F#_codeproject_VMWareTasks_Source_">
-   browse the source code</a>. You can find the latest information about this library
-  at <a href="http://code.dblock.org">code.dblock.org</a>. You're encouraged to submit
-  patches for added functionality and bug fixes, please direct everything to dblock
-  at dblock dot org.
- </p>
+  This project lives on CodePlex at <a href="http://www.codeplex.com/vmwaretasks">http://www.codeplex.com/vmwaretasks</a>.
+  You can find the latest information about this library at <a href="http://code.dblock.org">
+   code.dblock.org</a>. You&#39;re encouraged to submit patches for added functionality
+  and bug fixes.</p>
  <h2>
   History
  </h2>
  <ul>
   <li>12/22/2008: Initial article, version 1.0.</li>
-  <li>02/11/2009: revised &quot;Using VMWareTasks&quot; and described implementation of a blocking job wait</li></li>
+  <li>02/11/2009: revised &quot;Using VMWareTasks&quot; and described implementation
+   of a blocking job wait</li></li>
+  <li>02/12/2009: moved to CodePlex, version 1.1</li>
  </ul>
- <p>
-  For library changelog, see  <a href="http://svn.vestris.com/log.php?repname=Vestris+SVN&amp;path=%2Fcodeproject%2FVMWareTasks%2F&amp;rev=0&amp;sc=0&amp;isdir=1">
- svn log</a>.</p>
-  <li>&nbsp;<h2>
+ <h2>
   License</h2>
  <p>
   This library, along with any associated source code and files, is published under
-  the <a href="http://www.codeproject.com/info/licenses.aspx">CPOL</a> license, please
-  reuse.
- </p>
- <!-------------------------------    That's it!   --------------------------->
+  the MIT license./p>
+  <!-------------------------------    That's it!   --------------------------->
  </li>
 </body>
 </html>

@@ -7,6 +7,13 @@
     job-based programming model. Unfortunately that turns out to be too complicated for 99.9% of scenarios and most developers want to use a simple
     object-oriented interface for common VMWare tasks. The VMWareTasks library implements that interface and makes programming against virtual machines a no brainer.
    </para>
+   <para>
+    This library is maintained on CodePlex at
+    <externalLink>
+     <linkHref>http://www.codeplex.com/vmwaretasks/</linkHref>
+     <linkText>http://www.codeplex.com/vmwaretasks/</linkText>
+    </externalLink>.
+   </para>
   </introduction>
  </developerConceptualDocument>
 </topic>
