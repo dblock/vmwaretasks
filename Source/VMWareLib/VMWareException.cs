@@ -23,7 +23,7 @@ namespace Vestris.VMWareLib
         }
 
         public VMWareException(ulong code)
-            : this(code, VMWareInterop._vix.GetErrorText(code, "en-US"))
+            : this(code, VMWareInterop.Vix.GetErrorText(code, "en-US"))
         {
         }
 

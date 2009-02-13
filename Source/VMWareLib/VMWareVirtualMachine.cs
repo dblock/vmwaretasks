@@ -3,16 +3,63 @@ using System.Collections.Generic;
 using System.IO;
 using VixCOM;
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 
 namespace Vestris.VMWareLib
 {
     public class VMWareVirtualMachine
     {
+        /// <summary>
+        /// An indexer for variables
+        /// </summary>
+        public class VariableIndexer
+        {
+            private IVM _vm;
+            private int _variableType;
+
+            /// <summary>
+            /// A variables indexer
+            /// </summary>
+            /// <param name="vm">virtual machine's variables to index</param>
+            /// <param name="variableType">variable type, VixCOM.Constants.VIX_VM_GUEST_VARIABLE, VIX_VM_CONFIG_RUNTIME_ONLY or VIX_GUEST_ENVIRONMENT_VARIABLE</param>
+            public VariableIndexer(IVM vm, int variableType)
+            {
+                _vm = vm;
+                _variableType = variableType;
+            }
+
+            /// <summary>
+            /// Environment, guest and runtime variables
+            /// </summary>
+            /// <param name="name">name of the variable</param>
+            [IndexerName("Variables")]
+            public string this[string name]
+            {
+                get
+                {
+                    VMWareJob job = new VMWareJob(_vm.ReadVariable(_variableType, name, 0, null));
+                    object[] properties = { Constants.VIX_PROPERTY_JOB_RESULT_VM_VARIABLE_STRING };
+                    return job.Wait<string>(properties, 0, VMWareInterop.Timeouts.ReadVariableTimeout);
+                }
+                set
+                {
+                    VMWareJob job = new VMWareJob(_vm.WriteVariable(_variableType, name, value, 0, null));
+                    job.Wait(VMWareInterop.Timeouts.WriteVariableTimeout);
+                }
+            }
+        }
+
         private IVM _vm = null;
+        private VariableIndexer _guestEnvironmentVariables = null;
+        private VariableIndexer _runtimeConfigVariables = null;
+        private VariableIndexer _guestVariables = null;
 
         public VMWareVirtualMachine(IVM vm)
         {
             _vm = vm;
+            _guestEnvironmentVariables = new VariableIndexer(_vm, Constants.VIX_GUEST_ENVIRONMENT_VARIABLE);
+            _runtimeConfigVariables = new VariableIndexer(_vm, Constants.VIX_VM_CONFIG_RUNTIME_ONLY);
+            _guestVariables = new VariableIndexer(_vm, Constants.VIX_VM_GUEST_VARIABLE);
         }
 
         /// <summary>
@@ -20,7 +67,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public void PowerOn()
         {
-            PowerOn(VMWareTimeouts.defaultPowerOnTimeout);
+            PowerOn(VMWareInterop.Timeouts.PowerOnTimeout);
         }
 
         /// <summary>
@@ -96,7 +143,7 @@ namespace Vestris.VMWareLib
         /// <param name="password">password</param>
         public void Login(string username, string password)
         {
-            Login(username, password, VMWareTimeouts.defaultLoginTimeout);
+            Login(username, password, VMWareInterop.Timeouts.LoginTimeout);
         }
 
         /// <summary>
@@ -116,7 +163,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public void CopyFileFromHostToGuest(string hostPathName, string guestPathName)
         {
-            CopyFileFromHostToGuest(hostPathName, guestPathName, VMWareTimeouts.defaultCopyFileTimeout);
+            CopyFileFromHostToGuest(hostPathName, guestPathName, VMWareInterop.Timeouts.CopyFileTimeout);
         }
 
         /// <summary>
@@ -135,7 +182,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public void DeleteFileFromGuest(string guestPathName)
         {
-            DeleteFileFromGuest(guestPathName, VMWareTimeouts.defaultDeleteTimeout);
+            DeleteFileFromGuest(guestPathName, VMWareInterop.Timeouts.DeleteTimeout);
         }
 
         /// <summary>
@@ -153,7 +200,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public void CopyFileFromGuestToHost(string guestPathName, string hostPathName)
         {
-            CopyFileFromGuestToHost(guestPathName, hostPathName, VMWareTimeouts.defaultCopyFileTimeout);
+            CopyFileFromGuestToHost(guestPathName, hostPathName, VMWareInterop.Timeouts.CopyFileTimeout);
         }
 
         /// <summary>
@@ -172,7 +219,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public int Execute(string path, string parameters)
         {
-            return Execute(path, parameters, VMWareTimeouts.defaultExecuteTimeout);
+            return Execute(path, parameters, VMWareInterop.Timeouts.ExecuteTimeout);
         }
 
         /// <summary>
@@ -190,7 +237,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public bool FileExistsInGuest(string guestPathName)
         {
-            return FileExistsInGuest(guestPathName, VMWareTimeouts.defaultFileExistsTimeout);
+            return FileExistsInGuest(guestPathName, VMWareInterop.Timeouts.FileExistsTimeout);
         }
 
         /// <summary>
@@ -208,7 +255,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public void Logout()
         {
-            Logout(VMWareTimeouts.defaultLogoutTimeout);
+            Logout(VMWareInterop.Timeouts.LogoutTimeout);
         }
 
         /// <summary>
@@ -225,7 +272,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public void PowerOff()
         {
-            PowerOff(VMWareTimeouts.defaultPowerOffTimeout);
+            PowerOff(VMWareInterop.Timeouts.PowerOffTimeout);
         }
 
         /// <summary>
@@ -242,7 +289,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public List<string> ListDirectoryInGuest(string pathName, bool recurse)
         {
-            return ListDirectoryInGuest(pathName, recurse, VMWareTimeouts.defaultListDirectoryInGuestTimeout);
+            return ListDirectoryInGuest(pathName, recurse, VMWareInterop.Timeouts.ListDirectoryInGuestTimeout);
         }
 
         /// <summary>
@@ -295,6 +342,45 @@ namespace Vestris.VMWareLib
             }
 
             return results;
+        }
+
+        /// <summary>
+        /// An environment variable in the guest of the VM. On a Windows NT series guest, writing these 
+        /// values is saved persistently so they are immediately visible to every process. On a Linux or Windows 9X guest, 
+        /// writing these values is not persistent so they are only visible to the VMware tools process. 
+        /// </summary>
+        public VariableIndexer GuestEnvironmentVariables
+        {
+            get 
+            { 
+                return _guestEnvironmentVariables; 
+            }
+        }
+
+        /// <summary>
+        /// A "Guest Variable". This is a runtime-only value; it is never stored persistently. 
+        /// This is the same guest variable that is exposed through the VMControl APIs, and is a simple 
+        /// way to pass runtime values in and out of the guest. 
+        /// </summary>
+        public VariableIndexer GuestVariables
+        {
+            get
+            {
+                return _guestVariables;
+            }
+        }
+
+        /// <summary>
+        /// The configuration state of the virtual machine. This is the .vmx file that is stored on the host. 
+        /// You can read this and it will return the persistent data. If you write to this, it will only be a 
+        /// runtime change, so changes will be lost when the VM powers off. 
+        /// </summary>
+        public VariableIndexer RuntimeConfigVariables
+        {
+            get
+            {
+                return _runtimeConfigVariables;
+            }
         }
     }
 }

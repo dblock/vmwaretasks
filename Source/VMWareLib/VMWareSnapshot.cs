@@ -38,7 +38,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public void RevertToSnapshot()
         {
-            RevertToSnapshot(VMWareTimeouts.defaultRevertToSnapshotTimeout);
+            RevertToSnapshot(VMWareInterop.Timeouts.RevertToSnapshotTimeout);
         }
 
         /// <summary>

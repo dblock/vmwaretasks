@@ -21,7 +21,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public void ConnectToVMWareWorkstation()
         {
-            ConnectToVMWareWorkstation(VMWareTimeouts.defaultConnectTimeout);
+            ConnectToVMWareWorkstation(VMWareInterop.Timeouts.ConnectTimeout);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public void ConnectToVMWareVIServer(string hostName, int hostPort, string username, string password)
         {
-            ConnectToVMWareVIServer(hostName, hostPort, username, password, VMWareTimeouts.defaultConnectTimeout);
+            ConnectToVMWareVIServer(hostName, hostPort, username, password, VMWareInterop.Timeouts.ConnectTimeout);
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         private void Connect(int hostType, string hostName, int hostPort, string username, string password, int timeout)
         {
-            VMWareJob job = new VMWareJob(VMWareInterop._vix.Connect(
+            VMWareJob job = new VMWareJob(VMWareInterop.Vix.Connect(
                 Constants.VIX_API_VERSION,
                 hostType, hostName, hostPort,
                 username, password, 0, null, null)
@@ -71,7 +71,7 @@ namespace Vestris.VMWareLib
         /// <returns>an instance of a virtual machine</returns>
         public VMWareVirtualMachine Open(string fileName)
         {
-            return Open(fileName, VMWareTimeouts.defaultOpenFileTimeout);
+            return Open(fileName, VMWareInterop.Timeouts.OpenFileTimeout);
         }
 
         /// <summary>
