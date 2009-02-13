@@ -20,14 +20,41 @@ scripts and style sheets.
 <head>
  <title>The Code Project</title>
  <style>
-BODY, P, TD { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt }
-H2,H3,H4,H5 { color: #ff9900; font-weight: bold; }
-H2 { font-size: 13pt; }
-H3 { font-size: 12pt; }
-H4 { font-size: 10pt; color: black; }
-PRE { BACKGROUND-COLOR: #FBEDBB; FONT-FAMILY: "Courier New", Courier, mono; WHITE-SPACE: pre; }
-CODE { COLOR: #990000; FONT-FAMILY: "Courier New", Courier, mono; }
-</style>
+  BODY, P, TD
+  {
+   font-family: Verdana, Arial, Helvetica, sans-serif;
+   font-size: 10pt;
+  }
+  H2, H3, H4, H5
+  {
+   color: #ff9900;
+   font-weight: bold;
+  }
+  H2
+  {
+   font-size: 13pt;
+  }
+  H3
+  {
+   font-size: 12pt;
+  }
+  H4
+  {
+   font-size: 10pt;
+   color: black;
+  }
+  PRE
+  {
+   background-color: #FBEDBB;
+   font-family: "Courier New" , Courier, mono;
+   white-space: pre;
+  }
+  CODE
+  {
+   color: #990000;
+   font-family: "Courier New" , Courier, mono;
+  }
+ </style>
  <link rel="stylesheet" type="text/css" href="http://www.codeproject.com/styles/global.css">
 </head>
 <body bgcolor="#FFFFFF" color="#000000">
@@ -63,47 +90,51 @@ License:     <a href="http://www.codeproject.com/info/licenses.aspx">CPOL</a>
   the new SDKs and the level of programmable interfaces, making some excellent implementation
   decisions that enable developers to drive virtual machines programmatically with
   an asynchronous, job-based programming model. Unfortunately that turns out to be
-  too complicated for 99.9% of scenarios and most people want to have a simple object-oriented
-  interface for common VMWare tasks. This article implements that interface and makes
-  programming against virtual machine a no brainer.
- </p>
+  too complicated for 99.9% of scenarios and most developers want to use a simple object-oriented
+  interface for common VMWare tasks. The VMWareTasks library implements that interface and makes
+  programming against virtual machine a no brainer. This article explains how to 
+  use the library and discusses some of its implementation details.</p>
  <h2>
   Background
  </h2>
  <p>
   There're two types of VMWare APIs.</p>
-  <ul>
-   <li>VMWare Virtual Infrastructure SDK: a set of tools and APIs to manage a VMWare
-    Infrastructure environment. A toolkit has also been released that contains managed
-    wrappers on top of the SOAP interface provided by a VMWare deployment. It's focused
-    on VMWare ESX or VirtualCenter management and is beyond the scope of this article.
-   </li>
-   <li>VMWare VIX API. The VIX API allows developers to write programs and scripts that automate
-    virtual machine operations, as well as the guests within virtual machines. It runs
-    on both Windows and Linux and supports management of VMware Server, Workstation,
-    and Virtual Infrastructure (both ESX and vCenter). Bindings are provided for C,
-    Perl, and COM (Visual Basic, VBscript, C#). In this post I'll focus on the C# implementation.
-   </li>
-  </ul>
+ <ul>
+  <li>VMWare Virtual Infrastructure SDK: a set of tools and APIs to manage a VMWare
+   Infrastructure environment. A toolkit has also been released that contains managed
+   wrappers on top of the SOAP interface provided by a VMWare deployment. It's focused
+   on VMWare ESX or VirtualCenter management and is beyond the scope of this article.
+  </li>
+  <li>VMWare VIX API. The VIX API allows developers to write programs and scripts that
+   automate virtual machine operations, as well as the guests within virtual machines.
+   It runs on both Windows and Linux and supports management of VMware Server, Workstation,
+   and Virtual Infrastructure (both ESX and vCenter). Bindings are provided for C,
+   Perl, and COM (Visual Basic, VBscript, C#). In this post I'll focus on the C# implementation.
+  </li>
+ </ul>
  <h2>
   Using the Library</h2>
  <p>
   In order to use the library or build or run the source code you must install the
   following VMWare software.
  </p>
-  <ul>
-   <li>VMWare VIX. This is the SDK, obtained from <a href="http://www.vmware.com/download/sdk/vmauto.html">
-    http://www.vmware.com/download/sdk/vmauto.html</a>. The new 1.6.2 version is required
-    for VI support.</li>
-   <li>Either VMWare Workstation 6.5, a VI environment (I use ESX), or both.</li>
-  </ul>
+ <ul>
+  <li>VMWare VIX. This is the SDK, obtained from <a href="http://www.vmware.com/download/sdk/vmauto.html">
+   http://www.vmware.com/download/sdk/vmauto.html</a>. The new 1.6.2 version is required
+   for VI support.</li>
+  <li>Either VMWare Workstation 6.5, a VI environment (I use ESX), or both.</li>
+ </ul>
  <p>
-  In your project add a reference to <code>Vestris.VMWareLib.dll</code> and a namespace reference.
+  In your project add a reference to <code>Vestris.VMWareLib.dll</code> and a namespace
+  reference.
  </p>
-  <pre lang="cs">using Vestris.VMWareLib;</pre>
-  You can now connect to a local VMWare Workstation or a remote ESX server and perform VMWare tasks. Here's an example
-  that creates, restores, powers on and removes a snapshot on a VMWare Workstation.
-  <pre lang="cs">
+ <pre lang="cs">using Vestris.VMWareLib;</pre>
+ <p>
+  You can now connect to a local VMWare Workstation or a remote ESX server and perform
+  VMWare tasks. Here's an example that creates, restores, powers on and removes a
+  snapshot on a VMWare Workstation.
+ </p>
+ <pre lang="cs">
 // declare a virtual host
 VMWareVirtualHost virtualHost = new VMWareVirtualHost();
 // connect to a local (VMWare Workstation) virtual machine
@@ -171,7 +202,7 @@ public IHost Connect(int hostType, string hostName, int hostPort, string usernam
   this is! The API was originally designed for C, then extended to COM with a very
   limited object model: a number of interfaces were declared, but no corresponding
   COM classes have been implemented. Also, because the job interface is generic, there're
-  no strongly typed results. 
+  no strongly typed results.
  </p>
  <p>
   We can easily fill this gap in our C# implementation.
@@ -198,8 +229,10 @@ public IHost Connect(int hostType, string hostName, int hostPort, string usernam
         }
     }
 }  </pre>
- Aside from the abstract <code>VMWareInterop</code> our goal is to produce concrete
- classes that wrap various aspects of VMWare functionality.
+ <p>
+  Aside from the abstract <code>VMWareInterop</code> our goal is to produce concrete
+  classes that wrap various aspects of VMWare functionality.
+ </p>
  <h3>
   Base VMWareVixHandle
  </h3>
@@ -272,8 +305,9 @@ public IHost Connect(int hostType, string hostName, int hostPort, string usernam
   One very common problem in VMWare API implementations that transform a asynchronous
   job into a synchronous one is to use the blocking wait above. This is a bad design
   decision since this call may never return. VMWare server may timeout or someone
-  can pull the network cable, leaving your program hanging. I originally wrote a busy wait where all externally visible wait functions were based on the following
-  <code>InternalWait</code>.
+  can pull the network cable, leaving your program hanging. I originally wrote a busy
+  wait where all externally visible wait functions were based on the following <code>
+   InternalWait</code>.
  </p>
  <pre lang="cs">private void InternalWait(int timeoutInSeconds)
 {
@@ -301,7 +335,8 @@ public IHost Connect(int hostType, string hostName, int hostPort, string usernam
  <p>
   A more elegant implementation combines a callback mechanism provided by VixCOM with
   every asynchronous API and a blocking wait with a timeout. Wait is now signaled
-  and there's no CPU spin waiting for completion of an asynchronous API call.</p>
+  and there's no CPU spin waiting for completion of an asynchronous API call.
+ </p>
  <pre lang="cs">public class VMWareJobCallback : ICallback
 {
     #region ICallback Members
@@ -336,9 +371,10 @@ public IHost Connect(int hostType, string hostName, int hostPort, string usernam
 }  
  </pre>
  <p>
-  This and some generic code in <code>VMWareJob</code> can now be used inside <code>Connect</code>.
-  I have modified <code>VMWareJob</code> to require a <code>VMWareCallback</code> in order to prevent callers from
-  ever having a blocking wait.</p>
+  This and some generic code in <code>VMWareJob</code> can now be used inside <code>
+   Connect</code>. I have modified <code>VMWareJob</code> to require a <code>VMWareCallback</code>
+  in order to prevent callers from ever having a blocking wait.
+ </p>
  <pre lang="cs">VMWareJobCallback callback = new VMWareJobCallback();
 VMWareJob job = new VMWareJob(VMWareInterop.Instance.Connect(
     Constants.VIX_API_VERSION, Constants.VIX_SERVICEPROVIDER_VMWARE_SERVER, hostName, hostPort,
@@ -380,7 +416,8 @@ VMWareJob job = new VMWareJob(VMWareInterop.Instance.Connect(
             Constants.VIX_API_VERSION, serviceProvider, hostName, hostPort,
             username, password, 0, null, callback), callback);
 
-        _handle = job.Wait<ihost>(Constants.VIX_PROPERTY_JOB_RESULT_HANDLE, timeout);
+        _handle = job.Wait
+<ihost>(Constants.VIX_PROPERTY_JOB_RESULT_HANDLE, timeout);
         _serviceProviderType = serviceProviderType;
     }
 }        
@@ -393,7 +430,8 @@ VMWareJob job = new VMWareJob(VMWareInterop.Instance.Connect(
 {
     VMWareJobCallback callback = new VMWareJobCallback();
     VMWareJob job = new VMWareJob(_handle.OpenVM(fileName, callback), callback);
-    return new VMWareVirtualMachine(job.Wait<ivm2>(
+    return new VMWareVirtualMachine(job.Wait
+<ivm2>(
         Constants.VIX_PROPERTY_JOB_RESULT_HANDLE,
         timeoutInSeconds));
 }
@@ -430,7 +468,9 @@ public int GetNumProperties(int property)
     return _handle.GetNumProperties(property);
 }
   </pre>
- We can now write such properties as <code>RunningVirtualMachines</code>.
+ <p>
+  We can now write such properties as <code>RunningVirtualMachines</code>.
+ </p>
  <pre lang="cs">public IEnumerable&lt;VMWareVirtualMachine&gt; RunningVirtualMachines
 {
     get
@@ -448,9 +488,12 @@ public int GetNumProperties(int property)
     }
 }
   </pre>
- This is nice, but still not good enough. Let's combine the number of results and the results
- themselves in a <code>YieldWait</code> method.
- <pre lang="cs">public IEnumerable<object[]> YieldWait(object[] properties, int timeoutInSeconds)
+ <p>
+  This is nice, but still not good enough. Let's combine the number of results and
+  the results themselves in a <code>YieldWait</code> method.
+ </p>
+ <pre lang="cs">
+public IEnumerable &lt;object[]&gt; YieldWait(object[] properties, int timeoutInSeconds)
 {
     Wait(timeoutInSeconds);
     for (int i = 0; i < GetNumProperties((int)properties[0]); i++)
@@ -459,7 +502,9 @@ public int GetNumProperties(int property)
     }
 }
   </pre>
- This results in a nice improvement over the previous implementation.
+ <p>
+  This results in a nice improvement over the previous implementation.
+ </p>
  <pre lang="cs">public IEnumerable&lt;VMWareVirtualMachine&gt; RunningVirtualMachines
 {
     get
@@ -497,18 +542,21 @@ public int GetNumProperties(int property)
  <h2>
   History
  </h2>
+ <ul>
+  <li>12/22/2008: Initial article, version 1.0.</li>
+  <li>02/11/2009: revised &quot;Using VMWareTasks&quot; and described implementation of a blocking job wait</li></li>
+ </ul>
  <p>
+  For library changelog, see  <a href="http://svn.vestris.com/log.php?repname=Vestris+SVN&amp;path=%2Fcodeproject%2FVMWareTasks%2F&amp;rev=0&amp;sc=0&amp;isdir=1">
+ svn log</a>.</p>
+  <li>&nbsp;<h2>
+  License</h2>
+ <p>
+  This library, along with any associated source code and files, is published under
+  the <a href="http://www.codeproject.com/info/licenses.aspx">CPOL</a> license, please
+  reuse.
  </p>
- <li>12/22/2008: initial version</li>
- <li>02/11/2009: revised using VMWareTasks and implementing a blocking job wait<h2>
-   License
-  </h2>
-  <p>
-   This library, along with any associated source code and files, is published under
-   the <a href="http://www.codeproject.com/info/licenses.aspx">CPOL</a> license, please
-   reuse.
-  </p>
-  <!-------------------------------    That's it!   --------------------------->
+ <!-------------------------------    That's it!   --------------------------->
  </li>
 </body>
 </html>

@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="a6f46303-b703-4ff3-9572-55d8131eb883" revisionNumber="1">
+ <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <introduction>
+   <para>This section explains how to get started with VMWare Tasks library.</para>
+  </introduction>
+  <section address="requiredsoftware">
+   <title>Required Software</title>
+   <content>
+    <para>
+     In order to use the library you must install the following VMWare software.
+     <list class="bullet">
+      <listItem>
+       VMWare VIX. This is the SDK, obtained from
+       <externalLink>
+        <linkHref>http://www.vmware.com/download/sdk/vmauto.html</linkHref>
+        <linkText>http://www.vmware.com/download/sdk/vmauto.html</linkText>
+       </externalLink>.
+       Version 1.6.2 is required for VI support.
+      </listItem>
+      <listItem>
+       Either VMWare Workstation 6.5, a VI environment (eg. ESX), or both.
+      </listItem>
+     </list>
+    </para>
+   </content>
+  </section>
+  <section address="sourcecodereference">
+   <title>Using the Library</title>
+   <content>
+    <para>
+     In your project add a reference to <literal>Vestris.VMWareLib.dll</literal> and a namespace reference.
+     <code language="cs">
+      using Vestris.VMWareLib;
+     </code>
+    </para>
+    <para>
+     You can now connect to a local VMWare Workstation or a remote ESX server and perform VMWare tasks.
+     Here's an example that creates, restores, powers on and removes a snapshot on a VMWare Workstation.
+     <code language="cs">
+      // declare a virtual host
+      VMWareVirtualHost virtualHost = new VMWareVirtualHost();
+      // connect to a local (VMWare Workstation) virtual machine
+      virtualHost.ConnectToVMWareWorkstation();
+      // open an existing virtual machine
+      VMWareVirtualMachine virtualMachine = virtualHost.Open("C:\Virtual Machines\xp\xp.vmx");
+      // power on this virtual machine
+      virtualMachine.PowerOn();
+      // login to the virtual machine
+      virtualMachine.Login("Administrator", "password");
+      // run notepad
+      virtualMachine.RunProgramInGuest("notepad.exe", string.Empty);
+      // create a new snapshot
+      string name = "New Snapshot";
+      // take a snapshot at the current state
+      virtualMachine.Snapshots.CreateSnapshot(name, "test snapshot");
+      // power off
+      virtualMachine.PowerOff();
+      // find the newly created snapshot
+      VMWareSnapshot snapshot = virtualMachine.Snapshots.GetNamedSnapshot(name);
+      // revert to the new snapshot
+      snapshot.RevertToSnapshot();
+      // delete snapshot
+      snapshot.RemoveSnapshot();
+     </code>
+    </para>
+   </content>
+  </section>
+ </developerConceptualDocument>
+</topic>
