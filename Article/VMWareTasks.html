@@ -34,8 +34,7 @@ CODE { COLOR: #990000; FONT-FAMILY: "Courier New", Courier, mono; }
  <!--------------------------------------------------------------------------->
  <!-------------------------------     STEP 1      --------------------------->
  <!--  Fill in the details (CodeProject will reformat this section for you) -->
- <pre lang="cs">
-Title:       Automating VMWare Tasks in C# with VIX API
+ <pre lang="cs">Title:       Automating VMWare Tasks in C# with VIX API
 Author:      Daniel Doubrovkine
 Email:       dblock@dblock.org
 Member ID:   913212
@@ -104,8 +103,7 @@ License:     <a href="http://www.codeproject.com/info/licenses.aspx">CPOL</a>
   Connecting synchronously to either a local VMWare Workstation or an ESX server is
   virtually identical. The ESX server requires an URL to the SOAP SDK (eg. https://esxserver/sdk)
   and a username and password.
-  <pre lang="cs">
-public IHost ConnectToVMWareWorkstation()
+  <pre lang="cs">public IHost ConnectToVMWareWorkstation()
 {
     return Connect(Constants.VIX_SERVICEPROVIDER_VMWARE_WORKSTATION, string.Empty, 0, string.Empty, string.Empty);
 }
@@ -149,11 +147,11 @@ public IHost Connect(int hostType, string hostName, int hostPort, string usernam
   <pre lang="cs">
 public abstract class VMWareInterop
 {
-    public static VixLib _vix = new VixLib();
+    public static VixLib Instance = new VixLib();
 
     public static void Check(ulong errCode)
     {
-        if (_vix.ErrorIndicatesFailure(errCode))
+        if (Instance.ErrorIndicatesFailure(errCode))
         {
             throw new VMWareException(errCode);
         }
@@ -164,29 +162,74 @@ public abstract class VMWareInterop
   classes that wrap various aspects of VMWare functionality.
  </p>
  <h3>
+  Base VMWareVixHandle
+ </h3>
+ <p>
+  VMWare COM API returns interface pointers such as <span style="color: #990000; font-family: Courier New">
+   ISnapshot</span>. The objects also implement <span style="color: #990000; font-family: Courier New">
+    IVixHandle</span> which gives access to a set of object properties. We will baseclass
+  everything on <span style="color: #990000; font-family: Courier New">VMWareVixHandle</span>.
+  <pre lang="cs">
+public class VMWareVixHandle&lt;T&gt;
+{
+    protected T _handle = default(T);
+    
+    protected IVixHandle _vixhandle
+    {
+        get
+        {
+            return (IVixHandle) _handle;
+        }
+    }
+
+    public VMWareVixHandle()
+    {
+
+    }
+
+    public VMWareVixHandle(T handle)
+    {
+        _handle = handle;
+    }
+    
+    public object[] GetProperties(object[] properties)
+    {
+        object result = null;
+        VMWareInterop.Check(_vixhandle.GetProperties(properties, ref result));
+        return (object[]) result;
+    }
+
+    public R GetProperty&lt;R&gt;(int propertyId)
+    {
+        object[] properties = { propertyId };
+        return (R) GetProperties(properties)[0];
+    }
+}
+  </pre>
+ </p>
+ <h3>
   Implementing VMWareJob
  </h3>
  <p>
-  Since everything in VMWare is job-based, let's wrap up a job. If we use the COM API
-  directly we would have to call <code>IVixLib.Wait</code> passing a job handle. In
-  an object-oriented library this operation belongs inside the job.
-  <pre lang="cs">
- public class VMWareJob
+  Since all operations in VMWare are job-based, let's wrap up a job. If we use the COM
+  API directly we would have to call <code>IVixLib.Wait</code> passing a job handle.
+  In an object-oriented library this operation belongs inside the job, plus a job is also a a 
+  <code>VMWareVixHandle</code>.
+ </p>
+ <pre lang="cs"> public class VMWareJob : VMWareVixHandle&lt;IJob&gt;
  {
-     private IJob _job = null;
-
      public VMWareJob(IJob job)
+         : base(job)
      {
-         _job = job;
+     
      }
 
      public void Wait()
      {
-         VMWareInterop.Check(_job.WaitWithoutResults());
+         VMWareInterop.Check(_handle.WaitWithoutResults());
      }
  }
   </pre>
- </p>
  <p>
   One very common mistake in VMWare API implementations that transform a asynchronous
   job into a synchronous one is to use the blocking wait above. This is a poor design
@@ -194,8 +237,8 @@ public abstract class VMWareInterop
   can pull the network cable, leaving your program hanging. An active timeout can
   easily solve the problem and all externally visible waits are going to be based
   on this <code>InternalWait</code>.
-  <pre lang="cs">
-private void InternalWait(int timeoutInSeconds)
+ </p>
+ <pre lang="cs">private void InternalWait(int timeoutInSeconds)
 {
     if (timeoutInSeconds == 0)
     {
@@ -206,7 +249,7 @@ private void InternalWait(int timeoutInSeconds)
     bool isComplete = false;
     while (!isComplete && timeoutInSeconds > 0)
     {
-        VMWareInterop.Check(_job.CheckCompletion(out isComplete));
+        VMWareInterop.Check(_handle.CheckCompletion(out isComplete));
         if (isComplete) break;
         Thread.Sleep(1000);
         timeoutInSeconds--;
@@ -218,17 +261,16 @@ private void InternalWait(int timeoutInSeconds)
     }
 }
   </pre>
- </p>
  <h3>
   VMWareVirtualHost
  </h3>
  <p>
-  With <code>VMWareJob</code> and <code>VMWareException</code> it's now possible
-  to implement <code>VMWareVirtualHost</code> and connect to it. Note references
-  to default timeouts (a collection of constants) and some facilities in <code>VMWareJob</code>
+  With <code>VMWareJob</code> and <code>VMWareException</code> it's now possible to
+  implement <code>VMWareVirtualHost</code> and connect to it. Note references to default
+  timeouts (a collection of constants) and some facilities in <code>VMWareJob</code>
   that add strong typing into VMWare job results.
-  <pre lang="cs">
-public class VMWareVirtualHost
+ </p>
+ <pre lang="cs">public class VMWareVirtualHost
 {
     private IHost _host = null;
 
@@ -260,22 +302,20 @@ public class VMWareVirtualHost
     }
 }        
   </pre>
- </p>
  <p>
   <code>VMWareVirtualHost</code> can now implement opening of an actual virtual machine
   and return an instance of <code>VMWareVirtualMachine</code>.
-  <pre lang="cs">
-public VMWareVirtualMachine Open(string fileName, int timeoutInSeconds)
+ </p>
+ <pre lang="cs">public VMWareVirtualMachine Open(string fileName, int timeoutInSeconds)
 {
     VMWareJob job = new VMWareJob(_host.OpenVM(fileName, null));
     object[] resultProperties = { Constants.VIX_PROPERTY_JOB_RESULT_HANDLE };
     return new VMWareVirtualMachine(job.Wait&lt;IVM&gt;(resultProperties, 0, timeoutInSeconds));
 }
   </pre>
- </p>
  <p>
-  Based on this model we can code many functions of <code>VMWareVirtualMachine</code>, <code>
-   VMWareSnapshot</code>, etc. The rest is implementation details.
+  Based on this model we can code many functions of <code>VMWareVirtualMachine</code>,
+  <code>VMWareSnapshot</code>, etc. The rest is implementation details.
  </p>
  <p>
   <img src="VMWareClasses.jpg">
@@ -286,17 +326,16 @@ public VMWareVirtualMachine Open(string fileName, int timeoutInSeconds)
  <p>
   The library exposes a very simple object model, easy to use. The following example
   powers on the current snapshot of a virtual machine and executes a remote command.
-  <pre lang="cs">
-VMWareVirtualHost virtualHost = new VMWareVirtualHost();
+ </p>
+ <pre lang="cs">VMWareVirtualHost virtualHost = new VMWareVirtualHost();
 // connect to a local VM
 virtualHost.ConnectToVMWareWorkstation();
 VMWareVirtualMachine virtualMachine = virtualHost.Open(@"c:\vm\vm.vmx");
 // power-on current snapshot
 virtualMachine.PowerOn();
 virtualMachine.Login("Administrator", "password");
-virtualMachine.Execute("notepad.exe", string.Empty);
+virtualMachine.RunProgramInGuest("notepad.exe", string.Empty);
   </pre>
- </p>
  <h2>
   Source Code and Patches
  </h2>
@@ -306,23 +345,25 @@ virtualMachine.Execute("notepad.exe", string.Empty);
   You can also <a href="http://svn.vestris.com/listing.php?repname=Vestris+SVN&path=%2Fcodeproject%2FVMWareTasks%2FSource%2F#_codeproject_VMWareTasks_Source_">
    browse the source code</a>. You can find the latest information about this library
   at <a href="http://code.dblock.org">code.dblock.org</a>. You're encouraged to sumit
-  patches for added functionality and bug fixes, please direct everything to dblock at
-  dblock dot org.
+  patches for added functionality and bug fixes, please direct everything to dblock
+  at dblock dot org.
  </p>
  <h2>
   History
  </h2>
  <p>
-  <li>12/22/2008: initial version</li>
  </p>
- <h2>
-  License
- </h2>
- <p>
-  This library, along with any associated source code and files, is published under
-  the <a href="http://www.codeproject.com/info/licenses.aspx">CPOL</a> license, please
-  reuse.
+ <li>12/22/2008: initial version
+  <h2>
+   License
+  </h2>
+  <p>
+   This library, along with any associated source code and files, is published under
+   the <a href="http://www.codeproject.com/info/licenses.aspx">CPOL</a> license, please
+   reuse.
+  </p>
+  <!-------------------------------    That's it!   --------------------------->
+ </li>
  </p>
- <!-------------------------------    That's it!   --------------------------->
 </body>
 </html>

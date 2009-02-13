@@ -2,52 +2,67 @@
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Font Name="Segoe UI" Size="9" />
   <Class Name="Vestris.VMWareLib.VMWareException" Collapsed="true">
-    <Position X="0.5" Y="0.5" Width="1.5" />
+    <Position X="3.25" Y="4.25" Width="3" />
     <TypeIdentifier>
       <FileName>VMWareException.cs</FileName>
       <HashCode>AAAAAAAAAAAAAAAAAEAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="Vestris.VMWareLib.VMWareInterop" Collapsed="true">
-    <Position X="2.25" Y="0.5" Width="1.5" />
+    <Position X="3.25" Y="5.75" Width="3" />
     <TypeIdentifier>
       <FileName>VMWareInterop.cs</FileName>
-      <HashCode>AAAAAAgAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAgAAQAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="Vestris.VMWareLib.VMWareJob" Collapsed="true">
-    <Position X="4" Y="0.5" Width="1.5" />
+    <Position X="3.25" Y="2.5" Width="3" />
     <TypeIdentifier>
       <FileName>VMWareJob.cs</FileName>
-      <HashCode>CAgAQAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAIAAAAAA=</HashCode>
+      <HashCode>AAgAQAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAIAAAAAA=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="Vestris.VMWareLib.VMWareSnapshot">
-    <Position X="4.25" Y="5" Width="4" />
+    <Position X="0.5" Y="1.75" Width="2.5" />
     <TypeIdentifier>
       <FileName>VMWareSnapshot.cs</FileName>
-      <HashCode>AAAAAAAAAAAAIAAAAAAAAAAAAAAAQAAAgAAAAAEAAAA=</HashCode>
+      <HashCode>AAAAEAAAAAAgoAIAAAIAAABAAAAAAAAAhAAAAAAAAAA=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="Vestris.VMWareLib.VMWareTimeouts" Collapsed="true">
-    <Position X="2.25" Y="1.5" Width="1.5" />
+    <Position X="3.25" Y="5" Width="3" />
     <TypeIdentifier>
       <FileName>VMWareTimeouts.cs</FileName>
-      <HashCode>CABAJAAAggAAAQAAAAAAAAAgAIAEAAAAAgAAEAACAAA=</HashCode>
+      <HashCode>AABUAAMIQIBAABQAIAAAQAAAAgCAAAAAABCAQAAEAAA=</HashCode>
     </TypeIdentifier>
   </Class>
-  <Class Name="Vestris.VMWareLib.VMWareVirtualHost">
-    <Position X="4.25" Y="2.5" Width="4" />
+  <Class Name="Vestris.VMWareLib.VMWareVirtualHost" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="3.25" Y="3.25" Width="3" />
     <TypeIdentifier>
       <FileName>VMWareVirtualHost.cs</FileName>
-      <HashCode>AAAAAAgAAAAAIAAAAAAAAIAAAAAAAAAABAAABAAAAAA=</HashCode>
+      <HashCode>AAQAAAgAACAAIAAAAAAAAIAAAAAAAAAABAAAAAAAAAA=</HashCode>
     </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="Vestris.VMWareLib.VMWareVirtualMachine">
-    <Position X="0.5" Y="2.5" Width="3.5" />
+  <Class Name="Vestris.VMWareLib.VMWareVirtualMachine" Collapsed="true">
+    <Position X="3.25" Y="1.75" Width="3" />
     <TypeIdentifier>
       <FileName>VMWareVirtualMachine.cs</FileName>
-      <HashCode>AAQAAAAAAAAEAAQAABAAAAIAAAAAACQIwAAQAQABAQA=</HashCode>
+      <HashCode>AASEAAAAAAAkAMIAABAAAAIkAAAAACAAAAKRAQABAYA=</HashCode>
+    </TypeIdentifier>
+    <NestedTypes>
+      <Class Name="Vestris.VMWareLib.VMWareVirtualMachine.VariableIndexer" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>VMWareVirtualMachine.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+  </Class>
+  <Class Name="Vestris.VMWareLib.VMWareVixHandle&lt;T&gt;" Collapsed="true">
+    <Position X="2" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <FileName>VMWareVixHandle.cs</FileName>
+      <HashCode>EAAACAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
     </TypeIdentifier>
   </Class>
 </ClassDiagram>

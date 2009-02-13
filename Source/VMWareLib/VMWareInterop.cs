@@ -12,7 +12,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// VIX handler.
         /// </summary>
-        public static VixLib Vix = new VixLib();
+        public static VixLib Instance = new VixLib();
         public static VMWareTimeouts Timeouts = new VMWareTimeouts();
 
         /// <summary>
@@ -21,7 +21,7 @@ namespace Vestris.VMWareLib
         /// <param name="errCode">error code</param>
         public static void Check(ulong errCode)
         {
-            if (Vix.ErrorIndicatesFailure(errCode))
+            if (Instance.ErrorIndicatesFailure(errCode))
             {
                 throw new VMWareException(errCode);
             }

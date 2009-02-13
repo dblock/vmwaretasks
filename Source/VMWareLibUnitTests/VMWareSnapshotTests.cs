@@ -30,7 +30,8 @@ namespace Vestris.VMWareLibUnitTests
             {
                 VMWareSnapshot snapshot = virtualMachine.Snapshots.FindSnapshot(snapshotPath);
                 Assert.IsNotNull(snapshot);
-                Console.WriteLine("{0}: {1}", snapshot.DisplayName, snapshotPath);
+                Console.WriteLine("{0}: {1}, power state={2}, replayable={3}",
+                    snapshot.DisplayName, snapshotPath, snapshot.PowerState, snapshot.IsReplayable);
             }
         }
 

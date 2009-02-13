@@ -5,16 +5,12 @@ using VixCOM;
 
 namespace Vestris.VMWareLib
 {
-    public class VMWareJob
+    public class VMWareJob : VMWareVixHandle<IJob>
     {
-        /// <summary>
-        /// Job wrapped by this instance of VMWareJob.
-        /// </summary>
-        private IJob _job = null;
-
         public VMWareJob(IJob job)
+            : base(job)
         {
-            _job = job;
+
         }
 
         /// <summary>
@@ -22,7 +18,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public void Wait()
         {
-            VMWareInterop.Check(_job.WaitWithoutResults());
+            VMWareInterop.Check(_handle.WaitWithoutResults());
         }
 
         /// <summary>
@@ -59,7 +55,7 @@ namespace Vestris.VMWareLib
         public T Wait<T>(object[] properties)
         {
             object result = null;
-            VMWareInterop.Check(_job.Wait(properties, ref result));
+            VMWareInterop.Check(_handle.Wait(properties, ref result));
             return (T) result;
         }
 
@@ -69,7 +65,7 @@ namespace Vestris.VMWareLib
         public T GetNthProperties<T>(int index, object[] properties)
         {
             object result = null;
-            VMWareInterop.Check(_job.GetNthProperties(index, properties, ref result));
+            VMWareInterop.Check(_handle.GetNthProperties(index, properties, ref result));
             return (T) result;
         }
 
@@ -78,7 +74,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public int GetNumProperties(int property)
         {
-            return _job.GetNumProperties(Constants.VIX_PROPERTY_JOB_RESULT_ITEM_NAME);
+            return _handle.GetNumProperties(Constants.VIX_PROPERTY_JOB_RESULT_ITEM_NAME);
         }
         
         /// <summary>
@@ -95,7 +91,7 @@ namespace Vestris.VMWareLib
             bool isComplete = false;
             while (!isComplete && timeoutInSeconds > 0)
             {
-                VMWareInterop.Check(_job.CheckCompletion(out isComplete));
+                VMWareInterop.Check(_handle.CheckCompletion(out isComplete));
                 if (isComplete) break;
                 Thread.Sleep(1000);
                 timeoutInSeconds--;

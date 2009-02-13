@@ -6,13 +6,26 @@ using VixCOM;
 namespace Vestris.VMWareLib
 {
     /// <summary>
-    /// A wrapper for a VIX handle. Most VIX interfaces are actually handles.
+    /// A wrapper for a VIX handle. Most VIX objects returned also implement IVixHandle.
     /// </summary>
-    public class VMWareVixHandle
+    public class VMWareVixHandle<T>
     {
-        IVixHandle _handle = null;
+        protected T _handle = default(T);
+        
+        protected IVixHandle _vixhandle
+        {
+            get
+            {
+                return (IVixHandle) _handle;
+            }
+        }
 
-        public VMWareVixHandle(IVixHandle handle)
+        public VMWareVixHandle()
+        {
+
+        }
+
+        public VMWareVixHandle(T handle)
         {
             _handle = handle;
         }
@@ -25,8 +38,20 @@ namespace Vestris.VMWareLib
         public object[] GetProperties(object[] properties)
         {
             object result = null;
-            VMWareInterop.Check(_handle.GetProperties(properties, ref result));
+            VMWareInterop.Check(_vixhandle.GetProperties(properties, ref result));
             return (object[]) result;
+        }
+
+        /// <summary>
+        /// Return the value of a single property.
+        /// </summary>
+        /// <typeparam name="T">property value type</typeparam>
+        /// <param name="propertyId">property id</param>
+        /// <returns>the value of a single property of type T</returns>
+        public R GetProperty<R>(int propertyId)
+        {
+            object[] properties = { propertyId };
+            return (R) GetProperties(properties)[0];
         }
     }
 }

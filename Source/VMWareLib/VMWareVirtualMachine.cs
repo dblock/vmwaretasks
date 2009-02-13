@@ -8,14 +8,14 @@ using System.Drawing;
 
 namespace Vestris.VMWareLib
 {
-    public class VMWareVirtualMachine
+    public class VMWareVirtualMachine : VMWareVixHandle<IVM2>
     {
         /// <summary>
         /// An indexer for variables
         /// </summary>
         public class VariableIndexer
         {
-            private IVM2 _vm;
+            private IVM2 _handle;
             private int _variableType;
 
             /// <summary>
@@ -25,7 +25,7 @@ namespace Vestris.VMWareLib
             /// <param name="variableType">variable type, VixCOM.Constants.VIX_VM_GUEST_VARIABLE, VIX_VM_CONFIG_RUNTIME_ONLY or VIX_GUEST_ENVIRONMENT_VARIABLE</param>
             public VariableIndexer(IVM2 vm, int variableType)
             {
-                _vm = vm;
+                _handle = vm;
                 _variableType = variableType;
             }
 
@@ -38,19 +38,18 @@ namespace Vestris.VMWareLib
             {
                 get
                 {
-                    VMWareJob job = new VMWareJob(_vm.ReadVariable(_variableType, name, 0, null));
+                    VMWareJob job = new VMWareJob(_handle.ReadVariable(_variableType, name, 0, null));
                     object[] properties = { Constants.VIX_PROPERTY_JOB_RESULT_VM_VARIABLE_STRING };
                     return job.Wait<string>(properties, 0, VMWareInterop.Timeouts.ReadVariableTimeout);
                 }
                 set
                 {
-                    VMWareJob job = new VMWareJob(_vm.WriteVariable(_variableType, name, value, 0, null));
+                    VMWareJob job = new VMWareJob(_handle.WriteVariable(_variableType, name, value, 0, null));
                     job.Wait(VMWareInterop.Timeouts.WriteVariableTimeout);
                 }
             }
         }
 
-        private IVM2 _vm = null;
         private VariableIndexer _guestEnvironmentVariables = null;
         private VariableIndexer _runtimeConfigVariables = null;
         private VariableIndexer _guestVariables = null;
@@ -58,13 +57,13 @@ namespace Vestris.VMWareLib
         private VMWareSharedFolderCollection _sharedFolders = null;
 
         public VMWareVirtualMachine(IVM2 vm)
+            : base(vm)
         {
-            _vm = vm;
-            _guestEnvironmentVariables = new VariableIndexer(_vm, Constants.VIX_GUEST_ENVIRONMENT_VARIABLE);
-            _runtimeConfigVariables = new VariableIndexer(_vm, Constants.VIX_VM_CONFIG_RUNTIME_ONLY);
-            _guestVariables = new VariableIndexer(_vm, Constants.VIX_VM_GUEST_VARIABLE);
-            _sharedFolders = new VMWareSharedFolderCollection(_vm);
-            _snapshots = new VMWareRootSnapshotCollection(_vm);
+            _guestEnvironmentVariables = new VariableIndexer(_handle, Constants.VIX_GUEST_ENVIRONMENT_VARIABLE);
+            _runtimeConfigVariables = new VariableIndexer(_handle, Constants.VIX_VM_CONFIG_RUNTIME_ONLY);
+            _guestVariables = new VariableIndexer(_handle, Constants.VIX_VM_GUEST_VARIABLE);
+            _sharedFolders = new VMWareSharedFolderCollection(_handle);
+            _snapshots = new VMWareRootSnapshotCollection(_handle);
         }
 
         /// <summary>
@@ -92,10 +91,10 @@ namespace Vestris.VMWareLib
         /// <param name="timeoutInSeconds">timeout in seconds</param>
         public void PowerOn(int powerOnOptions, int timeoutInSeconds)
         {
-            VMWareJob powerOnJob = new VMWareJob(_vm.PowerOn(powerOnOptions, null, null));
+            VMWareJob powerOnJob = new VMWareJob(_handle.PowerOn(powerOnOptions, null, null));
             powerOnJob.Wait(timeoutInSeconds);
             // wait till the machine boots or times out with an error
-            VMWareJob waitForToolsInGuestJob = new VMWareJob(_vm.WaitForToolsInGuest(timeoutInSeconds, null));
+            VMWareJob waitForToolsInGuestJob = new VMWareJob(_handle.WaitForToolsInGuest(timeoutInSeconds, null));
             waitForToolsInGuestJob.Wait(timeoutInSeconds);
         }
 
@@ -130,7 +129,7 @@ namespace Vestris.VMWareLib
         /// <param name="password">password</param>
         public void Login(string username, string password, int timeoutInSeconds)
         {
-            VMWareJob job = new VMWareJob(_vm.LoginInGuest(username, password, 0, null));
+            VMWareJob job = new VMWareJob(_handle.LoginInGuest(username, password, 0, null));
             job.Wait(timeoutInSeconds);
         }
 
@@ -149,7 +148,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public void CopyFileFromHostToGuest(string hostPathName, string guestPathName, int timeoutInSeconds)
         {
-            VMWareJob job = new VMWareJob(_vm.CopyFileFromHostToGuest(hostPathName, guestPathName, 0, null, null));
+            VMWareJob job = new VMWareJob(_handle.CopyFileFromHostToGuest(hostPathName, guestPathName, 0, null, null));
             job.Wait(timeoutInSeconds);
         }
 
@@ -166,7 +165,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public void DeleteFileFromGuest(string guestPathName, int timeoutInSeconds)
         {
-            VMWareJob job = new VMWareJob(_vm.DeleteFileInGuest(guestPathName, null));
+            VMWareJob job = new VMWareJob(_handle.DeleteFileInGuest(guestPathName, null));
             job.Wait(timeoutInSeconds);
         }
 
@@ -186,7 +185,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public void CopyFileFromGuestToHost(string guestPathName, string hostPathName, int timeoutInSeconds)
         {
-            VMWareJob job = new VMWareJob(_vm.CopyFileFromGuestToHost(guestPathName, hostPathName, 0, null, null));
+            VMWareJob job = new VMWareJob(_handle.CopyFileFromGuestToHost(guestPathName, hostPathName, 0, null, null));
             job.Wait(timeoutInSeconds);
         }
 
@@ -218,7 +217,7 @@ namespace Vestris.VMWareLib
         /// <param name="timeoutInSeconds">timeout in seconds</param>
         public int RunProgramInGuest(string guestProgramName, string commandLineArgs, int options, int timeoutInSeconds)
         {
-            VMWareJob job = new VMWareJob(_vm.RunProgramInGuest(guestProgramName, commandLineArgs, options, null, null));
+            VMWareJob job = new VMWareJob(_handle.RunProgramInGuest(guestProgramName, commandLineArgs, options, null, null));
             object[] properties = { Constants.VIX_PROPERTY_JOB_RESULT_GUEST_PROGRAM_EXIT_CODE };
             return job.Wait<int>(properties, 0, timeoutInSeconds);
         }
@@ -236,7 +235,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public bool FileExistsInGuest(string guestPathName, int timeoutInSeconds)
         {
-            VMWareJob job = new VMWareJob(_vm.FileExistsInGuest(guestPathName, null));
+            VMWareJob job = new VMWareJob(_handle.FileExistsInGuest(guestPathName, null));
             object[] properties = { Constants.VIX_PROPERTY_JOB_RESULT_GUEST_OBJECT_EXISTS };
             return job.Wait<bool>(properties, 0, timeoutInSeconds);
         }
@@ -254,7 +253,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public void Logout(int timeoutInSeconds)
         {
-            VMWareJob job = new VMWareJob(_vm.LogoutFromGuest(null));
+            VMWareJob job = new VMWareJob(_handle.LogoutFromGuest(null));
             job.Wait(timeoutInSeconds);
         }
 
@@ -271,7 +270,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public void PowerOff(int timeoutInSeconds)
         {
-            VMWareJob job = new VMWareJob(_vm.PowerOff(VixCOM.Constants.VIX_VMPOWEROP_NORMAL, null));
+            VMWareJob job = new VMWareJob(_handle.PowerOff(VixCOM.Constants.VIX_VMPOWEROP_NORMAL, null));
             job.Wait(timeoutInSeconds);
         }
 
@@ -294,7 +293,7 @@ namespace Vestris.VMWareLib
         public List<string> ListDirectoryInGuest(string pathName, bool recurse, int timeoutInSeconds)
         {
             List<string> results = new List<string>();
-            VMWareJob job = new VMWareJob(_vm.ListDirectoryInGuest(pathName, 0, null));
+            VMWareJob job = new VMWareJob(_handle.ListDirectoryInGuest(pathName, 0, null));
 
             object[] properties = 
             { 
@@ -396,7 +395,7 @@ namespace Vestris.VMWareLib
         /// <returns>A <see cref="System.Drawing.Image"/> object holding the captured screen image.</returns>
         public Image CaptureScreenImage()
         {
-            VMWareJob job = new VMWareJob(_vm.CaptureScreenImage(VixCOM.Constants.VIX_CAPTURESCREENFORMAT_PNG, null, null));
+            VMWareJob job = new VMWareJob(_handle.CaptureScreenImage(VixCOM.Constants.VIX_CAPTURESCREENFORMAT_PNG, null, null));
             object[] properties = { Constants.VIX_PROPERTY_JOB_RESULT_SCREEN_IMAGE_DATA };
             byte[] imageBytes = job.Wait<byte[]>(properties, 0, VMWareInterop.Timeouts.CaptureScreenImageTimeout);
             return Image.FromStream(new MemoryStream(imageBytes));
