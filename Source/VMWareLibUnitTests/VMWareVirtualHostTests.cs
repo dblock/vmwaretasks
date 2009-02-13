@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using Vestris.VMWareLib;
+using System.Configuration;
 
 namespace Vestris.VMWareLibUnitTests
 {
@@ -9,8 +10,11 @@ namespace Vestris.VMWareLibUnitTests
     public class VMWareVirtualHostTests
     {
         [Test]
-        public void TestIDisposable()
+        public void TestWorkstationIDisposable()
         {
+            if (!bool.Parse(ConfigurationManager.AppSettings["testWorkstation"]))
+                Assert.Ignore("testWorkstation = false");
+
             using (VMWareVirtualHost virtualHost = new VMWareVirtualHost())
             {
                 virtualHost.ConnectToVMWareWorkstation();
@@ -19,8 +23,11 @@ namespace Vestris.VMWareLibUnitTests
         }
 
         [Test]
-        public void TestConnectDisconnect()
+        public void TestWorkstationConnectDisconnect()
         {
+            if (!bool.Parse(ConfigurationManager.AppSettings["testWorkstation"]))
+                Assert.Ignore("testWorkstation = false");
+
             VMWareVirtualHost virtualHost = new VMWareVirtualHost();
             Assert.AreEqual(VMWareVirtualHost.ServiceProviderType.None, virtualHost.ConnectionType);
             virtualHost.ConnectToVMWareWorkstation();
@@ -30,8 +37,11 @@ namespace Vestris.VMWareLibUnitTests
         }
 
         [Test, ExpectedException(typeof(InvalidOperationException))]
-        public void TestConnectDisconnectTwice()
+        public void TestWorkstationConnectDisconnectTwice()
         {
+            if (!bool.Parse(ConfigurationManager.AppSettings["testWorkstation"]))
+                Assert.Ignore("testWorkstation = false");
+
             VMWareVirtualHost virtualHost = new VMWareVirtualHost();
             virtualHost.ConnectToVMWareWorkstation();
             virtualHost.Disconnect();

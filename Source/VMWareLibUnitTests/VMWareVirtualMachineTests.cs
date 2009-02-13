@@ -5,6 +5,7 @@ using Vestris.VMWareLib;
 using System.Configuration;
 using System.IO;
 using System.Drawing;
+using VixCOM;
 
 namespace Vestris.VMWareLibUnitTests
 {
@@ -39,7 +40,7 @@ namespace Vestris.VMWareLibUnitTests
         }
 
         [Test, ExpectedException(typeof(VMWareException))]
-        public void TestWorkstationListDirectoryInGuestInvalidDirectory()
+        public void TestListDirectoryInGuestInvalidDirectory()
         {
             foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
             {
@@ -48,25 +49,35 @@ namespace Vestris.VMWareLibUnitTests
         }
 
         [Test]
-        public void TestWorkstationListDirectoryInGuestEmptyDirectory()
+        public void TestListDirectoryInGuestEmptyDirectory()
         {
             foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
             {
-                List<string> listOfInetPubBadMail = virtualMachine.ListDirectoryInGuest(@"C:\Inetpub\mailroot\Badmail", false);
-                Assert.AreEqual(0, listOfInetPubBadMail.Count);
+                // create an empty directory
+                string directory = string.Format(@"C:\{0}", Guid.NewGuid());
+                virtualMachine.CreateDirectoryInGuest(directory);
+                try
+                {
+                    // list the directory
+                    List<string> listOfEmptyDirectory = virtualMachine.ListDirectoryInGuest(directory, false);
+                    Assert.AreEqual(0, listOfEmptyDirectory.Count);
+                }
+                finally
+                {
+                    virtualMachine.DeleteDirectoryFromGuest(directory);
+                }
             }
         }
 
         [Test]
-        public void TestWorkstationListDirectoryInGuest()
+        public void TestListDirectoryInGuest()
         {
             foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
             {
-                List<string> listOfInetPub = virtualMachine.ListDirectoryInGuest(@"C:\Inetpub", false);
-                List<string> listOfInetPubWithSub = virtualMachine.ListDirectoryInGuest(@"C:\Inetpub", true);
-                Assert.AreEqual(0, listOfInetPub.Count);
-                Assert.IsTrue(listOfInetPub.Count < listOfInetPubWithSub.Count);
-                Assert.IsTrue(listOfInetPubWithSub.Contains(@"C:\Inetpub\AdminScripts\adsutil.vbs"));
+                List<string> listOfDrivers = virtualMachine.ListDirectoryInGuest(@"C:\WINDOWS\system32\drivers", false);
+                List<string> listOfDriversWithSub = virtualMachine.ListDirectoryInGuest(@"C:\WINDOWS\system32\drivers", true);
+                Assert.IsTrue(listOfDrivers.Count < listOfDriversWithSub.Count);
+                Assert.IsTrue(listOfDriversWithSub.Contains(@"C:\WINDOWS\system32\drivers\etc\hosts"));
             }
         }
 
@@ -116,20 +127,34 @@ namespace Vestris.VMWareLibUnitTests
         {
             foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
             {
-                int count = virtualMachine.SharedFolders.Count;
-                Console.WriteLine("Shared folders: {0}", count);
-                // add a shared folder
-                VMWareSharedFolder currentDirectory = new VMWareSharedFolder(Guid.NewGuid().ToString(), Environment.CurrentDirectory);
-                virtualMachine.SharedFolders.Add(currentDirectory);
-                Assert.AreEqual(count + 1, virtualMachine.SharedFolders.Count);
-                foreach (VMWareSharedFolder sharedFolder in virtualMachine.SharedFolders)
+                try
                 {
-                    Console.WriteLine("Shared folder: {0} ({1})",
-                        sharedFolder.ShareName, sharedFolder.HostPath);
+                    int count = virtualMachine.SharedFolders.Count;
+                    Console.WriteLine("Shared folders: {0}", count);
+                    // add a shared folder
+                    VMWareSharedFolder currentDirectory = new VMWareSharedFolder(Guid.NewGuid().ToString(), Environment.CurrentDirectory);
+                    virtualMachine.SharedFolders.Add(currentDirectory);
+                    Assert.AreEqual(count + 1, virtualMachine.SharedFolders.Count);
+                    foreach (VMWareSharedFolder sharedFolder in virtualMachine.SharedFolders)
+                    {
+                        Console.WriteLine("Shared folder: {0} ({1})",
+                            sharedFolder.ShareName, sharedFolder.HostPath);
+                    }
+                    // remove the shared folder
+                    virtualMachine.SharedFolders.Remove(currentDirectory);
+                    Assert.AreEqual(count, virtualMachine.SharedFolders.Count);
                 }
-                // remove the shared folder
-                virtualMachine.SharedFolders.Remove(currentDirectory);
-                Assert.AreEqual(count, virtualMachine.SharedFolders.Count);
+                catch (VMWareException ex)
+                {
+                    switch (ex.ErrorCode)
+                    {
+                        case Constants.VIX_E_NOT_SUPPORTED:
+                            Assert.Ignore("Shared folders not supported on this VMWare platform.");
+                            break;
+                        default:
+                            throw;
+                    }
+                }
             }
         }
 

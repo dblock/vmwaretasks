@@ -494,7 +494,8 @@ namespace Vestris.VMWareLib
                     {
                         if (recurse)
                         {
-                            results.AddRange(ListDirectoryInGuest(Path.Combine(pathName, fileName), true, timeoutInSeconds));
+                            results.AddRange(ListDirectoryInGuest(Path.Combine(pathName, fileName), 
+                                true, timeoutInSeconds));
                         }
                     }
                     else
@@ -507,6 +508,8 @@ namespace Vestris.VMWareLib
             {
                 switch (ex.ErrorCode)
                 {
+                    case 2:
+                        // file not found? empty directory in ESX
                     case Constants.VIX_E_UNRECOGNIZED_PROPERTY:
                         // unrecognized property returned by GetNumProperties, the directory exists, but contains no files
                         break;
