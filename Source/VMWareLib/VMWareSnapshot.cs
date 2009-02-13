@@ -9,6 +9,7 @@ namespace Vestris.VMWareLib
     {
         private IVM _vm = null;
         private ISnapshot _snapshot = null;
+        private List<VMWareSnapshot> _childSnapshots = null;
 
         public VMWareSnapshot(IVM vm, ISnapshot snapshot)
         {
@@ -41,22 +42,44 @@ namespace Vestris.VMWareLib
             RevertToSnapshot(VMWareInterop.Timeouts.RevertToSnapshotTimeout);
         }
 
+        public void RemoveSnapshot()
+        {
+            RemoveSnapshot(VMWareInterop.Timeouts.RemoveSnapshotTimeout);
+        }
+
+        /// <summary>
+        /// Remove/delete this snapshot.
+        /// </summary>
+        /// <param name="timeoutInSeconds">timeout in seconds</param>
+        public void RemoveSnapshot(int timeoutInSeconds)
+        {
+            VMWareJob job = new VMWareJob(_vm.RemoveSnapshot(_snapshot, 0, null));
+            job.Wait(timeoutInSeconds);
+        }
+
         /// <summary>
         /// Get all child snapshots.
         /// </summary>
         /// <returns>a list of child snapshots</returns>
-        public List<VMWareSnapshot> GetChildren()
+        public List<VMWareSnapshot> ChildSnapshots
         {
-            List<VMWareSnapshot> childSnapshots = new List<VMWareSnapshot>();
-            int nChildSnapshots = 0;
-            VMWareInterop.Check(_snapshot.GetNumChildren(out nChildSnapshots));
-            for (int i = 0; i < nChildSnapshots; i++)
+            get
             {
-                ISnapshot childSnapshot = null;
-                VMWareInterop.Check(_snapshot.GetChild(i, out childSnapshot));
-                childSnapshots.Add(new VMWareSnapshot(_vm, childSnapshot));
+                if (_childSnapshots == null)
+                {
+                    List<VMWareSnapshot> childSnapshots = new List<VMWareSnapshot>();
+                    int nChildSnapshots = 0;
+                    VMWareInterop.Check(_snapshot.GetNumChildren(out nChildSnapshots));
+                    for (int i = 0; i < nChildSnapshots; i++)
+                    {
+                        ISnapshot childSnapshot = null;
+                        VMWareInterop.Check(_snapshot.GetChild(i, out childSnapshot));
+                        childSnapshots.Add(new VMWareSnapshot(_vm, childSnapshot));
+                    }
+                    _childSnapshots = childSnapshots;
+                }
+                return _childSnapshots;
             }
-            return childSnapshots;
         }
     }
 }

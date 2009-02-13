@@ -10,32 +10,6 @@ namespace Vestris.VMWareLibUnitTests
     [TestFixture]
     public class VMWareVirtualMachineTests
     {
-        private VMWareVirtualMachine _virtualMachine = null;
-
-        private VMWareVirtualMachine VirtualMachine
-        {
-            get
-            {
-                if (_virtualMachine == null)
-                {
-                    VMWareVirtualHost virtualHost = new VMWareVirtualHost();
-                    // connect to a local VM
-                    virtualHost.ConnectToVMWareWorkstation();
-                    string testWorkstationFilename = ConfigurationManager.AppSettings["testWorkstationFilename"];
-                    VMWareVirtualMachine virtualMachine = virtualHost.Open(testWorkstationFilename);
-                    // power-on current snapshot
-                    virtualMachine.PowerOn();
-                    string testUsername = ConfigurationManager.AppSettings["testWorkstationUsername"];
-                    string testPassword = ConfigurationManager.AppSettings["testWorkstationPassword"];
-                    virtualMachine.Login(testUsername, testPassword);
-                    // assign last not to get a value on exception
-                    _virtualMachine = virtualMachine;
-                }
-
-                return _virtualMachine;
-            }
-        }
-
         [Test]
         public void TestWorkstationTasks()
         {
@@ -44,38 +18,38 @@ namespace Vestris.VMWareLibUnitTests
             string remoteTempFilename = string.Format(@"C:\{0}", Path.GetFileName(localTempFilename));
             string remoteBatFilename = string.Format(@"C:\{0}.bat", Path.GetFileNameWithoutExtension(localTempFilename));
             File.WriteAllText(localTempFilename, string.Format(@"dir C:\ > {0}", remoteTempFilename));
-            VirtualMachine.CopyFileFromHostToGuest(localTempFilename, remoteBatFilename);
-            Assert.AreEqual(0, VirtualMachine.Execute(@"cmd.exe", string.Format("/C \"{0}\"", remoteBatFilename)));
-            VirtualMachine.CopyFileFromGuestToHost(remoteTempFilename, localTempFilename);
+            VMWareTestVirtualMachine.VM.PoweredVirtualMachine.CopyFileFromHostToGuest(localTempFilename, remoteBatFilename);
+            Assert.AreEqual(0, VMWareTestVirtualMachine.VM.PoweredVirtualMachine.Execute(@"cmd.exe", string.Format("/C \"{0}\"", remoteBatFilename)));
+            VMWareTestVirtualMachine.VM.PoweredVirtualMachine.CopyFileFromGuestToHost(remoteTempFilename, localTempFilename);
             string remoteDirectoryListing = File.ReadAllText(localTempFilename);
             Console.WriteLine(remoteDirectoryListing);
             Assert.IsTrue(remoteDirectoryListing.Contains(Path.GetFileName(remoteTempFilename)));
             Assert.IsTrue(remoteDirectoryListing.Contains(Path.GetFileName(remoteBatFilename)));
             // delete the temp files
-            VirtualMachine.DeleteFileFromGuest(remoteTempFilename);
-            VirtualMachine.DeleteFileFromGuest(remoteBatFilename);
+            VMWareTestVirtualMachine.VM.PoweredVirtualMachine.DeleteFileFromGuest(remoteTempFilename);
+            VMWareTestVirtualMachine.VM.PoweredVirtualMachine.DeleteFileFromGuest(remoteBatFilename);
             File.Delete(localTempFilename);
-            // VirtualMachine.PowerOff();
+            // VMWareTestVirtualMachine.VM.PoweredVirtualMachine.PowerOff();
         }
 
         [Test, ExpectedException(typeof(VMWareException))]
         public void TestWorkstationListDirectoryInGuestInvalidDirectory()
         {
-            VirtualMachine.ListDirectoryInGuest(string.Format(@"C:\{0}", Guid.NewGuid()), false);
+            VMWareTestVirtualMachine.VM.PoweredVirtualMachine.ListDirectoryInGuest(string.Format(@"C:\{0}", Guid.NewGuid()), false);
         }
 
         [Test]
         public void TestWorkstationListDirectoryInGuestEmptyDirectory()
         {
-            List<string> listOfInetPubBadMail = VirtualMachine.ListDirectoryInGuest(@"C:\Inetpub\mailroot\Badmail", false);
+            List<string> listOfInetPubBadMail = VMWareTestVirtualMachine.VM.PoweredVirtualMachine.ListDirectoryInGuest(@"C:\Inetpub\mailroot\Badmail", false);
             Assert.AreEqual(0, listOfInetPubBadMail.Count);
         }
 
         [Test]
         public void TestWorkstationListDirectoryInGuest()
         {
-            List<string> listOfInetPub = VirtualMachine.ListDirectoryInGuest(@"C:\Inetpub", false);
-            List<string> listOfInetPubWithSub = VirtualMachine.ListDirectoryInGuest(@"C:\Inetpub", true);
+            List<string> listOfInetPub = VMWareTestVirtualMachine.VM.PoweredVirtualMachine.ListDirectoryInGuest(@"C:\Inetpub", false);
+            List<string> listOfInetPubWithSub = VMWareTestVirtualMachine.VM.PoweredVirtualMachine.ListDirectoryInGuest(@"C:\Inetpub", true);
             Assert.AreEqual(0, listOfInetPub.Count);
             Assert.IsTrue(listOfInetPub.Count < listOfInetPubWithSub.Count);
             Assert.IsTrue(listOfInetPubWithSub.Contains(@"C:\Inetpub\AdminScripts\adsutil.vbs"));
@@ -84,13 +58,13 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestGetSetGuestVariables()
         {
-            string ip = VirtualMachine.GuestVariables["ip"];
+            string ip = VMWareTestVirtualMachine.VM.PoweredVirtualMachine.GuestVariables["ip"];
             Assert.IsFalse(string.IsNullOrEmpty(ip));
-            Console.WriteLine("IP: {0}", VirtualMachine.GuestVariables["ip"]);
+            Console.WriteLine("IP: {0}", ip);
             string guid = Guid.NewGuid().ToString();
-            Assert.IsTrue(string.IsNullOrEmpty(VirtualMachine.GuestVariables[guid]));
-            VirtualMachine.GuestVariables[guid] = guid;
-            Assert.AreEqual(guid, VirtualMachine.GuestVariables[guid]);
+            Assert.IsTrue(string.IsNullOrEmpty(VMWareTestVirtualMachine.VM.PoweredVirtualMachine.GuestVariables[guid]));
+            VMWareTestVirtualMachine.VM.PoweredVirtualMachine.GuestVariables[guid] = guid;
+            Assert.AreEqual(guid, VMWareTestVirtualMachine.VM.PoweredVirtualMachine.GuestVariables[guid]);
         }
 
         /// <summary>
@@ -100,18 +74,36 @@ namespace Vestris.VMWareLibUnitTests
         protected void TestGetSetGuestEnvironmentVariables()
         {
             string guid = Guid.NewGuid().ToString();
-            Assert.IsTrue(string.IsNullOrEmpty(VirtualMachine.GuestEnvironmentVariables[guid]));
-            VirtualMachine.GuestVariables[guid] = guid;
-            Assert.AreEqual(guid, VirtualMachine.GuestEnvironmentVariables[guid]);
+            Assert.IsTrue(string.IsNullOrEmpty(VMWareTestVirtualMachine.VM.PoweredVirtualMachine.GuestEnvironmentVariables[guid]));
+            VMWareTestVirtualMachine.VM.PoweredVirtualMachine.GuestVariables[guid] = guid;
+            Assert.AreEqual(guid, VMWareTestVirtualMachine.VM.PoweredVirtualMachine.GuestEnvironmentVariables[guid]);
         }
 
         [Test]
         public void TestGetSetRuntimeConfigVariables()
         {
-            string displayName = VirtualMachine.RuntimeConfigVariables["displayname"];
+            string displayName = VMWareTestVirtualMachine.VM.PoweredVirtualMachine.RuntimeConfigVariables["displayname"];
             Console.WriteLine("Display name: {0}", displayName);
             Assert.IsFalse(string.IsNullOrEmpty(displayName));
         }
 
+        [Test]
+        public void TestGetAddRemoveSharedFolders()
+        {
+            int count = VMWareTestVirtualMachine.VM.PoweredVirtualMachine.SharedFolders.Count;
+            Console.WriteLine("Shared folders: {0}", count);
+            // add a shared folder
+            VMWareSharedFolder currentDirectory = new VMWareSharedFolder(Guid.NewGuid().ToString(), Environment.CurrentDirectory);
+            VMWareTestVirtualMachine.VM.PoweredVirtualMachine.SharedFolders.Add(currentDirectory);
+            Assert.AreEqual(count + 1, VMWareTestVirtualMachine.VM.PoweredVirtualMachine.SharedFolders.Count);
+            foreach (VMWareSharedFolder sharedFolder in VMWareTestVirtualMachine.VM.PoweredVirtualMachine.SharedFolders)
+            {
+                Console.WriteLine("Shared folder: {0} ({1})", 
+                    sharedFolder.ShareName, sharedFolder.HostPath);
+            }
+            // remove the shared folder
+            VMWareTestVirtualMachine.VM.PoweredVirtualMachine.SharedFolders.Remove(currentDirectory);
+            Assert.AreEqual(count, VMWareTestVirtualMachine.VM.PoweredVirtualMachine.SharedFolders.Count);
+        }
     }
 }

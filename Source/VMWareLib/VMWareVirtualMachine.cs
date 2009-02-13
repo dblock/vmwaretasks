@@ -53,6 +53,8 @@ namespace Vestris.VMWareLib
         private VariableIndexer _guestEnvironmentVariables = null;
         private VariableIndexer _runtimeConfigVariables = null;
         private VariableIndexer _guestVariables = null;
+        private VMWareSnapshotCollection _snapshots = null;
+        private VMWareSharedFolderCollection _sharedFolders = null;
 
         public VMWareVirtualMachine(IVM vm)
         {
@@ -60,6 +62,8 @@ namespace Vestris.VMWareLib
             _guestEnvironmentVariables = new VariableIndexer(_vm, Constants.VIX_GUEST_ENVIRONMENT_VARIABLE);
             _runtimeConfigVariables = new VariableIndexer(_vm, Constants.VIX_VM_CONFIG_RUNTIME_ONLY);
             _guestVariables = new VariableIndexer(_vm, Constants.VIX_VM_GUEST_VARIABLE);
+            _sharedFolders = new VMWareSharedFolderCollection(_vm);
+            _snapshots = new VMWareSnapshotCollection(_vm);
         }
 
         /// <summary>
@@ -95,44 +99,15 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// Find a snapshot.
-        /// </summary>
-        /// <param name="name">snapshot name</param>
-        /// <returns>a snapshot</returns>
-        public VMWareSnapshot FindSnapshot(string name)
-        {
-            ISnapshot snapshot = null;
-            VMWareInterop.Check(_vm.GetNamedSnapshot(name, out snapshot));
-            return new VMWareSnapshot(_vm, snapshot);
-        }
-
-        /// <summary>
-        /// Current snapshot.
-        /// </summary>
-        /// <returns>current snapshot</returns>
-        public VMWareSnapshot GetCurrentSnapshot()
-        {
-            ISnapshot snapshot = null;
-            VMWareInterop.Check(_vm.GetCurrentSnapshot(out snapshot));
-            return new VMWareSnapshot(_vm, snapshot);
-        }
-
-        /// <summary>
         /// Get all snapshots.
         /// </summary>
         /// <returns>a list of snapshots</returns>
-        public List<VMWareSnapshot> GetSnapshots()
+        public VMWareSnapshotCollection Snapshots
         {
-            List<VMWareSnapshot> snapshots = new List<VMWareSnapshot>();
-            int nSnapshots = 0;
-            VMWareInterop.Check(_vm.GetNumRootSnapshots(out nSnapshots));
-            for (int i = 0; i < nSnapshots; i++)
+            get
             {
-                ISnapshot snapshot = null;
-                VMWareInterop.Check(_vm.GetRootSnapshot(i, out snapshot));
-                snapshots.Add(new VMWareSnapshot(_vm, snapshot));
+                return _snapshots;
             }
-            return snapshots;
         }
 
         /// <summary>
@@ -351,9 +326,9 @@ namespace Vestris.VMWareLib
         /// </summary>
         public VariableIndexer GuestEnvironmentVariables
         {
-            get 
-            { 
-                return _guestEnvironmentVariables; 
+            get
+            {
+                return _guestEnvironmentVariables;
             }
         }
 
@@ -380,6 +355,17 @@ namespace Vestris.VMWareLib
             get
             {
                 return _runtimeConfigVariables;
+            }
+        }
+
+        /// <summary>
+        /// Shared folders on this virtual machine.
+        /// </summary>
+        public VMWareSharedFolderCollection SharedFolders
+        {
+            get
+            {
+                return _sharedFolders;
             }
         }
     }

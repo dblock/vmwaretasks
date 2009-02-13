@@ -9,6 +9,8 @@ namespace Vestris.VMWareLib
         public int ConnectTimeout;
         public int OpenFileTimeout;
         public int RevertToSnapshotTimeout;
+        public int RemoveSnapshotTimeout;
+        public int CreateSnapshotTimeout;
         /// <summary>
         /// the operational time to bring the power to/from the vm, not to boot it
         /// </summary>
@@ -30,6 +32,8 @@ namespace Vestris.VMWareLib
         public int ListDirectoryInGuestTimeout;
         public int ReadVariableTimeout;
         public int WriteVariableTimeout;
+        public int GetSharedFoldersTimeout;
+        public int AddRemoveSharedFolderTimeout;
 
         public VMWareTimeouts()
             : this(60)
@@ -41,6 +45,8 @@ namespace Vestris.VMWareLib
             ConnectTimeout = baseTimeout;
             OpenFileTimeout = baseTimeout;
             RevertToSnapshotTimeout = baseTimeout;
+            RemoveSnapshotTimeout = baseTimeout * 10;
+            CreateSnapshotTimeout = baseTimeout * 10;
             PowerOnTimeout = baseTimeout;
             PowerOffTimeout = baseTimeout;
             WaitForToolsInGuestTimeout = 5 * baseTimeout;
@@ -53,6 +59,8 @@ namespace Vestris.VMWareLib
             ListDirectoryInGuestTimeout = baseTimeout;
             ReadVariableTimeout = baseTimeout;
             WriteVariableTimeout = baseTimeout;
+            GetSharedFoldersTimeout = baseTimeout;
+            AddRemoveSharedFolderTimeout = baseTimeout;
         }
     }
 }
