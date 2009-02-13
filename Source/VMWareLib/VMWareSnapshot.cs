@@ -118,12 +118,18 @@ namespace Vestris.VMWareLib
             get
             {
                 ISnapshot parentSnapshot = null;
-                VMWareInterop.Check(_handle.GetParent(out parentSnapshot));
-                // hack: get the parent's parent snapshot: if this fails, we're looking at the root
-                ISnapshot parentsParentSnapshot = null;
-                return (parentSnapshot.GetParent(out parentsParentSnapshot) != Constants.VIX_OK)
-                    ? DisplayName
-                    : System.IO.Path.Combine(new VMWareSnapshot(_vm, parentSnapshot).Path, DisplayName);
+                ulong ulError = 0;
+                switch ((ulError = _handle.GetParent(out parentSnapshot)))
+                {
+                    case Constants.VIX_OK:
+                        return System.IO.Path.Combine(new VMWareSnapshot(_vm, parentSnapshot).Path, DisplayName);
+                    case Constants.VIX_E_SNAPSHOT_NOTFOUND: // no parent
+                        return DisplayName;
+                    case Constants.VIX_E_INVALID_ARG: // root snapshot
+                        return string.Empty;
+                    default:
+                        throw new VMWareException(ulError);
+                }
             }
         }
 

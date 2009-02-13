@@ -22,31 +22,35 @@ namespace Vestris.VMWareLibUnitTests
         }
 
         [Test]
-        public void TestWorkstationEnumerateSnapshots()
+        public void TestEnumerateSnapshots()
         {
-            VMWareVirtualMachine virtualMachine = VMWareTestVirtualMachine.VM.VirtualMachine;
-            List<string> snapshotPaths = GetSnapshotPaths(virtualMachine.Snapshots, 0);
-            foreach (string snapshotPath in snapshotPaths)
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.VirtualMachines)
             {
-                VMWareSnapshot snapshot = virtualMachine.Snapshots.FindSnapshot(snapshotPath);
-                Assert.IsNotNull(snapshot);
-                Console.WriteLine("{0}: {1}, power state={2}, replayable={3}",
-                    snapshot.DisplayName, snapshotPath, snapshot.PowerState, snapshot.IsReplayable);
+                List<string> snapshotPaths = GetSnapshotPaths(virtualMachine.Snapshots, 0);
+                foreach (string snapshotPath in snapshotPaths)
+                {
+                    VMWareSnapshot snapshot = virtualMachine.Snapshots.FindSnapshot(snapshotPath);
+                    Assert.IsNotNull(snapshot);
+                    Console.WriteLine("{0}: {1}, power state={2}",
+                        snapshot.DisplayName, snapshotPath, snapshot.PowerState);
+                }
             }
         }
 
         [Test]
-        public void TestWorkstationCreateRemoveSnapshot()
+        public void TestCreateRemoveSnapshot()
         {
-            VMWareVirtualMachine virtualMachine = VMWareTestVirtualMachine.VM.VirtualMachine;
-            // this is the root snapshot
-            Assert.IsTrue(virtualMachine.Snapshots.Count >= 0);
-            string name = Guid.NewGuid().ToString();
-            Console.WriteLine("Snapshot name: {0}", name);
-            // take a snapshot at the current state
-            virtualMachine.Snapshots.CreateSnapshot(name, Guid.NewGuid().ToString());
-            // delete the snapshot
-            virtualMachine.Snapshots.RemoveSnapshot(name);
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.VirtualMachines)
+            {
+                // this is the root snapshot
+                Assert.IsTrue(virtualMachine.Snapshots.Count >= 0);
+                string name = Guid.NewGuid().ToString();
+                Console.WriteLine("Snapshot name: {0}", name);
+                // take a snapshot at the current state
+                virtualMachine.Snapshots.CreateSnapshot(name, Guid.NewGuid().ToString());
+                // delete the snapshot
+                virtualMachine.Snapshots.RemoveSnapshot(name);
+            }
         }
     }
 }

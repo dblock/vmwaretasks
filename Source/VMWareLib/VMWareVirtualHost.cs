@@ -63,7 +63,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public void ConnectToVMWareWorkstation(int timeoutInSeconds)
         {
-            Connect(ServiceProviderType.Workstation, string.Empty, 0, string.Empty, string.Empty, timeoutInSeconds);
+            Connect(ServiceProviderType.Workstation, null, 0, null, null, timeoutInSeconds);
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Vestris.VMWareLib
         /// <param name="password">password</param>
         public void ConnectToVMWareVIServer(string hostName, string username, string password)
         {
-            ConnectToVMWareVIServer(new Uri(string.Format("http://{0}/sdk", hostName)),
+            ConnectToVMWareVIServer(new Uri(string.Format("https://{0}/sdk", hostName)),
                 username, password, VMWareInterop.Timeouts.ConnectTimeout);
         }
 
@@ -97,8 +97,9 @@ namespace Vestris.VMWareLib
         private void Connect(ServiceProviderType serviceProviderType, 
             string hostName, int hostPort, string username, string password, int timeout)
         {
+            int serviceProvider = (int)serviceProviderType;
             VMWareJob job = new VMWareJob(VMWareInterop.Instance.Connect(
-                Constants.VIX_API_VERSION, (int) serviceProviderType, hostName, hostPort,
+                Constants.VIX_API_VERSION, serviceProvider, hostName, hostPort,
                 username, password, 0, null, null)
                 );
 

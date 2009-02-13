@@ -43,7 +43,9 @@
     <Compile Include="VMWareInteropTests.cs" />
     <Compile Include="VMWareJobTests.cs" />
     <Compile Include="VMWareSnapshotTests.cs" />
-    <Compile Include="VMWareTestVirtualMachine.cs" />
+    <Compile Include="VMWareTest.cs" />
+    <Compile Include="VMWareTestVI.cs" />
+    <Compile Include="VMWareTestWorkstation.cs" />
     <Compile Include="VMWareVirtualHostTests.cs" />
     <Compile Include="VMWareVirtualMachineTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

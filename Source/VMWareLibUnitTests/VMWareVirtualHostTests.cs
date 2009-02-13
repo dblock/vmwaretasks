@@ -41,9 +41,8 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestRunningVirtualMachines()
         {
-            using (VMWareVirtualHost virtualHost = new VMWareVirtualHost())
+            foreach(VMWareVirtualHost virtualHost in VMWareTest.VirtualHosts)
             {
-                virtualHost.ConnectToVMWareWorkstation();
                 foreach (VMWareVirtualMachine virtualMachine in virtualHost.RunningVirtualMachines)
                 {
                     Console.WriteLine("{0}: running={1}, memory={2}, CPUs={3}",

@@ -6,7 +6,7 @@ using System.Configuration;
 
 namespace Vestris.VMWareLibUnitTests
 {
-    public class VMWareTestVirtualMachine
+    public class TestWorkstation
     {
         private VMWareVirtualHost _host = null;
         private VMWareVirtualMachine _virtualMachine = null;
@@ -19,6 +19,7 @@ namespace Vestris.VMWareLibUnitTests
                 if (_host == null)
                 {
                     VMWareVirtualHost virtualHost = new VMWareVirtualHost();
+                    Console.WriteLine("Connecting to local host");
                     // connect to a local VM
                     virtualHost.ConnectToVMWareWorkstation();
                     _host = virtualHost;
@@ -33,6 +34,7 @@ namespace Vestris.VMWareLibUnitTests
             {
                 if (_virtualMachine == null)
                 {
+                    Console.WriteLine("Opening: {0}", ConfigurationManager.AppSettings["testWorkstationFilename"]);
                     string testWorkstationFilename = ConfigurationManager.AppSettings["testWorkstationFilename"];
                     _virtualMachine = LocalHost.Open(testWorkstationFilename);
                 }
@@ -44,8 +46,9 @@ namespace Vestris.VMWareLibUnitTests
         {
             get
             {
-                if (! _poweredOn)
+                if (!_poweredOn)
                 {
+                    Console.WriteLine("Powering on: {0}", ConfigurationManager.AppSettings["testWorkstationFilename"]);
                     // power-on current snapshot
                     VirtualMachine.PowerOn();
                     string testUsername = ConfigurationManager.AppSettings["testWorkstationUsername"];
@@ -58,6 +61,6 @@ namespace Vestris.VMWareLibUnitTests
             }
         }
 
-        public static VMWareTestVirtualMachine VM = new VMWareTestVirtualMachine();
+        public static TestWorkstation Instance = new TestWorkstation();
     }
 }
