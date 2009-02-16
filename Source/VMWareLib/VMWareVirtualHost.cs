@@ -72,9 +72,9 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Connect to a WMWare Virtual Infrastructure Server (eg. ESX).
         /// </summary>
-        /// <param name="hostName">VMWare host name</param>
-        /// <param name="username">username</param>
-        /// <param name="password">password</param>
+        /// <param name="hostName">VMWare host name.</param>
+        /// <param name="username">Username.</param>
+        /// <param name="password">Password.</param>
         public void ConnectToVMWareVIServer(string hostName, string username, string password)
         {
             ConnectToVMWareVIServer(new Uri(string.Format("https://{0}/sdk", hostName)),
@@ -84,10 +84,10 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Connect to a WMWare Virtual Infrastructure Server (eg. ESX).
         /// </summary>
-        /// <param name="hostUri">host SDK uri, eg. http://server/sdk</param>
-        /// <param name="username">username</param>
-        /// <param name="password">password</param>
-        /// <param name="timeoutInSeconds">timeout in seconds</param>
+        /// <param name="hostUri">Host SDK uri, eg. http://server/sdk.</param>
+        /// <param name="username">Username.</param>
+        /// <param name="password">Password.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void ConnectToVMWareVIServer(Uri hostUri, string username, string password, int timeoutInSeconds)
         {
             Connect(ServiceProviderType.VirtualInfrastructureServer,
@@ -113,7 +113,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Open a .vmx file.
         /// </summary>
-        /// <param name="fileName">Virtual Machine file, local .vmx or [storage] .vmx</param>
+        /// <param nme="fileName">Virtual Machine file, local .vmx or [storage] .vmx.</param>
         /// <returns>An instance of a virtual machine.</returns>
         public VMWareVirtualMachine Open(string fileName)
         {
@@ -123,8 +123,8 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Open a .vmx file.
         /// </summary>
-        /// <param name="fileName">Virtual Machine file, local .vmx or [storage] .vmx</param>
-        /// <param name="timeoutInSeconds">timeout in seconds</param>
+        /// <param name="fileName">Virtual Machine file, local .vmx or [storage] .vmx.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         /// <returns>An instance of a virtual machine.</returns>
         public VMWareVirtualMachine Open(string fileName, int timeoutInSeconds)
         {

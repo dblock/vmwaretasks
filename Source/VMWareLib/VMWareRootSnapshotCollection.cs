@@ -19,7 +19,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         ///  A collection of snapshots that belong to a virtual machine.
         /// </summary>
-        /// <param name="vm">a virtual machine instance</param>
+        /// <param name="vm">A virtual machine instance.</param>
         public VMWareRootSnapshotCollection(IVM vm)
             : base(vm, null)
         {
@@ -129,7 +129,7 @@ namespace Vestris.VMWareLib
         ///  <item>VIX_SNAPSHOT_INCLUDE_MEMORY: Captures the full state of a running virtual machine, including the memory</item>
         /// </list>
         /// </param>
-        /// <param name="timeoutInSeconds">timeout in seconds</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void CreateSnapshot(string name, string description, int flags, int timeoutInSeconds)
         {
             VMWareJobCallback callback = new VMWareJobCallback();

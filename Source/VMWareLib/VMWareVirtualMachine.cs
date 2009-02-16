@@ -1,4 +1,4 @@
-using System;
+2using System;
 using System.Collections.Generic;
 using System.IO;
 using VixCOM;
@@ -14,7 +14,7 @@ namespace Vestris.VMWareLib
     public class VMWareVirtualMachine : VMWareVixHandle<IVM2>
     {
         /// <summary>
-        /// An indexer for variables
+        /// An indexer for variables.
         /// </summary>
         public class VariableIndexer
         {
@@ -22,10 +22,16 @@ namespace Vestris.VMWareLib
             private int _variableType;
 
             /// <summary>
-            /// A variables indexer
+            /// A variables indexer.
             /// </summary>
-            /// <param name="vm">virtual machine's variables to index</param>
-            /// <param name="variableType">variable type, Constants.VIX_VM_GUEST_VARIABLE, VIX_VM_CONFIG_RUNTIME_ONLY or VIX_GUEST_ENVIRONMENT_VARIABLE</param>
+            /// <param name="vm">Virtual machine's variables to index.</param>
+            /// <param name="variableType">Variable type, one of the following.
+            /// <list type="bullet">
+            ///  <item>Constants.VIX_VM_GUEST_VARIABLE</item>
+            ///  <item>Constants.VIX_VM_CONFIG_RUNTIME_ONLY</item>
+            ///  <item>Constants.VIX_GUEST_ENVIRONMENT_VARIABLE</item>
+            /// </list>
+            /// </param>
             public VariableIndexer(IVM2 vm, int variableType)
             {
                 _handle = vm;
@@ -33,9 +39,9 @@ namespace Vestris.VMWareLib
             }
 
             /// <summary>
-            /// Environment, guest and runtime variables
+            /// Environment, guest and runtime variables.
             /// </summary>
-            /// <param name="name">name of the variable</param>
+            /// <param name="name">Name of the variable.</param>
             [IndexerName("Variables")]
             public string this[string name]
             {
@@ -99,7 +105,7 @@ namespace Vestris.VMWareLib
             /// <summary>
             /// A process running in the guest operating system on a virtual machine.
             /// </summary>
-            /// <param name="vm">virtual machine</param>
+            /// <param name="vm">Virtual machine.</param>
             public Process(IVM2 vm)
             {
                 _vm = vm;
@@ -116,7 +122,7 @@ namespace Vestris.VMWareLib
             /// <summary>
             /// Kill a process in the guest operating system.
             /// </summary>
-            /// <param name="timeoutInSeconds">timeout in seconds</param>
+            /// <param name="timeoutInSeconds">Timeout in seconds.</param>
             public void KillProcessInGuest(int timeoutInSeconds)
             {
                 VMWareJobCallback callback = new VMWareJobCallback();
@@ -136,7 +142,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// A VMWare Virtual Machine.
         /// </summary>
-        /// <param name="vm">a handle to a virtual machine</param>
+        /// <param name="vm">A handle to a virtual machine.</param>
         public VMWareVirtualMachine(IVM2 vm)
             : base(vm)
         {
@@ -211,10 +217,10 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// Power on a virtual machine.
+        /// Power on a virtual machine and wait for it to boot.
         /// </summary>
-        /// <param name="powerOnOptions">additional options</param>
-        /// <param name="timeoutInSeconds">timeout in seconds</param>
+        /// <param name="powerOnOptions">Additional power options.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void PowerOn(int powerOnOptions, int timeoutInSeconds)
         {
             VMWareJobCallback powerOnCallback = new VMWareJobCallback();
@@ -246,8 +252,8 @@ namespace Vestris.VMWareLib
         /// This function establishes a guest operating system authentication context that can be used 
         /// with guest functions for the given virtual machine handle. 
         /// </summary>
-        /// <param name="username">username</param>
-        /// <param name="password">password</param>
+        /// <param name="username">Username.</param>
+        /// <param name="password">Password.</param>
         public void Login(string username, string password)
         {
             Login(username, password, VMWareInterop.Timeouts.LoginTimeout);
@@ -257,9 +263,9 @@ namespace Vestris.VMWareLib
         /// This function establishes a guest operating system authentication context that can be used 
         /// with guest functions for the given virtual machine handle. 
         /// </summary>
-        /// <param name="username">username</param>
-        /// <param name="password">password</param>
-        /// <param name="timeoutInSeconds">timeout in seconds</param>
+        /// <param name="username">Username.</param>
+        /// <param name="password">Password.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void Login(string username, string password, int timeoutInSeconds)
         {
             VMWareJobCallback callback = new VMWareJobCallback();
@@ -383,6 +389,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Creates a temp file on the guest operating system.
         /// </summary>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public string CreateTempFileInGuest(int timeoutInSeconds)
         {
             VMWareJobCallback callback = new VMWareJobCallback();
@@ -395,6 +402,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Runs a program in the guest operating system.
         /// </summary>       
+        /// <param name="guestProgramName">Program to execute.</param>
         /// <returns>Process information.</returns>
         public Process RunProgramInGuest(string guestProgramName)
         {
@@ -404,8 +412,8 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Run a program in the guest operating system.
         /// </summary>
-        /// <param name="commandLineArgs">additional command line arguments</param>
-        /// <param name="guestProgramName">program to execute</param>
+        /// <param name="commandLineArgs">Additional command line arguments.</param>
+        /// <param name="guestProgramName">Program to execute.</param>
         /// <returns>Process information.</returns>
         public Process RunProgramInGuest(string guestProgramName, string commandLineArgs)
         {
@@ -417,7 +425,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Run a detached program in the guest operating system.
         /// </summary>
-        /// <param name="guestProgramName">program to execute</param>
+        /// <param name="guestProgramName">Program to execute.</param>
         /// <returns>Process information.</returns>
         public Process DetachProgramInGuest(string guestProgramName)
         {
@@ -427,8 +435,8 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Run a detached program in the guest operating system.
         /// </summary>
-        /// <param name="commandLineArgs">additional command line arguments</param>
-        /// <param name="guestProgramName">program to execute</param>
+        /// <param name="guestProgramName">Program to execute.</param>
+        /// <param name="commandLineArgs">Additional command line arguments.</param>
         /// <returns>Process information.</returns>
         public Process DetachProgramInGuest(string guestProgramName, string commandLineArgs)
         {
@@ -440,10 +448,10 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Run a program in the guest operating system.
         /// </summary>
-        /// <param name="guestProgramName">guest program to run</param>
-        /// <param name="commandLineArgs">additional command line arguments</param>
-        /// <param name="options">additional options, one of VIX_RUNPROGRAM_RETURN_IMMEDIATELY or VIX_RUNPROGRAM_ACTIVATE_WINDOW</param>
-        /// <param name="timeoutInSeconds">timeout in seconds</param>
+        /// <param name="guestProgramName">Guest program to run.</param>
+        /// <param name="commandLineArgs">Additional command line arguments.</param>
+        /// <param name="options">Additional options, one of VIX_RUNPROGRAM_RETURN_IMMEDIATELY or VIX_RUNPROGRAM_ACTIVATE_WINDOW.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         /// <returns>Process information.</returns>
         public Process RunProgramInGuest(string guestProgramName, string commandLineArgs, int options, int timeoutInSeconds)
         {
@@ -473,6 +481,8 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Tests the existence of a file in the guest operating system.
         /// </summary>
+        /// <param name="guestPathName">Path to a file in the guest operating system.</param>
+        /// <returns>True if the file exists in the guest operating system.</returns>
         public bool FileExistsInGuest(string guestPathName)
         {
             return FileExistsInGuest(guestPathName, VMWareInterop.Timeouts.FileExistsTimeout);
@@ -481,6 +491,9 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Tests the existence of a file in the guest operating system.
         /// </summary>
+        /// <param name="guestPathName">Path to a file in the guest operating system.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        /// <returns>True if the file exists in the guest operating system.</returns>
         public bool FileExistsInGuest(string guestPathName, int timeoutInSeconds)
         {
             VMWareJobCallback callback = new VMWareJobCallback();
@@ -493,6 +506,8 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Tests the existence of a directory in the guest operating system.
         /// </summary>
+        /// <param name="guestPathName">Path to a directory in the guest operating system.</param>
+        /// <returns>True if the directory exists in the guest operating system.</returns>
         public bool DirectoryExistsInGuest(string guestPathName)
         {
             return DirectoryExistsInGuest(guestPathName, VMWareInterop.Timeouts.DirectoryExistsTimeout);
@@ -501,6 +516,9 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Tests the existence of a directory in the guest operating system.
         /// </summary>
+        /// <param name="guestPathName">Path to a directory in the guest operating system.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        /// <returns>True if the directory exists in the guest operating system.</returns>
         public bool DirectoryExistsInGuest(string guestPathName, int timeoutInSeconds)
         {
             VMWareJobCallback callback = new VMWareJobCallback();
@@ -521,6 +539,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Remove any guest operating system authentication context created by a previous call to LoginInGuest(), ie. Logout.
         /// </summary>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void Logout(int timeoutInSeconds)
         {
             VMWareJobCallback callback = new VMWareJobCallback();
@@ -529,30 +548,48 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// Power off a virtual machine.
+        /// Power off a virtual machine. The virtual machine will be powered off at the hardware level. 
+        /// Any state of the guest that has not been committed to disk will be lost. 
         /// </summary>
         public void PowerOff()
         {
-            PowerOff(VMWareInterop.Timeouts.PowerOffTimeout);
+            PowerOff(Constants.VIX_VMPOWEROP_NORMAL, VMWareInterop.Timeouts.PowerOffTimeout);
         }
 
         /// <summary>
-        /// Power off a virtual machine.
+        /// Power off a virtual machine. The virtual machine will be powered off at the hardware level. 
+        /// Any state of the guest that has not been committed to disk will be lost. 
         /// </summary>
-        public void PowerOff(int timeoutInSeconds)
+        public void ShutdownGuest()
+        {
+            PowerOff(Constants.VIX_VMPOWEROP_FROM_GUEST, VMWareInterop.Timeouts.PowerOffTimeout);
+        }
+
+        /// <summary>
+        /// Power off or shutdown a virtual machine.
+        /// If you call this function while the virtual machine is powered off or suspended, the operation will throw an 
+        /// exception with a VIX_E_VM_NOT_RUNNING error.
+        /// </summary>
+        /// <param name="powerOffOptions">Power-off options. Passing the VIX_VMPOWEROP_FROM_GUEST flag will cause the function 
+        /// to try to power off the guest OS. This will ensure a clean shutdown of the guest. This option requires that the 
+        /// VMware Tools be installed and running in the guest. If VIX_VMPOWEROP_NORMAL is passed as the 'powerOffOptions' parameter, 
+        /// then the virtual machine will be powered off at the hardware level. Any state of the guest that has not been committed 
+        /// to disk will be lost.
+        /// </param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        public void PowerOff(int powerOffOptions, int timeoutInSeconds)
         {
             VMWareJobCallback callback = new VMWareJobCallback();
-            VMWareJob job = new VMWareJob(_handle.PowerOff(
-                Constants.VIX_VMPOWEROP_NORMAL, callback),
-                callback);
+            VMWareJob job = new VMWareJob(_handle.PowerOff(powerOffOptions, callback), callback);
             job.Wait(timeoutInSeconds);
         }
 
         /// <summary>
         /// List files in the guest operating system.
         /// </summary>
-        /// <param name="pathName">path in the guest operating system to list</param>
-        /// <param name="recurse">recruse into subdirectories</param>
+        /// <param name="pathName">Path in the guest operating system to list.</param>
+        /// <param name="recurse">Recruse into subdirectories.</param>
+        /// <returns>A list of files and directories with full paths.</returns>
         public List<string> ListDirectoryInGuest(string pathName, bool recurse)
         {
             return ListDirectoryInGuest(pathName, recurse, VMWareInterop.Timeouts.ListDirectoryTimeout);
@@ -561,13 +598,14 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// List files in the guest operating system.
         /// </summary>
-        /// <param name="pathName">path in the guest operating system to list</param>
-        /// <param name="recurse">recruse into subdirectories</param>
-        /// <param name="timeoutInSeconds">timeout in seconds</param>
+        /// <param name="pathName">Path in the guest operating system to list.</param>
+        /// <param name="recurse">Recruse into subdirectories.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         /// <remarks>
         /// This function behaves differently on VMWare Workstation (returns empty list) and 
         /// ESX (throws an exception) for directories or files that don't exist.
         /// </remarks>
+        /// <returns>A list of files and directories with full paths.</returns>
         public List<string> ListDirectoryInGuest(string pathName, bool recurse, int timeoutInSeconds)
         {
             List<string> results = new List<string>();
@@ -638,7 +676,7 @@ namespace Vestris.VMWareLib
         /// way to pass runtime values in and out of the guest. 
         /// VMWare doesn't publish a list of known variables, the following guest variables have been observed.
         /// <list type="bullet">
-        /// <item>ip: IP address of the guest operating system</item>
+        /// <item>ip: IP address of the guest operating system.</item>
         /// </list>
         /// </summary>
         public VariableIndexer GuestVariables
@@ -690,7 +728,7 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// Running processes in the guest operating system by process id.
+        /// Running processes in the guest operating system, organized by process id.
         /// </summary>
         public Dictionary<long, Process> GuestProcesses
         {

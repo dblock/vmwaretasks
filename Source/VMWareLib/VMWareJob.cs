@@ -16,8 +16,8 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// A VMWare job created with a job completion callback.
         /// </summary>
-        /// <param name="job">an instance of IJob</param>
-        /// <param name="callback">job completion callback</param>
+        /// <param name="job">An instance of IJob.</param>
+        /// <param name="callback">Job completion callback.</param>
         public VMWareJob(IJob job, VMWareJobCallback callback)
             : base(job)
         {
@@ -27,7 +27,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Wait for the job to complete, timeout.
         /// </summary>
-        /// <param name="timeoutInSeconds">timeout in seconds</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void Wait(int timeoutInSeconds)
         {
             _callback.WaitForCompletion(timeoutInSeconds * 1000);
@@ -47,7 +47,7 @@ namespace Vestris.VMWareLib
         /// Wait for the job to complete and enumerate results.
         /// </summary>
         /// <param name="properties">properties to yield</param>
-        /// <param name="timeoutInSeconds">timeout in seconds</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public IEnumerable<object[]> YieldWait(object[] properties, int timeoutInSeconds)
         {
             _callback.WaitForCompletion(timeoutInSeconds * 1000);
@@ -62,7 +62,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         /// <param name="properties">properties to yield</param>
         /// <param name="index">property index to yield</param>
-        /// <param name="timeoutInSeconds">timeout in seconds</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         /// <typeparam name="T">type of the property to return</typeparam>
         public T Wait<T>(object[] properties, int index, int timeoutInSeconds)
         {
@@ -74,7 +74,7 @@ namespace Vestris.VMWareLib
         /// Wait for the job to complete, return a single result.
         /// </summary>
         /// <param name="propertyId">property id</param>
-        /// <param name="timeoutInSeconds">timeout in seconds</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         /// <typeparam name="T">type of property to return</typeparam>
         public T Wait<T>(int propertyId, int timeoutInSeconds)
         {

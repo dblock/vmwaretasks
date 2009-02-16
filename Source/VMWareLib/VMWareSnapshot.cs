@@ -51,7 +51,7 @@ namespace Vestris.VMWareLib
         /// Restores the virtual machine to the state when the specified snapshot was created.
         /// </summary>
         /// <param name="powerOnOptions">additional power-on options</param>
-        /// <param name="timeoutInSeconds">timeout in seconds</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void RevertToSnapshot(int powerOnOptions, int timeoutInSeconds)
         {
             VMWareJobCallback callback = new VMWareJobCallback();
@@ -62,7 +62,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Restores the virtual machine to the state when the specified snapshot was created.
         /// </summary>
-        /// <param name="timeoutInSeconds">timeout in seconds</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void RevertToSnapshot(int timeoutInSeconds)
         {
             RevertToSnapshot(Constants.VIX_VMPOWEROP_NORMAL, timeoutInSeconds);
@@ -91,7 +91,7 @@ namespace Vestris.VMWareLib
         /// If the snapshot is a member of a collection, the latter is updated with orphaned
         /// snapshots appended to the parent.
         /// </remarks>
-        /// <param name="timeoutInSeconds">timeout in seconds</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void RemoveSnapshot(int timeoutInSeconds)
         {
             // resolve child snapshots that will move one level up

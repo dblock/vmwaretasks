@@ -22,7 +22,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Checks whether an error indicates failure and throws an exception in that case.
         /// </summary>
-        /// <param name="errCode">error code</param>
+        /// <param name="errCode">Error code.</param>
         public static void Check(ulong errCode)
         {
             if (Instance.ErrorIndicatesFailure(errCode))
