@@ -95,7 +95,28 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// Connects to a VMWare Server or Workstation.
+        /// Connect to a WMWare Server.
+        /// </summary>
+        /// <param name="hostName">DNS name or IP address of a VMWare host, leave blank for localhost.</param>
+        public void ConnectToVMWareServer(string hostName)
+        {
+            Connect(ServiceProviderType.Server,
+                hostName, 0, null, null, VMWareInterop.Timeouts.ConnectTimeout);
+        }
+
+        /// <summary>
+        /// Connect to a WMWare Server.
+        /// </summary>
+        /// <param name="hostName">DNS name or IP address of a VMWare host, leave blank for localhost.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        public void ConnectToVMWareServer(string hostName, int timeoutInSeconds)
+        {
+            Connect(ServiceProviderType.Server,
+                hostName, 0, null, null, timeoutInSeconds);
+        }
+
+        /// <summary>
+        /// Connects to a VMWare VI Server, VMWare Server or Workstation.
         /// </summary>
         private void Connect(ServiceProviderType serviceProviderType, 
             string hostName, int hostPort, string username, string password, int timeout)
