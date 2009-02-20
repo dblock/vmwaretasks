@@ -249,28 +249,48 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// This function establishes a guest operating system authentication context that can be used 
-        /// with guest functions for the given virtual machine handle. 
+        /// This function establishes a guest operating system authentication context. 
         /// </summary>
-        /// <param name="username">Username.</param>
-        /// <param name="password">Password.</param>
+        /// <param name="username">The name of a user account on the guest operating system.</param>
+        /// <param name="password">The password of the account identified by userName.</param>
         public void Login(string username, string password)
         {
             Login(username, password, VMWareInterop.Timeouts.LoginTimeout);
         }
 
         /// <summary>
-        /// This function establishes a guest operating system authentication context that can be used 
-        /// with guest functions for the given virtual machine handle. 
+        /// This function establishes a guest operating system authentication context.
         /// </summary>
-        /// <param name="username">Username.</param>
-        /// <param name="password">Password.</param>
+        /// <param name="username">The name of a user account on the guest operating system.</param>
+        /// <param name="password">The password of the account identified by userName.</param>
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void Login(string username, string password, int timeoutInSeconds)
         {
+            Login(username, password, 0, timeoutInSeconds);
+        }
+
+        /// <summary>
+        /// This function establishes a guest operating system authentication context.
+        /// </summary>
+        /// <param name="username">The name of a user account on the guest operating system.</param>
+        /// <param name="password">The password of the account identified by userName.</param>
+        /// <param name="options">
+        ///  Must be 0 or VixCOM.Constants.VIX_LOGIN_IN_GUEST_REQUIRE_INTERACTIVE_ENVIRONMENT, which forces interactive 
+        ///  guest login within a graphical session that is visible to the user. On Linux, interactive environment 
+        ///  requires that the X11 window system be running to start the vmware-user process. Without X11, pass 0 as 
+        ///  options to start the vmware-guestd process instead.
+        /// </param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        /// <remarks>
+        /// Logins are supported on Linux and Windows. To log in as a Windows Domain user, specify the 'userName' parameter in 
+        /// the form "domain\username". Other guest operating systems are not supported for login, including Solaris, FreeBSD, 
+        /// and Netware.
+        /// </remarks>
+        public void Login(string username, string password, int options, int timeoutInSeconds)
+        {
             VMWareJobCallback callback = new VMWareJobCallback();
             VMWareJob job = new VMWareJob(_handle.LoginInGuest(
-                username, password, 0, callback),
+                username, password, options, callback),
                 callback);
             job.Wait(timeoutInSeconds);
         }

@@ -223,5 +223,16 @@ namespace Vestris.VMWareLibUnitTests
                 Assert.IsFalse(guestProcesses2.ContainsKey(notepadProcess.Id));
             }
         }
+
+        [Test]
+        public void TestPowerOnPoweredHost()
+        {
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            {
+                virtualMachine.PowerOn();
+                virtualMachine.PowerOn();
+                Assert.IsTrue(virtualMachine.IsRunning);
+            }
+        }
     }
 }
