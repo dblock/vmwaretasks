@@ -5,12 +5,13 @@ using Vestris.VMWareLib;
 using System.Configuration;
 using System.IO;
 using System.Drawing;
+using System.Threading;
 using VixCOM;
 
 namespace Vestris.VMWareLibUnitTests
 {
     [TestFixture]
-    public class VMWareVirtualMachineTests
+    public class VMWareVirtualMachineTests : VMWareTestSetup
     {
         [Test]
         public void TestTasks()
@@ -196,6 +197,7 @@ namespace Vestris.VMWareLibUnitTests
                 Console.WriteLine("{0}: {1} [{2}] ({3})", process.Value.Id, process.Value.Name, process.Value.Command, process.Value.Owner);
             }
             notepadProcess.KillProcessInGuest();
+            Thread.Sleep(3000); // doc says: depending on the behavior of the guest operating system, there may be a short delay after the job completes before the process truly disappears
             Dictionary<long, VMWareVirtualMachine.Process> guestProcesses2 = virtualMachine.GuestProcesses;
             Assert.IsFalse(guestProcesses2.ContainsKey(notepadProcess.Id));
         }

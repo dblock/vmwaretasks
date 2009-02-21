@@ -7,7 +7,7 @@ using System.Configuration;
 namespace Vestris.VMWareLibUnitTests
 {
     [TestFixture]
-    public class VMWareVirtualHostTests
+    public class VMWareVirtualHostTests : VMWareTestSetup
     {
         [Test]
         public void TestWorkstationIDisposable()
@@ -66,7 +66,7 @@ namespace Vestris.VMWareLibUnitTests
             if (VMWareTest.Instance.TestType != VMWareTestType.VI)
                 Assert.Ignore("Skipping, test applies to VI only.");
 
-            foreach (VMWareVirtualMachine virtualMachine in TestVI.Instance.VirtualHost.RegisteredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.VirtualHost.RegisteredVirtualMachines)
             {
                 Console.WriteLine("{0}: running={1}, memory={2}, CPUs={3}",
                     virtualMachine.PathName, virtualMachine.IsRunning,

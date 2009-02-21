@@ -644,7 +644,7 @@ namespace Vestris.VMWareLib
         public List<string> ListDirectoryInGuest(string pathName, bool recurse, int timeoutInSeconds)
         {
             // ListDirectoryInGuest behaves differently on VMWare Workstation (returns empty list) and 
-            /// ESX (throws an exception) for directories or files that don't exist.
+            // ESX (throws an exception) for directories or files that don't exist.
             if (!DirectoryExistsInGuest(pathName))
                 throw new VMWareException(2);
 

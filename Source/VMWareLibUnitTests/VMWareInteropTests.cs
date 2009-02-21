@@ -6,7 +6,7 @@ using Vestris.VMWareLib;
 namespace Vestris.VMWareLibUnitTests
 {
     [TestFixture]
-    public class VMWareInteropTests
+    public class VMWareInteropTests : VMWareTestSetup
     {
         [Test]
         public void TestThrowOperationWasSuccessfulException()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Vestris.VMWareLib;
 using System.Configuration;
+using NUnit.Framework;
 
 namespace Vestris.VMWareLibUnitTests
 {
@@ -22,7 +23,7 @@ namespace Vestris.VMWareLibUnitTests
     /// <summary>
     /// An abstract VMWareTest driver.
     /// </summary>
-    public class VMWareTest : IVMWareTestProvider
+    public class VMWareTest : IVMWareTestProvider, IDisposable
     {
         private VMWareTestType _testType = VMWareTestType.Workstation;
         private IVMWareTestProvider _provider = null;
@@ -50,11 +51,11 @@ namespace Vestris.VMWareLibUnitTests
             switch (testType)
             {
                 case VMWareTestType.VI:
-                    _provider = TestVI.Instance;
+                    _provider = new TestVI();
                     break;
                 case VMWareTestType.Workstation:
                 default:
-                    _provider = TestWorkstation.Instance;
+                    _provider = new TestWorkstation();
                     break;
             }
         }
@@ -92,6 +93,47 @@ namespace Vestris.VMWareLibUnitTests
             }
         }
 
-        public static VMWareTest Instance = new VMWareTest();
+        public void Dispose()
+        {
+            _provider = null;
+            GC.SuppressFinalize(this);
+        }
+
+        private static VMWareTest _instance = null;
+
+        public static VMWareTest Instance
+        {
+            get
+            {
+                return _instance;
+            }
+            set
+            {
+                if (_instance != null)
+                {
+                    _instance.Dispose();
+                }
+
+                _instance = value;
+            }
+        }
+    }
+
+    public class VMWareTestSetup
+    {
+        [SetUp]
+        public virtual void SetUp()
+        {
+            VMWareTest.Instance = new VMWareTest();
+        }
+
+        [TearDown]
+        public virtual void TearDown()
+        {
+            VMWareTest.Instance = null;
+            // work around VMWare VIXCOM API AVs
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
     }
 }

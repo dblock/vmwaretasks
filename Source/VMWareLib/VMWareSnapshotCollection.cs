@@ -86,7 +86,11 @@ namespace Vestris.VMWareLib
                     return snapshot;
                 }
 
-                return snapshot.ChildSnapshots.FindSnapshotByName(name);
+                VMWareSnapshot childSnapshot = snapshot.ChildSnapshots.FindSnapshotByName(name);
+                if (childSnapshot != null)
+                {
+                    return childSnapshot;
+                }
             }
             return null;
         }

@@ -57,14 +57,14 @@ namespace Vestris.VMWareLibUnitTests
                     VirtualMachine.WaitForToolsInGuest();
                     string testUsername = ConfigurationManager.AppSettings["testVIUsername"];
                     string testPassword = ConfigurationManager.AppSettings["testVIPassword"];
+                    Console.WriteLine("Logging in ...");
                     VirtualMachine.LoginInGuest(testUsername, testPassword);
+                    Console.WriteLine("Waiting for tools ...");
                     VirtualMachine.WaitForToolsInGuest();
                     _poweredOn = true;
                 }
                 return _virtualMachine;
             }
         }
-
-        public static TestVI Instance = new TestVI();
     }
 }

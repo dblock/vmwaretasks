@@ -59,16 +59,14 @@ namespace Vestris.VMWareLib
         /// Get a snapshot by its exact name. 
         /// </summary>
         /// <param name="name">Snapshot name.</param>
-        /// <returns>A snapshot or null if the snapshot doesn't exist.</returns>
-        /// <remarks>This function will throw an exception if more than one snapshot with the same exists.</remarks>
+        /// <returns>A snapshot.</returns>
+        /// <remarks>This function will throw an exception if more than one snapshot with the same exists or if the snapshot doesn't exist.</remarks>
         public VMWareSnapshot GetNamedSnapshot(string name)
         {
             ISnapshot snapshot = null;
             ulong rc = _vm.GetNamedSnapshot(name, out snapshot);
             switch (rc)
             {
-                case VixCOM.Constants.VIX_E_SNAPSHOT_NOTFOUND:
-                    break;
                 case VixCOM.Constants.VIX_OK:
                     return new VMWareSnapshot(_vm, snapshot, null);
                 default:
