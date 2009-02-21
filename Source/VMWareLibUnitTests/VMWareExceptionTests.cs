@@ -8,6 +8,12 @@ namespace Vestris.VMWareLibUnitTests
     [TestFixture]
     public class VMWareExceptionTests
     {
+        [SetUp]
+        public void SetUp()
+        {
+            Console.WriteLine("Virtual machine: {0}", VMWareTest.Instance.PoweredVirtualMachine.PathName);
+        }
+
         [Test]
         [ExpectedException(ExceptionType = typeof(VMWareException), ExpectedMessage = "The operation was successful")]
         public void TestThrowOperationWasSuccessfulException()

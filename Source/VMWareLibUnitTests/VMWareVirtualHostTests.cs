@@ -12,8 +12,8 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestWorkstationIDisposable()
         {
-            if (!bool.Parse(ConfigurationManager.AppSettings["testWorkstation"]))
-                Assert.Ignore("testWorkstation = false");
+            if (VMWareTest.Instance.TestType != VMWareTestType.Workstation)
+                Assert.Ignore("Skipping, test applies to Workstation only.");
 
             using (VMWareVirtualHost virtualHost = new VMWareVirtualHost())
             {
@@ -25,8 +25,9 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestWorkstationConnectDisconnect()
         {
-            if (!bool.Parse(ConfigurationManager.AppSettings["testWorkstation"]))
-                Assert.Ignore("testWorkstation = false");
+
+            if (VMWareTest.Instance.TestType != VMWareTestType.Workstation)
+                Assert.Ignore("Skipping, test applies to Workstation only.");
 
             VMWareVirtualHost virtualHost = new VMWareVirtualHost();
             Assert.AreEqual(VMWareVirtualHost.ServiceProviderType.None, virtualHost.ConnectionType);
@@ -39,8 +40,8 @@ namespace Vestris.VMWareLibUnitTests
         [Test, ExpectedException(typeof(InvalidOperationException))]
         public void TestWorkstationConnectDisconnectTwice()
         {
-            if (!bool.Parse(ConfigurationManager.AppSettings["testWorkstation"]))
-                Assert.Ignore("testWorkstation = false");
+            if (VMWareTest.Instance.TestType != VMWareTestType.Workstation)
+                Assert.Ignore("Skipping, test applies to Workstation only.");
 
             VMWareVirtualHost virtualHost = new VMWareVirtualHost();
             virtualHost.ConnectToVMWareWorkstation();
@@ -51,22 +52,19 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void ShowRunningVirtualMachines()
         {
-            foreach(VMWareVirtualHost virtualHost in VMWareTest.VirtualHosts)
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.VirtualHost.RunningVirtualMachines)
             {
-                foreach (VMWareVirtualMachine virtualMachine in virtualHost.RunningVirtualMachines)
-                {
-                    Console.WriteLine("{0}: running={1}, memory={2}, CPUs={3}",
-                        virtualMachine.PathName, virtualMachine.IsRunning, 
-                        virtualMachine.MemorySize, virtualMachine.CPUCount);
-                }
+                Console.WriteLine("{0}: running={1}, memory={2}, CPUs={3}",
+                    virtualMachine.PathName, virtualMachine.IsRunning,
+                    virtualMachine.MemorySize, virtualMachine.CPUCount);
             }
         }
 
         [Test]
         public void ShowVIRegisteredVirtualMachines()
         {
-            if (!bool.Parse(ConfigurationManager.AppSettings["testVI"]))
-                Assert.Ignore("testVI = false");
+            if (VMWareTest.Instance.TestType != VMWareTestType.VI)
+                Assert.Ignore("Skipping, test applies to VI only.");
 
             foreach (VMWareVirtualMachine virtualMachine in TestVI.Instance.VirtualHost.RegisteredVirtualMachines)
             {

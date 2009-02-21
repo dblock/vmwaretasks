@@ -6,7 +6,7 @@ using System.Configuration;
 
 namespace Vestris.VMWareLibUnitTests
 {
-    public class TestVI
+    public class TestVI : IVMWareTestProvider
     {
         private VMWareVirtualHost _host = null;
         private VMWareVirtualMachine _virtualMachine = null;
@@ -19,11 +19,12 @@ namespace Vestris.VMWareLibUnitTests
                 if (_host == null)
                 {
                     VMWareVirtualHost virtualHost = new VMWareVirtualHost();
-                    Console.WriteLine("Connecting to: {0}", ConfigurationManager.AppSettings["testVIHost"]);
+                    Console.WriteLine("Connecting to: {0} ...", ConfigurationManager.AppSettings["testVIHost"]);
                     virtualHost.ConnectToVMWareVIServer(
                         ConfigurationManager.AppSettings["testVIHost"],
                         ConfigurationManager.AppSettings["testVIHostUsername"],
                         ConfigurationManager.AppSettings["testVIHostPassword"]);
+                    Console.WriteLine("Connection established.");
                     _host = virtualHost;
                 }
                 return _host;
@@ -53,10 +54,11 @@ namespace Vestris.VMWareLibUnitTests
                     Console.WriteLine("Powering on: {0}", ConfigurationManager.AppSettings["testVIFilename"]);
                     // power-on current snapshot
                     VirtualMachine.PowerOn();
+                    VirtualMachine.WaitForToolsInGuest();
                     string testUsername = ConfigurationManager.AppSettings["testVIUsername"];
                     string testPassword = ConfigurationManager.AppSettings["testVIPassword"];
-                    VirtualMachine.Login(testUsername, testPassword);
-                    // assign last not to get a value on exception
+                    VirtualMachine.LoginInGuest(testUsername, testPassword);
+                    VirtualMachine.WaitForToolsInGuest();
                     _poweredOn = true;
                 }
                 return _virtualMachine;

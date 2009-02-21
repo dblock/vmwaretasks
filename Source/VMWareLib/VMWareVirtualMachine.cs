@@ -217,23 +217,39 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// Power on a virtual machine and wait for it to boot.
+        /// Power on a virtual machine.
         /// </summary>
         /// <param name="powerOnOptions">Additional power options.</param>
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void PowerOn(int powerOnOptions, int timeoutInSeconds)
         {
-            VMWareJobCallback powerOnCallback = new VMWareJobCallback();
-            VMWareJob powerOnJob = new VMWareJob(_handle.PowerOn(
-                powerOnOptions, null, powerOnCallback),
-                powerOnCallback);
-            powerOnJob.Wait(timeoutInSeconds);
+            VMWareJobCallback callback = new VMWareJobCallback();
+            VMWareJob job = new VMWareJob(_handle.PowerOn(
+                powerOnOptions, null, callback), callback);
+            job.Wait(timeoutInSeconds);
+        }
+
+        /// <summary>
+        /// This function returns when VMware Tools has successfully started in the guest operating system. 
+        /// VMware Tools is a collection of services that run in the guest. 
+        /// </summary>
+        public void WaitForToolsInGuest()
+        {
+            WaitForToolsInGuest(VMWareInterop.Timeouts.WaitForToolsTimeout);
+        }
+
+        /// <summary>
+        /// This function returns when VMware Tools has successfully started in the guest operating system. 
+        /// VMware Tools is a collection of services that run in the guest. 
+        /// </summary>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        public void WaitForToolsInGuest(int timeoutInSeconds)
+        {
             // wait till the machine boots or times out with an error
-            VMWareJobCallback waitForToolsCallback = new VMWareJobCallback();
-            VMWareJob waitForToolsInGuestJob = new VMWareJob(
-                _handle.WaitForToolsInGuest(timeoutInSeconds, waitForToolsCallback), 
-                waitForToolsCallback);
-            waitForToolsInGuestJob.Wait(timeoutInSeconds);
+            VMWareJobCallback callback = new VMWareJobCallback();
+            VMWareJob job = new VMWareJob(
+                _handle.WaitForToolsInGuest(timeoutInSeconds, callback), callback);
+            job.Wait(timeoutInSeconds);
         }
 
         /// <summary>
@@ -253,9 +269,9 @@ namespace Vestris.VMWareLib
         /// </summary>
         /// <param name="username">The name of a user account on the guest operating system.</param>
         /// <param name="password">The password of the account identified by userName.</param>
-        public void Login(string username, string password)
+        public void LoginInGuest(string username, string password)
         {
-            Login(username, password, VMWareInterop.Timeouts.LoginTimeout);
+            LoginInGuest(username, password, VMWareInterop.Timeouts.LoginTimeout);
         }
 
         /// <summary>
@@ -264,9 +280,9 @@ namespace Vestris.VMWareLib
         /// <param name="username">The name of a user account on the guest operating system.</param>
         /// <param name="password">The password of the account identified by userName.</param>
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
-        public void Login(string username, string password, int timeoutInSeconds)
+        public void LoginInGuest(string username, string password, int timeoutInSeconds)
         {
-            Login(username, password, 0, timeoutInSeconds);
+            LoginInGuest(username, password, 0, timeoutInSeconds);
         }
 
         /// <summary>
@@ -286,7 +302,7 @@ namespace Vestris.VMWareLib
         /// the form "domain\username". Other guest operating systems are not supported for login, including Solaris, FreeBSD, 
         /// and Netware.
         /// </remarks>
-        public void Login(string username, string password, int options, int timeoutInSeconds)
+        public void LoginInGuest(string username, string password, int options, int timeoutInSeconds)
         {
             VMWareJobCallback callback = new VMWareJobCallback();
             VMWareJob job = new VMWareJob(_handle.LoginInGuest(
@@ -622,12 +638,16 @@ namespace Vestris.VMWareLib
         /// <param name="recurse">Recruse into subdirectories.</param>
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         /// <remarks>
-        /// This function behaves differently on VMWare Workstation (returns empty list) and 
-        /// ESX (throws an exception) for directories or files that don't exist.
+        /// The function throws an exception if pathName doesn't exist.
         /// </remarks>
         /// <returns>A list of files and directories with full paths.</returns>
         public List<string> ListDirectoryInGuest(string pathName, bool recurse, int timeoutInSeconds)
         {
+            // ListDirectoryInGuest behaves differently on VMWare Workstation (returns empty list) and 
+            /// ESX (throws an exception) for directories or files that don't exist.
+            if (!DirectoryExistsInGuest(pathName))
+                throw new VMWareException(2);
+
             List<string> results = new List<string>();
             VMWareJobCallback callback = new VMWareJobCallback();
             VMWareJob job = new VMWareJob(_handle.ListDirectoryInGuest(

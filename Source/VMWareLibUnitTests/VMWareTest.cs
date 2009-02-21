@@ -6,49 +6,92 @@ using System.Configuration;
 
 namespace Vestris.VMWareLibUnitTests
 {
-    public abstract class VMWareTest
+    public enum VMWareTestType
     {
+        VI,
+        Workstation
+    }
+
+    public interface IVMWareTestProvider
+    {
+        VMWareVirtualHost VirtualHost { get; }
+        VMWareVirtualMachine VirtualMachine { get; }
+        VMWareVirtualMachine PoweredVirtualMachine { get; }
+    }
+
+    /// <summary>
+    /// An abstract VMWareTest driver.
+    /// </summary>
+    public class VMWareTest : IVMWareTestProvider
+    {
+        private VMWareTestType _testType = VMWareTestType.Workstation;
+        private IVMWareTestProvider _provider = null;
+
+        public VMWareTest()
+            : this((VMWareTestType) Enum.Parse(typeof(VMWareTestType), ConfigurationManager.AppSettings["testType"]))
+        {
+
+        }
+
         /// <summary>
-        /// A set of generic virtual machines to run tests on.
+        /// Current test type.
         /// </summary>
-        public static IEnumerable<VMWareVirtualMachine> VirtualMachines
+        public VMWareTestType TestType
         {
             get
             {
-                if (bool.Parse(ConfigurationManager.AppSettings["testVI"]))
-                    yield return TestVI.Instance.VirtualMachine;
-                if (bool.Parse(ConfigurationManager.AppSettings["testWorkstation"]))
-                    yield return TestWorkstation.Instance.VirtualMachine;
+                return _testType;
+            }
+        }
+
+        public VMWareTest(VMWareTestType testType)
+        {
+            _testType = testType;
+            switch (testType)
+            {
+                case VMWareTestType.VI:
+                    _provider = TestVI.Instance;
+                    break;
+                case VMWareTestType.Workstation:
+                default:
+                    _provider = TestWorkstation.Instance;
+                    break;
             }
         }
 
         /// <summary>
-        /// A set of generic virtual machines to run tests on.
+        /// A virtual machine.
         /// </summary>
-        public static IEnumerable<VMWareVirtualMachine> PoweredVirtualMachines
+        public VMWareVirtualMachine VirtualMachine
         {
             get
             {
-                if (bool.Parse(ConfigurationManager.AppSettings["testVI"]))
-                    yield return TestVI.Instance.PoweredVirtualMachine;
-                if (bool.Parse(ConfigurationManager.AppSettings["testWorkstation"]))
-                    yield return TestWorkstation.Instance.PoweredVirtualMachine;
+                return _provider.VirtualMachine;
             }
         }
 
         /// <summary>
-        /// A set of generic virtual hosts.
+        /// A powered VM.
         /// </summary>
-        public static IEnumerable<VMWareVirtualHost> VirtualHosts
+        public VMWareVirtualMachine PoweredVirtualMachine
         {
             get
             {
-                if (bool.Parse(ConfigurationManager.AppSettings["testVI"]))
-                    yield return TestVI.Instance.VirtualHost;
-                if (bool.Parse(ConfigurationManager.AppSettings["testWorkstation"]))
-                    yield return TestWorkstation.Instance.LocalHost;
+                return _provider.PoweredVirtualMachine;
             }
         }
 
+        /// <summary>
+        /// A virtual host.
+        /// </summary>
+        public VMWareVirtualHost VirtualHost
+        {
+            get
+            {
+                return _provider.VirtualHost;
+            }
+        }
+
+        public static VMWareTest Instance = new VMWareTest();
     }
 }

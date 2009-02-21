@@ -46,8 +46,10 @@
       VMWareVirtualMachine virtualMachine = virtualHost.Open("C:\Virtual Machines\xp\xp.vmx");
       // power on this virtual machine
       virtualMachine.PowerOn();
+      // wait for VMWare Tools
+      virtualMachine.WaitForToolsInGuest();
       // login to the virtual machine
-      virtualMachine.Login("Administrator", "password");
+      virtualMachine.LoginInGuest("Administrator", "password");
       // run notepad
       virtualMachine.RunProgramInGuest("notepad.exe", string.Empty);
       // create a new snapshot

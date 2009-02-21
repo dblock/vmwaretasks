@@ -6,22 +6,23 @@ using System.Configuration;
 
 namespace Vestris.VMWareLibUnitTests
 {
-    public class TestWorkstation
+    public class TestWorkstation : IVMWareTestProvider
     {
         private VMWareVirtualHost _host = null;
         private VMWareVirtualMachine _virtualMachine = null;
         private bool _poweredOn = false;
 
-        public VMWareVirtualHost LocalHost
+        public VMWareVirtualHost VirtualHost
         {
             get
             {
                 if (_host == null)
                 {
                     VMWareVirtualHost virtualHost = new VMWareVirtualHost();
-                    Console.WriteLine("Connecting to local host");
+                    Console.WriteLine("Connecting to local host ...");
                     // connect to a local VM
                     virtualHost.ConnectToVMWareWorkstation();
+                    Console.WriteLine("Connection established.");
                     _host = virtualHost;
                 }
                 return _host;
@@ -36,7 +37,7 @@ namespace Vestris.VMWareLibUnitTests
                 {
                     Console.WriteLine("Opening: {0}", ConfigurationManager.AppSettings["testWorkstationFilename"]);
                     string testWorkstationFilename = ConfigurationManager.AppSettings["testWorkstationFilename"];
-                    _virtualMachine = LocalHost.Open(testWorkstationFilename);
+                    _virtualMachine = VirtualHost.Open(testWorkstationFilename);
                 }
                 return _virtualMachine;
             }
@@ -51,10 +52,11 @@ namespace Vestris.VMWareLibUnitTests
                     Console.WriteLine("Powering on: {0}", ConfigurationManager.AppSettings["testWorkstationFilename"]);
                     // power-on current snapshot
                     VirtualMachine.PowerOn();
+                    VirtualMachine.WaitForToolsInGuest();
                     string testUsername = ConfigurationManager.AppSettings["testWorkstationUsername"];
                     string testPassword = ConfigurationManager.AppSettings["testWorkstationPassword"];
-                    VirtualMachine.Login(testUsername, testPassword);
-                    // assign last not to get a value on exception
+                    VirtualMachine.LoginInGuest(testUsername, testPassword);
+                    VirtualMachine.WaitForToolsInGuest();
                     _poweredOn = true;
                 }
                 return _virtualMachine;

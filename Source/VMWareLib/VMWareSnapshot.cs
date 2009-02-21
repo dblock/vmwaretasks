@@ -50,12 +50,19 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Restores the virtual machine to the state when the specified snapshot was created.
         /// </summary>
-        /// <param name="powerOnOptions">additional power-on options</param>
+        /// <param name="powerOnOptions">
+        ///  Any applicable VixVMPowerOpOptions. If the virtual machine was powered on when the snapshot was created, 
+        ///  then this will determine how the virtual machine is powered back on. To prevent the virtual machine from being 
+        ///  powered on regardless of the power state when the snapshot was created, use the 
+        ///  VIX_VMPOWEROP_SUPPRESS_SNAPSHOT_POWERON flag. VIX_VMPOWEROP_SUPPRESS_SNAPSHOT_POWERON is mutually exclusive to 
+        ///  all other VixVMPowerOpOptions. 
+        /// </param>
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void RevertToSnapshot(int powerOnOptions, int timeoutInSeconds)
         {
             VMWareJobCallback callback = new VMWareJobCallback();
-            VMWareJob job = new VMWareJob(_vm.RevertToSnapshot(_handle, powerOnOptions, null, callback), callback);
+            VMWareJob job = new VMWareJob(_vm.RevertToSnapshot(
+                _handle, powerOnOptions, null, callback), callback);
             job.Wait(timeoutInSeconds);
         }
 

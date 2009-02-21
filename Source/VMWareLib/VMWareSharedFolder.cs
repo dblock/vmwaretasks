@@ -78,5 +78,31 @@ namespace Vestris.VMWareLib
                 return _flags;
             }
         }
+
+        /// <summary>
+        /// Compare with another instance of a shared folder or object.
+        /// </summary>
+        /// <param name="obj">another shared folder</param>
+        /// <returns>true if the shared folders are identical</returns>
+        public override bool Equals(object obj)
+        {
+            if (obj is VMWareSharedFolder)
+            {
+                VMWareSharedFolder sharedFolder = (VMWareSharedFolder)obj;
+                return sharedFolder._hostPath == _hostPath 
+                    && sharedFolder._shareName == _shareName;
+            }
+
+            return base.Equals(obj);
+        }
+
+        /// <summary>
+        /// Serves as a hash function for a particular type.
+        /// </summary>
+        /// <returns>A hash code for the current System.Object.</returns>
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }
