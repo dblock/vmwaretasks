@@ -19,7 +19,7 @@
        Version 1.6.2 is required for VI support.
       </listItem>
       <listItem>
-       Either VMWare Workstation 6.5, a VI environment (eg. ESX), or both.
+       Either VMWare Workstation 6.5, VMWare Server 2.0 or a Virtual Infrastructure environment (eg. ESX).
       </listItem>
      </list>
     </para>
