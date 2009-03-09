@@ -189,6 +189,17 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
+        /// Returns true when connected to a virtual host, false otherwise.
+        /// </summary>
+        public bool IsConnected
+        {
+            get
+            {
+                return _handle != null;
+            }
+        }
+
+        /// <summary>
         /// Destructor.
         /// </summary>
         ~VMWareVirtualHost()

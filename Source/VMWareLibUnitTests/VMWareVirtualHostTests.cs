@@ -30,10 +30,13 @@ namespace Vestris.VMWareLibUnitTests
                 Assert.Ignore("Skipping, test applies to Workstation only.");
 
             VMWareVirtualHost virtualHost = new VMWareVirtualHost();
+            Assert.IsFalse(virtualHost.IsConnected);
             Assert.AreEqual(VMWareVirtualHost.ServiceProviderType.None, virtualHost.ConnectionType);
             virtualHost.ConnectToVMWareWorkstation();
+            Assert.IsTrue(virtualHost.IsConnected);
             Assert.AreEqual(VMWareVirtualHost.ServiceProviderType.Workstation, virtualHost.ConnectionType);
             virtualHost.Disconnect();
+            Assert.IsFalse(virtualHost.IsConnected);
             Assert.AreEqual(VMWareVirtualHost.ServiceProviderType.None, virtualHost.ConnectionType);
         }
 
