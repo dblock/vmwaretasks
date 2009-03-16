@@ -177,6 +177,28 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
+        /// Returns true if the virtual machine is paused.
+        /// </summary>
+        public bool IsPaused
+        {
+            get
+            {
+                return (GetProperty<int>(Constants.VIX_PROPERTY_VM_POWER_STATE) & Constants.VIX_POWERSTATE_PAUSED) > 0;
+            }
+        }
+
+        /// <summary>
+        /// Returns true if the virtual machine is suspended.
+        /// </summary>
+        public bool IsSuspended
+        {
+            get
+            {
+                return (GetProperty<int>(Constants.VIX_PROPERTY_VM_POWER_STATE) & Constants.VIX_POWERSTATE_SUSPENDED) > 0;
+            }
+        }
+
+        /// <summary>
         /// The memory size of the virtual machine. 
         /// </summary>
         public int MemorySize
@@ -617,6 +639,100 @@ namespace Vestris.VMWareLib
         {
             VMWareJobCallback callback = new VMWareJobCallback();
             VMWareJob job = new VMWareJob(_handle.PowerOff(powerOffOptions, callback), callback);
+            job.Wait(timeoutInSeconds);
+        }
+
+        /// <summary>
+        /// Hardware reset the virtual machine.
+        /// </summary>
+        public void Reset()
+        {
+            Reset(Constants.VIX_VMPOWEROP_NORMAL);
+        }
+
+        /// <summary>
+        /// Hardware reset the virtual machine.
+        /// </summary>
+        /// <param name="resetOptions">Reset options.
+        /// Passing VIX_VMPOWEROP_NORMAL will force a hardware reset.
+        /// Passing VIX_VMPOWEROP_FROM_GUEST will attempt a clean shutdown of the guest operating system.
+        /// </param>
+        public void Reset(int resetOptions)
+        {
+            Reset(resetOptions, VMWareInterop.Timeouts.ResetTimeout);
+        }
+
+        /// <summary>
+        /// Reset a virtual machine.
+        /// </summary>
+        /// <param name="resetOptions">Reset options.
+        /// Passing VIX_VMPOWEROP_NORMAL will force a hardware reset.
+        /// Passing VIX_VMPOWEROP_FROM_GUEST will attempt a clean shutdown of the guest operating system.
+        /// </param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        public void Reset(int resetOptions, int timeoutInSeconds)
+        {
+            VMWareJobCallback callback = new VMWareJobCallback();
+            VMWareJob job = new VMWareJob(_handle.Reset(resetOptions, callback), callback);
+            job.Wait(timeoutInSeconds);
+        }
+
+        /// <summary>
+        /// Suspend the virtual machine.
+        /// </summary>
+        public void Suspend()
+        {
+            Suspend(VMWareInterop.Timeouts.SuspendTimeout);
+        }
+
+        /// <summary>
+        /// Suspend a virtual machine.
+        /// </summary>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        public void Suspend(int timeoutInSeconds)
+        {
+            VMWareJobCallback callback = new VMWareJobCallback();
+            VMWareJob job = new VMWareJob(_handle.Suspend(0, callback), callback);
+            job.Wait(timeoutInSeconds);
+        }
+
+        /// <summary>
+        /// Pause the virtual machine.
+        /// </summary>
+        public void Pause()
+        {
+            Pause(VMWareInterop.Timeouts.PauseTimeout);
+        }
+
+        /// <summary>
+        /// Pause a virtual machine.
+        /// This stops execution of the virtual machine. 
+        /// Call Unpause to continue execution of the virtual machine. 
+        /// </summary>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        public void Pause(int timeoutInSeconds)
+        {
+            VMWareJobCallback callback = new VMWareJobCallback();
+            VMWareJob job = new VMWareJob(_handle.Pause(0, null, callback), callback);
+            job.Wait(timeoutInSeconds);
+        }
+
+        /// <summary>
+        /// Continue execution of a virtual machine that was stopped using Pause. 
+        /// </summary>
+        public void Unpause()
+        {
+            Unpause(VMWareInterop.Timeouts.UnpauseTimeout);
+        }
+
+        /// <summary>
+        /// Continue execution of a virtual machine that was stopped using Pause. 
+        /// </summary>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        public void Unpause(int timeoutInSeconds)
+        {
+            VMWareJobCallback callback = new VMWareJobCallback();
+            VMWareJob job = new VMWareJob(_handle.Unpause(0, null, callback), callback);
             job.Wait(timeoutInSeconds);
         }
 

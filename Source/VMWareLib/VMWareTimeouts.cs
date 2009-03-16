@@ -1,9 +1,33 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Reflection;
 
 namespace Vestris.VMWareLib
 {
+    /// <summary>
+    /// VMWare job timeout metadata.
+    /// </summary>
+    public class VMWareTimeoutAttribute : Attribute
+    {
+        private int _multiplier = 1;
+
+        /// <summary>
+        /// A default base timeout multiplier.
+        /// </summary>
+        public int Multiplier
+        {
+            get
+            {
+                return _multiplier;
+            }
+            set
+            {
+                _multiplier = value;
+            }
+        }
+    }
+
     /// <summary>
     /// A collection of default timeouts used in VMWareTasks functions exposed without a timeout parameter.
     /// </summary>
@@ -12,38 +36,67 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Maximum time, in seconds, to establish a connection to a VMWare host.
         /// </summary>
+        [VMWareTimeoutAttribute]
         public int ConnectTimeout;
         /// <summary>
         /// Maximum time, in seconds, to open a file in a VMWare guest operating system.
         /// </summary>
+        [VMWareTimeoutAttribute]
         public int OpenFileTimeout;
         /// <summary>
         /// Maximum time, in seconds, to revert a snapshot.
         /// </summary>
+        [VMWareTimeoutAttribute]
         public int RevertToSnapshotTimeout;
         /// <summary>
         /// Maximum time, in seconds, to remove (delete) a snapshot.
         /// </summary>
+        [VMWareTimeoutAttribute(Multiplier = 10)]
         public int RemoveSnapshotTimeout;
         /// <summary>
         /// Maximum time, in seconds, to create a snapshot.
         /// </summary>
+        [VMWareTimeoutAttribute(Multiplier = 10)]
         public int CreateSnapshotTimeout;
         /// <summary>
         /// The maximum operational time, in seconds, to bring the power to/from the vm, not to boot it
         /// </summary>
+        [VMWareTimeoutAttribute]
         public int PowerOnTimeout;
         /// <summary>
         /// The maximum time, in seconds, to power off a virtual machine.
         /// </summary>
+        [VMWareTimeoutAttribute]
         public int PowerOffTimeout;
+        /// <summary>
+        /// The maximum time, in seconds, to reset a virtual machine.
+        /// </summary>
+        [VMWareTimeoutAttribute]
+        public int ResetTimeout;
+        /// <summary>
+        /// The maximum time, in seconds, to suspend a virtual machine.
+        /// </summary>
+        [VMWareTimeoutAttribute]
+        public int SuspendTimeout;
+        /// <summary>
+        /// The maximum time, in seconds, to pause a virtual machine.
+        /// </summary>
+        [VMWareTimeoutAttribute]
+        public int PauseTimeout;
+        /// <summary>
+        /// The maximum time, in seconds, to unpause (continue execution of) a virtual machine.
+        /// </summary>
+        [VMWareTimeoutAttribute]
+        public int UnpauseTimeout;
         /// <summary>
         /// The maximum time, in seconds, to wait for tools in a guest operating system.
         /// </summary>
+        [VMWareTimeoutAttribute(Multiplier = 5)]
         public int WaitForToolsTimeout;
         /// <summary>
         /// The maximum time, in seconds, to wait for a log-in to a guest operating system.
         /// </summary>
+        [VMWareTimeoutAttribute]
         public int LoginTimeout;
         /// <summary>
         /// Maximum time, in seconds, to copy a file from guest to host and from host to guest.
@@ -51,74 +104,92 @@ namespace Vestris.VMWareLib
         /// Copy is very slow, see http://communities.vmware.com/thread/184489.
         /// </remarks>
         /// </summary>
+        [VMWareTimeoutAttribute(Multiplier = 20)]
         public int CopyFileTimeout;
         /// <summary>
         /// Maximum time, in seconds, to wait for a file to be deleted in the guest operating system.
         /// </summary>
+        [VMWareTimeoutAttribute]
         public int DeleteFileTimeout;
         /// <summary>
         /// Maximum time, in seconds, to wait for a directory to be deleted in the guest operating system.
         /// </summary>
+        [VMWareTimeoutAttribute]
         public int DeleteDirectoryTimeout;
         /// <summary>
         /// Maximum time, in seconds, to wait for a pogram to start in the guest operating system.
         /// </summary>
+        [VMWareTimeoutAttribute(Multiplier = 5)]
         public int RunProgramTimeout;
         /// <summary>
         /// Maximum time, in seconds, to wait to check whether a file exists in the guest operating system.
         /// </summary>
+        [VMWareTimeoutAttribute]
         public int FileExistsTimeout;
         /// <summary>
         /// Maximum time, in seconds, to wait to check whether a directory exists in the guest operating system.
         /// </summary>
+        [VMWareTimeoutAttribute]
         public int DirectoryExistsTimeout;
         /// <summary>
         /// Maximum time, in seconds, to wait for a logout from a guest operating system to complete.
         /// </summary>
+        [VMWareTimeoutAttribute]
         public int LogoutTimeout;
         /// <summary>
         /// Maximum time, in seconds, to list the contents of a directory in the guest operating system.
         /// </summary>
+        [VMWareTimeoutAttribute]
         public int ListDirectoryTimeout;
         /// <summary>
         /// Maximum time, in seconds, to wait to read a remote variable.
         /// </summary>
+        [VMWareTimeoutAttribute]
         public int ReadVariableTimeout;
         /// <summary>
         /// Maximum time, in seconds, to wait to write a remote variable.
         /// </summary>
+        [VMWareTimeoutAttribute]
         public int WriteVariableTimeout;
         /// <summary>
         /// Maximum time, in seconds, to wait to fetch the list of shared folders.
         /// </summary>
+        [VMWareTimeoutAttribute]
         public int GetSharedFoldersTimeout;
         /// <summary>
         /// Maximum time, in seconds, to add/remove a shared folder.
         /// </summary>
+        [VMWareTimeoutAttribute]
         public int AddRemoveSharedFolderTimeout;
         /// <summary>
         /// Maximum time, in seconds, to capture a screen image.
         /// </summary>
+        [VMWareTimeoutAttribute]
         public int CaptureScreenImageTimeout;
         /// <summary>
         /// Maximum time, in seconds, to create a directory in the guest operating system.
         /// </summary>
+        [VMWareTimeoutAttribute]
         public int CreateDirectoryTimeout;
         /// <summary>
         /// Maximum time, in seconds, to create a temporary file in the guest operating system.
         /// </summary>
+        [VMWareTimeoutAttribute]
         public int CreateTempFileTimeout;
         /// <summary>
         /// Maximum time, in seconds, to list processes in the guest operating system.
         /// </summary>
+        [VMWareTimeoutAttribute]
         public int ListProcessesTimeout;
         /// <summary>
         /// Maximum time, in seconds, to fetch a collection of items in find operations.
         /// </summary>
+        [VMWareTimeoutAttribute]
         public int FindItemsTimeout;
         /// <summary>
         /// Maximum time, in seconds, to kill a process in the guest operating system.
         /// </summary>
+        [VMWareTimeoutAttribute]
         public int KillProcessTimeout;
 
         /// <summary>
@@ -135,33 +206,16 @@ namespace Vestris.VMWareLib
         /// <param name="baseTimeout">a base timeout</param>
         public VMWareTimeouts(int baseTimeout)
         {
-            ConnectTimeout = baseTimeout;
-            OpenFileTimeout = baseTimeout;
-            RevertToSnapshotTimeout = baseTimeout;
-            RemoveSnapshotTimeout = baseTimeout * 10;
-            CreateSnapshotTimeout = baseTimeout * 10;
-            PowerOnTimeout = baseTimeout;
-            PowerOffTimeout = baseTimeout;
-            WaitForToolsTimeout = 5 * baseTimeout;
-            LoginTimeout = baseTimeout;
-            CopyFileTimeout = 20 * baseTimeout;
-            DeleteFileTimeout = baseTimeout;
-            DeleteDirectoryTimeout = baseTimeout;
-            CreateDirectoryTimeout = baseTimeout;
-            RunProgramTimeout = 5 * baseTimeout;
-            FileExistsTimeout = baseTimeout;
-            DirectoryExistsTimeout = baseTimeout;
-            LogoutTimeout = baseTimeout;
-            ListDirectoryTimeout = baseTimeout;
-            ReadVariableTimeout = baseTimeout;
-            WriteVariableTimeout = baseTimeout;
-            GetSharedFoldersTimeout = baseTimeout;
-            AddRemoveSharedFolderTimeout = baseTimeout;
-            CaptureScreenImageTimeout = baseTimeout;
-            CreateTempFileTimeout = baseTimeout;
-            ListProcessesTimeout = baseTimeout;
-            FindItemsTimeout = baseTimeout;
-            KillProcessTimeout = baseTimeout;
+            FieldInfo[] timeouts = GetType().GetFields();
+            foreach (FieldInfo timeout in timeouts)
+            {
+                object[] timeoutAttributes = timeout.GetCustomAttributes(typeof(VMWareTimeoutAttribute), false);
+                if (timeoutAttributes == null || timeoutAttributes.Length == 0)
+                    continue;
+
+                VMWareTimeoutAttribute timeoutAttribute = timeoutAttributes[0] as VMWareTimeoutAttribute;
+                timeout.SetValue(this, baseTimeout * timeoutAttribute.Multiplier);
+            }
         }
     }
 }

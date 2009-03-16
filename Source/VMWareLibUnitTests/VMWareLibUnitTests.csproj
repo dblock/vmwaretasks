@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{9CB4E334-90E7-4F52-BD04-DE9ACF943580}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -51,6 +51,7 @@
     <Compile Include="VMWareTest.cs" />
     <Compile Include="VMWareTestVI.cs" />
     <Compile Include="VMWareTestWorkstation.cs" />
+    <Compile Include="VMWareTimeoutsTests.cs" />
     <Compile Include="VMWareVirtualHostTests.cs" />
     <Compile Include="VMWareVirtualMachineTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

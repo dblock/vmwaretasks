@@ -212,5 +212,41 @@ namespace Vestris.VMWareLibUnitTests
             virtualMachine.WaitForToolsInGuest();
             Assert.IsTrue(virtualMachine.IsRunning);
         }
+
+        [Test]
+        public void TestPauseUnpause()
+        {
+            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
+            virtualMachine.Pause();
+            Assert.AreEqual(true, virtualMachine.IsPaused);
+            virtualMachine.Unpause();
+            Assert.AreEqual(false, virtualMachine.IsPaused);
+        }
+
+        [Test]
+        public void TestReset()
+        {
+            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
+            // hardware reset
+            Console.WriteLine("Reset ...");
+            virtualMachine.Reset();
+            Assert.AreEqual(true, virtualMachine.IsRunning);
+            Console.WriteLine("Wait ...");
+            virtualMachine.WaitForToolsInGuest();
+        }
+
+        [Test]
+        public void TestSuspend()
+        {
+            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
+            Console.WriteLine("Suspend ...");
+            virtualMachine.Suspend();
+            Assert.AreEqual(false, virtualMachine.IsPaused);
+            Assert.AreEqual(true, virtualMachine.IsSuspended);
+            Console.WriteLine("Power ...");
+            virtualMachine.PowerOn();
+            Console.WriteLine("Wait ...");
+            virtualMachine.WaitForToolsInGuest();
+        }
     }
 }
