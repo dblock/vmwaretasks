@@ -20,7 +20,7 @@ namespace Vestris.VMWareLib
         ///  A collection of snapshots that belong to a virtual machine.
         /// </summary>
         /// <param name="vm">A virtual machine instance.</param>
-        public VMWareRootSnapshotCollection(IVM vm)
+        public VMWareRootSnapshotCollection(IVM2 vm)
             : base(vm, null)
         {
 

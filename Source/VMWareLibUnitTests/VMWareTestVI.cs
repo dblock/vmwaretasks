@@ -52,15 +52,13 @@ namespace Vestris.VMWareLibUnitTests
                 if (!_poweredOn)
                 {
                     Console.WriteLine("Powering on: {0}", ConfigurationManager.AppSettings["testVIFilename"]);
-                    // power-on current snapshot
                     VirtualMachine.PowerOn();
+                    Console.WriteLine("Waiting for tools ...");
                     VirtualMachine.WaitForToolsInGuest();
                     string testUsername = ConfigurationManager.AppSettings["testVIUsername"];
                     string testPassword = ConfigurationManager.AppSettings["testVIPassword"];
                     Console.WriteLine("Logging in ...");
                     VirtualMachine.LoginInGuest(testUsername, testPassword);
-                    Console.WriteLine("Waiting for tools ...");
-                    VirtualMachine.WaitForToolsInGuest();
                     _poweredOn = true;
                 }
                 return _virtualMachine;

@@ -15,7 +15,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Virtual machine handle.
         /// </summary>
-        protected IVM _vm = null;
+        protected IVM2 _vm = null;
         /// <summary>
         /// Internal list of snapshots.
         /// </summary>
@@ -27,7 +27,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         /// <param name="vm">virtual machine</param>
         /// <param name="parent">snapshot parent</param>
-        public VMWareSnapshotCollection(IVM vm, VMWareSnapshot parent)
+        public VMWareSnapshotCollection(IVM2 vm, VMWareSnapshot parent)
         {
             _vm = vm;
             _parent = parent;

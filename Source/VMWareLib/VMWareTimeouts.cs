@@ -191,6 +191,16 @@ namespace Vestris.VMWareLib
         /// </summary>
         [VMWareTimeoutAttribute]
         public int KillProcessTimeout;
+        /// <summary>
+        /// Maximum time, in seconds, to begin and end a recording.
+        /// </summary>
+        [VMWareTimeoutAttribute(Multiplier = 10)]
+        public int RecordingTimeout;
+        /// <summary>
+        /// Maximum time, in seconds, to replay a snapshot.
+        /// </summary>
+        [VMWareTimeoutAttribute(Multiplier = 10)]
+        public int ReplayTimeout;
 
         /// <summary>
         /// A collection of timeouts based on a default 60-seconds base timeout.

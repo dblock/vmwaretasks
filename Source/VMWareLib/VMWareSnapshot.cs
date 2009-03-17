@@ -12,7 +12,7 @@ namespace Vestris.VMWareLib
     /// </summary>
     public class VMWareSnapshot : VMWareVixHandle<ISnapshot>
     {
-        private IVM _vm = null;
+        private IVM2 _vm = null;
         private VMWareSnapshotCollection _childSnapshots = null;
         private VMWareSnapshot _parent = null;
 
@@ -22,7 +22,7 @@ namespace Vestris.VMWareLib
         /// <param name="vm">virtual machine</param>
         /// <param name="snapshot">snapshot</param>
         /// <param name="parent">parent snapshot</param>
-        public VMWareSnapshot(IVM vm, ISnapshot snapshot, VMWareSnapshot parent)
+        public VMWareSnapshot(IVM2 vm, ISnapshot snapshot, VMWareSnapshot parent)
             : base(snapshot)
         {
             _vm = vm;
@@ -203,6 +203,48 @@ namespace Vestris.VMWareLib
             {
                 return GetProperty<bool>(Constants.VIX_PROPERTY_SNAPSHOT_IS_REPLAYABLE);
             }
+        }
+
+        /// <summary>
+        /// Replay a recording of a virtual machine. 
+        /// </summary>
+        public void BeginReplay()
+        {
+            BeginReplay(VixCOM.Constants.VIX_VMPOWEROP_NORMAL, 
+                VMWareInterop.Timeouts.ReplayTimeout);
+        }
+
+        /// <summary>
+        /// Replay a recording of a virtual machine. 
+        /// </summary>
+        /// <param name="powerOnOptions">One of VIX_VMPOWEROP_NORMAL or VIX_VMPOWEROP_LAUNCH_GUI.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        public void BeginReplay(int powerOnOptions, int timeoutInSeconds)
+        {
+            VMWareJobCallback callback = new VMWareJobCallback();
+            VMWareJob job = new VMWareJob(_vm.BeginReplay(
+                _handle, powerOnOptions, null, callback), callback);
+            job.Wait(timeoutInSeconds);
+        }
+
+        /// <summary>
+        /// Stop replaying a virtual machine's recording.
+        /// </summary>
+        public void EndReplay()
+        {
+            EndReplay(VMWareInterop.Timeouts.ReplayTimeout);
+        }
+
+        /// <summary>
+        /// Stop replaying a virtual machine's recording.
+        /// </summary>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        public void EndReplay(int timeoutInSeconds)
+        {
+            VMWareJobCallback callback = new VMWareJobCallback();
+            VMWareJob job = new VMWareJob(_vm.EndReplay(
+                0, null, callback), callback);
+            job.Wait(timeoutInSeconds);
         }
     }
 }

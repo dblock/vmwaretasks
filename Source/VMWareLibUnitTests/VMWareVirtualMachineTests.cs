@@ -23,7 +23,8 @@ namespace Vestris.VMWareLibUnitTests
             string remoteBatFilename = string.Format(@"C:\{0}.bat", Path.GetFileNameWithoutExtension(localTempFilename));
             File.WriteAllText(localTempFilename, string.Format(@"dir C:\ > {0}", remoteTempFilename));
             virtualMachine.CopyFileFromHostToGuest(localTempFilename, remoteBatFilename);
-            VMWareVirtualMachine.Process cmdProcess = virtualMachine.RunProgramInGuest(@"cmd.exe", string.Format("/C \"{0}\"", remoteBatFilename));
+            VMWareVirtualMachine.Process cmdProcess = virtualMachine.RunProgramInGuest(
+                "cmd.exe", string.Format("/C \"{0}\"", remoteBatFilename));
             Assert.IsNotNull(cmdProcess);
             Assert.AreEqual(0, cmdProcess.ExitCode);
             virtualMachine.CopyFileFromGuestToHost(remoteTempFilename, localTempFilename);
@@ -247,6 +248,36 @@ namespace Vestris.VMWareLibUnitTests
             virtualMachine.PowerOn();
             Console.WriteLine("Wait ...");
             virtualMachine.WaitForToolsInGuest();
+        }
+
+        [Test]
+        public void TestBeginEndRecording()
+        {
+            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
+            Assert.IsFalse(virtualMachine.IsRecording);
+            string snapshotName = Guid.NewGuid().ToString();
+            Console.WriteLine("Begin recording ...");
+            VMWareSnapshot snapshot = virtualMachine.BeginRecording(snapshotName, Guid.NewGuid().ToString());
+            Assert.IsNotNull(snapshot);
+            Assert.IsTrue(virtualMachine.IsRecording);
+            Assert.IsFalse(virtualMachine.IsReplaying);
+            virtualMachine.WaitForToolsInGuest();
+            Console.WriteLine("Snapshot: {0}", snapshot.DisplayName);
+            VMWareVirtualMachine.Process cmdProcess = virtualMachine.RunProgramInGuest("cmd.exe", "/C dir");
+            Assert.IsNotNull(cmdProcess);
+            Console.WriteLine("Process: {0}", cmdProcess.Id);
+            Console.WriteLine("End recording ...");
+            virtualMachine.EndRecording();
+            Assert.IsFalse(virtualMachine.IsRecording);
+            Assert.IsFalse(virtualMachine.IsReplaying);
+            Console.WriteLine("Begin replay ...");
+            snapshot.BeginReplay(VixCOM.Constants.VIX_VMPOWEROP_LAUNCH_GUI, VMWareInterop.Timeouts.ReplayTimeout);
+            Assert.IsTrue(virtualMachine.IsReplaying);
+            Thread.Sleep(10000);
+            snapshot.EndReplay();
+            Assert.IsFalse(virtualMachine.IsReplaying);
+            Console.WriteLine("Removing snapshot ...");
+            snapshot.RemoveSnapshot();
         }
     }
 }

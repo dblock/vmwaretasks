@@ -419,8 +419,7 @@ VMWareJob job = new VMWareJob(VMWareInterop.Instance.Connect(
             Constants.VIX_API_VERSION, serviceProvider, hostName, hostPort,
             username, password, 0, null, callback), callback);
 
-        _handle = job.Wait
-<ihost>(Constants.VIX_PROPERTY_JOB_RESULT_HANDLE, timeout);
+        _handle = job.Wait&lt;IHost&gt;(Constants.VIX_PROPERTY_JOB_RESULT_HANDLE, timeout);
         _serviceProviderType = serviceProviderType;
     }
 }        

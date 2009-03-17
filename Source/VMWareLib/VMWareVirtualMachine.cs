@@ -177,13 +177,24 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
+        /// Returns virtual machine powerstate, an OR-ed set of VIX_POWERSTATE_* values.
+        /// </summary>
+        public int PowerState
+        {
+            get
+            {
+                return GetProperty<int>(Constants.VIX_PROPERTY_VM_POWER_STATE);
+            }
+        }
+
+        /// <summary>
         /// Returns true if the virtual machine is paused.
         /// </summary>
         public bool IsPaused
         {
             get
             {
-                return (GetProperty<int>(Constants.VIX_PROPERTY_VM_POWER_STATE) & Constants.VIX_POWERSTATE_PAUSED) > 0;
+                return (PowerState & Constants.VIX_POWERSTATE_PAUSED) > 0;
             }
         }
 
@@ -194,7 +205,7 @@ namespace Vestris.VMWareLib
         {
             get
             {
-                return (GetProperty<int>(Constants.VIX_PROPERTY_VM_POWER_STATE) & Constants.VIX_POWERSTATE_SUSPENDED) > 0;
+                return (PowerState & Constants.VIX_POWERSTATE_SUSPENDED) > 0;
             }
         }
 
@@ -369,7 +380,7 @@ namespace Vestris.VMWareLib
         {
             VMWareJobCallback callback = new VMWareJobCallback();
             VMWareJob job = new VMWareJob(_handle.DeleteFileInGuest(
-                guestPathName, callback), 
+                guestPathName, callback),
                 callback);
             job.Wait(timeoutInSeconds);
         }
@@ -786,7 +797,7 @@ namespace Vestris.VMWareLib
                     {
                         if (recurse)
                         {
-                            results.AddRange(ListDirectoryInGuest(Path.Combine(pathName, fileName), 
+                            results.AddRange(ListDirectoryInGuest(Path.Combine(pathName, fileName),
                                 true, timeoutInSeconds));
                         }
                     }
@@ -801,7 +812,7 @@ namespace Vestris.VMWareLib
                 switch (ex.ErrorCode)
                 {
                     case 2:
-                        // file not found? empty directory in ESX
+                    // file not found? empty directory in ESX
                     case Constants.VIX_E_UNRECOGNIZED_PROPERTY:
                         // unrecognized property returned by GetNumProperties, the directory exists, but contains no files
                         break;
@@ -875,7 +886,7 @@ namespace Vestris.VMWareLib
         {
             VMWareJobCallback callback = new VMWareJobCallback();
             VMWareJob job = new VMWareJob(_handle.CaptureScreenImage(
-                Constants.VIX_CAPTURESCREENFORMAT_PNG, null, callback), 
+                Constants.VIX_CAPTURESCREENFORMAT_PNG, null, callback),
                 callback);
             byte[] imageBytes = job.Wait<byte[]>(
                 Constants.VIX_PROPERTY_JOB_RESULT_SCREEN_IMAGE_DATA,
@@ -918,6 +929,87 @@ namespace Vestris.VMWareLib
 
                 return processes;
             }
+        }
+
+        /// <summary>
+        /// Returns true if the virtual machine is in the process of recording.
+        /// </summary>
+        public bool IsRecording
+        {
+            get
+            {
+                return GetProperty<bool>(Constants.VIX_PROPERTY_VM_IS_RECORDING);
+            }
+        }
+
+        /// <summary>
+        /// Returns true if the virtual machine is in the process of replaying.
+        /// </summary>
+        public bool IsReplaying
+        {
+            get
+            {
+                return GetProperty<bool>(Constants.VIX_PROPERTY_VM_IS_REPLAYING);
+            }
+        }
+
+        /// <summary>
+        /// Records a virtual machine's activity as a snapshot object.
+        /// </summary>
+        /// <param name="name">snapshot name</param>
+        /// <returns>resulting snapshot</returns>
+        public VMWareSnapshot BeginRecording(string name)
+        {
+            return BeginRecording(name, string.Empty);
+        }
+
+        /// <summary>
+        /// Records a virtual machine's activity as a snapshot object.
+        /// </summary>
+        /// <param name="name">snapshot name</param>
+        /// <param name="description">snapshot description</param>
+        /// <returns>resulting snapshot</returns>
+        public VMWareSnapshot BeginRecording(string name, string description)
+        {
+            return BeginRecording(name, description, VMWareInterop.Timeouts.RecordingTimeout);
+        }
+
+        /// <summary>
+        /// Records a virtual machine's activity as a snapshot object.
+        /// </summary>
+        /// <param name="name">snapshot name</param>
+        /// <param name="description">snapshot description</param>
+        /// <param name="timeoutInSeconds">timeout in seconds</param>
+        /// <returns>resulting snapshot</returns>
+        public VMWareSnapshot BeginRecording(string name, string description, int timeoutInSeconds)
+        {
+            VMWareJobCallback callback = new VMWareJobCallback();
+            VMWareJob job = new VMWareJob(_handle.BeginRecording(name, description, 0, null, callback), callback);
+            VMWareSnapshot snapshot = new VMWareSnapshot(_handle, 
+                job.Wait<ISnapshot>(Constants.VIX_PROPERTY_JOB_RESULT_HANDLE, timeoutInSeconds), 
+                null);
+            _snapshots.Add(snapshot);
+            return snapshot;
+        }
+
+        /// <summary>
+        /// This function stops recording a virtual machine's activity.
+        /// </summary>
+        public void EndRecording()
+        {
+            EndRecording(VMWareInterop.Timeouts.RecordingTimeout);
+        }
+
+        /// <summary>
+        /// This function stops recording a virtual machine's activity.
+        /// </summary>
+        /// <param name="timeoutInSeconds">timeout in seconds</param>
+        public void EndRecording(int timeoutInSeconds)
+        {
+            VMWareJobCallback callback = new VMWareJobCallback();
+            VMWareJob job = new VMWareJob(_handle.EndRecording(
+                0, null, callback), callback);
+            job.Wait(timeoutInSeconds);
         }
     }
 }
