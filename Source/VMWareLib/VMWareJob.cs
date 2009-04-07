@@ -22,6 +22,9 @@ namespace Vestris.VMWareLib
             : base(job)
         {
             _callback = callback;
+            // API-level errors aren't surfaced and the callback wait will never be set
+            bool completedImmediately = false;
+            VMWareInterop.Check(job.CheckCompletion(out completedImmediately));
         }
 
         /// <summary>
