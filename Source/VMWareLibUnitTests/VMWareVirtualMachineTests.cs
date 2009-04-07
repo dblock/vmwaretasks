@@ -6,6 +6,7 @@ using System.Configuration;
 using System.IO;
 using System.Drawing;
 using System.Threading;
+using System.Text;
 using VixCOM;
 
 namespace Vestris.VMWareLibUnitTests
@@ -278,6 +279,35 @@ namespace Vestris.VMWareLibUnitTests
             Assert.IsFalse(virtualMachine.IsReplaying);
             Console.WriteLine("Removing snapshot ...");
             snapshot.RemoveSnapshot();
+        }
+
+        [Test]
+        protected void TestRunScriptInGuest()
+        {
+            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
+            StringBuilder script = new StringBuilder();
+            script.AppendLine("print \"Hello World\";");
+            VMWareVirtualMachine.Process cmdProcess = virtualMachine.RunScriptInGuest(@"c:\perl\bin\perl.exe", script.ToString());
+            Assert.IsNotNull(cmdProcess);
+            Assert.AreEqual(0, cmdProcess.ExitCode);
+        }
+
+        [Test]
+        public void TestOpenUrlInGuest()
+        {
+            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
+            virtualMachine.OpenUrlInGuest("http://vmwaretasks.codeplex.com/");
+        }
+
+        [Test]
+        protected void TestUpgradeVirtualHardware()
+        {
+            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.VirtualMachine;
+            // power off the virtual machine
+            if (virtualMachine.IsRunning) virtualMachine.PowerOff();
+            // upgrading virtual hardware should always succeed
+            Console.WriteLine("Upgrading virtual hardware ...");
+            virtualMachine.UpgradeVirtualHardware();
         }
     }
 }

@@ -23,6 +23,23 @@ namespace Vestris.VMWareLibUnitTests
         }
 
         [Test]
+        public void TestWorkstationSynchronousConnect()
+        {
+            if (VMWareTest.Instance.TestType != VMWareTestType.Workstation)
+                Assert.Ignore("Skipping, test applies to Workstation only.");
+
+            VixCOM.VixLib vix = new VixCOM.VixLib();
+            VixCOM.IJob job = vix.Connect(
+                VixCOM.Constants.VIX_API_VERSION,
+                VixCOM.Constants.VIX_SERVICEPROVIDER_VMWARE_WORKSTATION, 
+                null, 0, null, null, 0, null, null);
+            ulong rc = job.WaitWithoutResults();
+            Console.WriteLine("rc: {0}", rc);
+            Assert.IsFalse(vix.ErrorIndicatesFailure(rc));
+            Assert.IsTrue(vix.ErrorIndicatesSuccess(rc));
+        }
+
+        [Test]
         public void TestWorkstationConnectDisconnect()
         {
 

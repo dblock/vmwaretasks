@@ -117,10 +117,20 @@ namespace Vestris.VMWareLib
         [VMWareTimeoutAttribute]
         public int DeleteDirectoryTimeout;
         /// <summary>
-        /// Maximum time, in seconds, to wait for a pogram to start in the guest operating system.
+        /// Maximum time, in seconds, to wait for a pogram to run in the guest operating system.
         /// </summary>
         [VMWareTimeoutAttribute(Multiplier = 5)]
         public int RunProgramTimeout;
+        /// <summary>
+        /// Maximum time, in seconds, to wait for a script to run in the guest operating system.
+        /// </summary>
+        [VMWareTimeoutAttribute(Multiplier = 5)]
+        public int RunScriptTimeout;
+        /// <summary>
+        /// Maximum time, in seconds, to wait for an url to open in a browser on the guest operating system.
+        /// </summary>
+        [VMWareTimeoutAttribute(Multiplier = 5)]
+        public int OpenUrlTimeout;
         /// <summary>
         /// Maximum time, in seconds, to wait to check whether a file exists in the guest operating system.
         /// </summary>
@@ -201,6 +211,11 @@ namespace Vestris.VMWareLib
         /// </summary>
         [VMWareTimeoutAttribute(Multiplier = 10)]
         public int ReplayTimeout;
+        /// <summary>
+        /// Maximum time, in seconds, to wait for an upgrade for the virtual hardware.
+        /// </summary>
+        [VMWareTimeoutAttribute(Multiplier = 5)]
+        public int UpgradeVirtualHardwareTimeout;
 
         /// <summary>
         /// A collection of timeouts based on a default 60-seconds base timeout.

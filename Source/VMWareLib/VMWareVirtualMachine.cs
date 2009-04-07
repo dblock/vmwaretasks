@@ -531,7 +531,8 @@ namespace Vestris.VMWareLib
             object[] properties = 
             { 
                 Constants.VIX_PROPERTY_JOB_RESULT_GUEST_PROGRAM_EXIT_CODE, 
-                Constants.VIX_PROPERTY_JOB_RESULT_PROCESS_ID
+                Constants.VIX_PROPERTY_JOB_RESULT_PROCESS_ID,
+                // Constants.VIX_PROPERTY_JOB_RESULT_GUEST_PROGRAM_ELAPSED_TIME
             };
             object[] propertyValues = job.Wait<object[]>(properties, timeoutInSeconds);
             Process process = new Process(_handle);
@@ -545,6 +546,81 @@ namespace Vestris.VMWareLib
             process.ExitCode = (int)propertyValues[0];
             process.Id = (long)propertyValues[1];
             return process;
+        }
+
+        /// <summary>
+        /// Run a script in the guest operating system.
+        /// </summary>
+        /// <param name="interpreter">The path to the script interpreter.</param>
+        /// <param name="scriptText">The text of the script.</param>
+        /// <returns>Process information.</returns>
+        public Process RunScriptInGuest(string interpreter, string scriptText)
+        {
+            return RunScriptInGuest(interpreter, scriptText, 0,
+                VMWareInterop.Timeouts.RunScriptTimeout);
+        }
+
+        /// <summary>
+        /// Detach a script in the guest operating system.
+        /// </summary>
+        /// <param name="interpreter">The path to the script interpreter.</param>
+        /// <param name="scriptText">The text of the script.</param>
+        /// <returns>Process information.</returns>
+        public Process DetachScriptInGuest(string interpreter, string scriptText)
+        {
+            return RunScriptInGuest(interpreter, scriptText, 
+                VixCOM.Constants.VIX_RUNPROGRAM_RETURN_IMMEDIATELY,
+                VMWareInterop.Timeouts.RunScriptTimeout);
+        }
+
+        /// <summary>
+        /// Run a script in the guest operating system.
+        /// </summary>
+        /// <param name="interpreter">The path to the script interpreter.</param>
+        /// <param name="scriptText">The text of the script.</param>
+        /// <param name="options">Run options for the program.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        /// <returns>Process information.</returns>
+        public Process RunScriptInGuest(string interpreter, string scriptText, int options, int timeoutInSeconds)
+        {
+            VMWareJobCallback callback = new VMWareJobCallback();
+            VMWareJob job = new VMWareJob(_handle.RunScriptInGuest(
+                interpreter, scriptText, options, null, callback),
+                callback);
+            object[] properties = 
+            { 
+                Constants.VIX_PROPERTY_JOB_RESULT_GUEST_PROGRAM_EXIT_CODE, 
+                Constants.VIX_PROPERTY_JOB_RESULT_PROCESS_ID,
+                // Constants.VIX_PROPERTY_JOB_RESULT_GUEST_PROGRAM_ELAPSED_TIME
+            };
+            object[] propertyValues = job.Wait<object[]>(properties, timeoutInSeconds);
+            Process process = new Process(_handle);
+            process.Name = Path.GetFileName(interpreter);
+            process.Command = interpreter;
+            process.ExitCode = (int)propertyValues[0];
+            process.Id = (long)propertyValues[1];
+            return process;
+        }
+
+        /// <summary>
+        /// Open a browser window on the specified URL in the guest operating system.
+        /// </summary>
+        /// <param name="url">The url to be opened.</param>
+        public void OpenUrlInGuest(string url)
+        {
+            OpenUrlInGuest(url, VMWareInterop.Timeouts.OpenUrlTimeout);
+        }
+
+        /// <summary>
+        /// Open a browser window on the specified URL in the guest operating system.
+        /// </summary>
+        /// <param name="url">The url to be opened.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        public void OpenUrlInGuest(string url, int timeoutInSeconds)
+        {
+            VMWareJobCallback callback = new VMWareJobCallback();
+            VMWareJob job = new VMWareJob(_handle.OpenUrlInGuest(url, 0, null, callback), callback);
+            job.Wait(timeoutInSeconds);
         }
 
         /// <summary>
@@ -1003,13 +1079,35 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// This function stops recording a virtual machine's activity.
         /// </summary>
-        /// <param name="timeoutInSeconds">timeout in seconds</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void EndRecording(int timeoutInSeconds)
         {
             VMWareJobCallback callback = new VMWareJobCallback();
             VMWareJob job = new VMWareJob(_handle.EndRecording(
                 0, null, callback), callback);
             job.Wait(timeoutInSeconds);
+        }
+
+        /// <summary>
+        /// Upgrades the virtual hardware version of the virtual machine to match the version of the VIX library. 
+        /// This has no effect if the virtual machine is already at the same version or at a newer version than the VIX library.
+        /// </summary>
+        public void UpgradeVirtualHardware()
+        {
+            UpgradeVirtualHardware(VMWareInterop.Timeouts.UpgradeVirtualHardwareTimeout);
+        }
+
+        /// <summary>
+        /// Upgrades the virtual hardware version of the virtual machine to match the version of the VIX library. 
+        /// This has no effect if the virtual machine is already at the same version or at a newer version than the VIX library.
+        /// </summary>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        public void UpgradeVirtualHardware(int timeoutInSeconds)
+        {
+            VMWareJobCallback callback = new VMWareJobCallback();
+            VMWareJob job = new VMWareJob(_handle.UpgradeVirtualHardware(
+                0, callback), callback);
+            job.Wait(timeoutInSeconds);            
         }
     }
 }
