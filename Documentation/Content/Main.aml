@@ -9,10 +9,10 @@
         implements that interface and makes programming against virtual machines a no brainer.
       </para>
       <para>
-        VMWareTasks contains a VixCOM wrapper 
-        <codeEntityReference qualifyHint="true">T:Vestris.VMWareLib</codeEntityReference> (VMWareLib.dll)
-        and a library <codeEntityReference qualifyHint="true">T:Vestris.VMWareLib.Tools</codeEntityReference>
-        (VMWareTools.dll) that implements additional functionality based on the pure VixCOM API.
+        VMWareTasks contains a complete VixCOM wrapper 
+        <codeEntityReference qualifyHint="true">N:Vestris.VMWareLib</codeEntityReference> (<localUri>Vestris.VMWareLib.dll</localUri>)
+        and a library <codeEntityReference qualifyHint="true">N:Vestris.VMWareLib.Tools</codeEntityReference>
+        (<localUri>Vestris.VMWareTools.dll</localUri>) that implements additional functionality based on the pure VixCOM API.
       </para>
       <para>
         This library is maintained on CodePlex at
@@ -22,5 +22,11 @@
         </externalLink>.
       </para>
     </introduction>
+    <relatedTopics>
+      <link topicType_id="DAC3A6A0-C863-4E5B-8F65-79EFC6A4BA09" xlink:href="a6f46303-b703-4ff3-9572-55d8131eb883" />
+      <codeEntityReference qualifyHint="true">N:Vestris.VMWareLib</codeEntityReference>
+      <codeEntityReference qualifyHint="true">N:Vestris.VMWareLib.Tools</codeEntityReference>
+      <codeEntityReference qualifyHint="true">N:Vestris.VMWareLib.Tools.Windows</codeEntityReference>
+    </relatedTopics>
   </developerConceptualDocument>
 </topic>

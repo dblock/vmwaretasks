@@ -76,6 +76,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Connect to a WMWare Workstation.
         /// </summary>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void ConnectToVMWareWorkstation(int timeoutInSeconds)
         {
             Connect(ServiceProviderType.Workstation, null, 0, null, null, timeoutInSeconds);
@@ -158,7 +159,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Open a .vmx file.
         /// </summary>
-        /// <param nme="fileName">Virtual Machine file, local .vmx or [storage] .vmx.</param>
+        /// <param name="fileName">Virtual Machine file, local .vmx or [storage] .vmx.</param>
         /// <returns>An instance of a virtual machine.</returns>
         public VMWareVirtualMachine Open(string fileName)
         {

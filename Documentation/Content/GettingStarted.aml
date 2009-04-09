@@ -29,7 +29,7 @@
    <title>Using the Library</title>
    <content>
     <para>
-     In your project add a reference to <literal>Vestris.VMWareLib.dll</literal> and a namespace reference.
+     In your project add a reference to <localUri>Vestris.VMWareLib.dll</localUri> and a namespace reference.
      <code language="cs">
       using Vestris.VMWareLib;
      </code>
@@ -38,7 +38,7 @@
      You can now connect to a local VMWare Workstation or a remote ESX server and perform VMWare tasks.
     </para>
     <para>
-     Here's an example that creates, restores, powers on and removes a snapshot on a VMWare Workstation.
+     The following example creates, restores, powers on and removes a snapshot on a VMWare Workstation.
      <code language="cs">
       // declare a virtual host
       VMWareVirtualHost virtualHost = new VMWareVirtualHost();
@@ -69,7 +69,7 @@
      </code>
     </para>
     <para>
-     Here's an example that creates, restores, powers on and removes a snapshot on a VMWare ESX server.
+     The following example creates, restores, powers on and removes a snapshot on a VMWare ESX server.
      <code language="cs">
       // declare a virtual host
       VMWareVirtualHost virtualHost = new VMWareVirtualHost();

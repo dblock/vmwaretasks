@@ -246,5 +246,30 @@ namespace Vestris.VMWareLib
                 0, null, callback), callback);
             job.Wait(timeoutInSeconds);
         }
+
+        /// <summary>
+        /// Creates a copy of the virtual machine at the state at which this snapshot was taken.
+        /// </summary>
+        /// <param name="cloneType">Virtual Machine clone type.</param>
+        /// <param name="destConfigPathName">The path name of the virtual machine configuration file that will be created.</param>
+        public void Clone(VMWareVirtualMachineCloneType cloneType, string destConfigPathName)
+        {
+            Clone(cloneType, destConfigPathName, VMWareInterop.Timeouts.CloneTimeout);
+        }
+
+        /// <summary>
+        /// Creates a copy of the virtual machine at the state at which this snapshot was taken.
+        /// </summary>
+        /// <param name="cloneType">Virtual Machine clone type.</param>
+        /// <param name="destConfigPathName">The path name of the virtual machine configuration file that will be created.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        public void Clone(VMWareVirtualMachineCloneType cloneType, string destConfigPathName, int timeoutInSeconds)
+        {
+            VMWareJobCallback callback = new VMWareJobCallback();
+            VMWareJob job = new VMWareJob(_vm.Clone(
+                _handle, (int) cloneType, destConfigPathName, 0, null, callback),
+                callback);
+            job.Wait(timeoutInSeconds);
+        }
     }
 }

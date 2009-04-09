@@ -216,6 +216,11 @@ namespace Vestris.VMWareLib
         /// </summary>
         [VMWareTimeoutAttribute(Multiplier = 5)]
         public int UpgradeVirtualHardwareTimeout;
+        /// <summary>
+        /// Maximum time, in seconds, to clone a virtual machine.
+        /// </summary>
+        [VMWareTimeoutAttribute(Multiplier = 5)]
+        public int CloneTimeout;
 
         /// <summary>
         /// A collection of timeouts based on a default 60-seconds base timeout.

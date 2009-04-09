@@ -309,5 +309,39 @@ namespace Vestris.VMWareLibUnitTests
             Console.WriteLine("Upgrading virtual hardware ...");
             virtualMachine.UpgradeVirtualHardware();
         }
+
+        [Test]
+        public void TestCloneVirtualMachine()
+        {
+            if (VMWareTest.Instance.TestType != VMWareTestType.Workstation)
+                Assert.Ignore("Skipping, test requires server admin privileges for ESX, test applies to Workstation only.");
+
+            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.VirtualMachine;
+            if (virtualMachine.IsRunning) virtualMachine.PowerOff();
+            string vmxPathName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            Console.WriteLine("Creating linked clone: {0}", vmxPathName);
+            Directory.CreateDirectory(vmxPathName);
+            string vmxFileName = Path.Combine(vmxPathName, "Clone.vmx");
+            virtualMachine.Clone(VMWareVirtualMachineCloneType.Linked, vmxFileName);
+            Assert.IsTrue(File.Exists(vmxFileName));
+            Directory.Delete(vmxPathName, true);
+        }
+
+        [Test]
+        public void TestCloneVirtualMachineSnapshot()
+        {
+            if (VMWareTest.Instance.TestType != VMWareTestType.Workstation)
+                Assert.Ignore("Skipping, test requires server admin privileges for ESX, test applies to Workstation only.");
+
+            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.VirtualMachine;
+            if (virtualMachine.IsRunning) virtualMachine.PowerOff();
+            string vmxPathName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            Console.WriteLine("Creating linked clone of root snapshot: {0}", vmxPathName);
+            Directory.CreateDirectory(vmxPathName);
+            string vmxFileName = Path.Combine(vmxPathName, "Clone.vmx");
+            virtualMachine.Snapshots.GetCurrentSnapshot().Clone(VMWareVirtualMachineCloneType.Linked, vmxFileName);
+            Assert.IsTrue(File.Exists(vmxFileName));
+            Directory.Delete(vmxPathName, true);
+        }
     }
 }

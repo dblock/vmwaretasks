@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<doc>
+  <assembly>
+    <name>Vestris.VMWareTools</name>
+  </assembly>
+  <members>
+    <member name="N:Vestris.VMWareLib.Tools">
+      <summary>
+        An add-on package that implements common guest operating system functions not directly supported by VixCOM.
+        To get started, create an instance of <see cref="T:Vestris.VMWareLib.VMWareVirtualHost" />,
+        connect to the VMWare Workstation, Server or VI and create an instance of 
+        <see cref="T:Vestris.VMWareLib.Tools.GuestOS" /> using the returned 
+        <see cref="T:Vestris.VMWareLib.VMWareVirtualMachine" /> for further tasks.
+      </summary>
+    </member>
+    <member name="N:Vestris.VMWareLib.Tools.Windows">
+      <summary>
+        An add-on package that implements common guest operating system Windows functions not directly supported by VixCOM.
+        To get started, create an instance of <see cref="T:Vestris.VMWareLib.VMWareVirtualHost" />,
+        connect to the VMWare Workstation, Server or VI and create an instance of
+        <see cref="T:Vestris.VMWareLib.Tools.Windows.Shell" /> using the returned 
+        <see cref="T:Vestris.VMWareLib.VMWareVirtualMachine" /> for further tasks.
+      </summary>
+    </member>
+  </members>
+</doc>

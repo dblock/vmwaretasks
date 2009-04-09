@@ -9,6 +9,22 @@ using System.Drawing;
 namespace Vestris.VMWareLib
 {
     /// <summary>
+    /// Virtual machine clone type.
+    /// </summary>
+    public enum VMWareVirtualMachineCloneType
+    {
+        /// <summary>
+        /// A full, independent clone of the virtual machine.
+        /// </summary>
+        Full = VixCOM.Constants.VIX_CLONETYPE_FULL,
+        /// <summary>
+        /// A linked clone is a copy of a virtual machine that shares virtual disks with the parent virtual 
+        /// machine in an ongoing manner. 
+        /// </summary>
+        Linked = VixCOM.Constants.VIX_CLONETYPE_LINKED
+    }
+
+    /// <summary>
     /// A VMWare Virtual Machine.
     /// </summary>
     public class VMWareVirtualMachine : VMWareVixHandle<IVM2>
@@ -347,6 +363,8 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Copies a file or directory from the local system (where the Vix client is running) to the guest operating system.
         /// </summary>
+        /// <param name="hostPathName">File location on the host operating system.</param>
+        /// <param name="guestPathName">File location on the guest operating system.</param>
         public void CopyFileFromHostToGuest(string hostPathName, string guestPathName)
         {
             CopyFileFromHostToGuest(hostPathName, guestPathName, VMWareInterop.Timeouts.CopyFileTimeout);
@@ -357,6 +375,9 @@ namespace Vestris.VMWareLib
         /// You must call LoginInGuest() before calling this procedure.
         /// Only absolute paths should be used for files in the guest; the resolution of relative paths is not specified.
         /// </summary>
+        /// <param name="hostPathName">File location on the host operating system.</param>
+        /// <param name="guestPathName">File location on the guest operating system.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void CopyFileFromHostToGuest(string hostPathName, string guestPathName, int timeoutInSeconds)
         {
             VMWareJobCallback callback = new VMWareJobCallback();
@@ -368,6 +389,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Deletes a file from guest file system.
         /// </summary>
+        /// <param name="guestPathName">File location on the guest operating system.</param>
         public void DeleteFileFromGuest(string guestPathName)
         {
             DeleteFileFromGuest(guestPathName, VMWareInterop.Timeouts.DeleteFileTimeout);
@@ -376,6 +398,8 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Deletes a file from guest file system.
         /// </summary>
+        /// <param name="guestPathName">File location on the guest operating system.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void DeleteFileFromGuest(string guestPathName, int timeoutInSeconds)
         {
             VMWareJobCallback callback = new VMWareJobCallback();
@@ -388,6 +412,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Deletes a directory from guest directory system.
         /// </summary>
+        /// <param name="guestPathName">Directory location on the guest operating system.</param>
         public void DeleteDirectoryFromGuest(string guestPathName)
         {
             DeleteDirectoryFromGuest(guestPathName, VMWareInterop.Timeouts.DeleteDirectoryTimeout);
@@ -396,6 +421,8 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Deletes a directory from guest directory system.
         /// </summary>
+        /// <param name="guestPathName">Directory location on the guest operating system.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void DeleteDirectoryFromGuest(string guestPathName, int timeoutInSeconds)
         {
             VMWareJobCallback callback = new VMWareJobCallback();
@@ -408,6 +435,8 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Copies a file or directory from the guest operating system to the local system (where the Vix client is running).
         /// </summary>
+        /// <param name="guestPathName">File location on the guest operating system.</param>
+        /// <param name="hostPathName">File location on the host operating system.</param>
         public void CopyFileFromGuestToHost(string guestPathName, string hostPathName)
         {
             CopyFileFromGuestToHost(guestPathName, hostPathName, VMWareInterop.Timeouts.CopyFileTimeout);
@@ -418,6 +447,9 @@ namespace Vestris.VMWareLib
         /// You must call LoginInGuest() before calling this procedure.
         /// Only absolute paths should be used for files in the guest; the resolution of relative paths is not specified. 
         /// </summary>
+        /// <param name="guestPathName">File location on the guest operating system.</param>
+        /// <param name="hostPathName">File location on the host operating system.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void CopyFileFromGuestToHost(string guestPathName, string hostPathName, int timeoutInSeconds)
         {
             VMWareJobCallback callback = new VMWareJobCallback();
@@ -430,6 +462,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Creates a directory on the guest operating system.
         /// </summary>
+        /// <param name="guestPathName">Directory location on the guest operating system.</param>
         public void CreateDirectoryInGuest(string guestPathName)
         {
             CreateDirectoryInGuest(guestPathName, VMWareInterop.Timeouts.CreateDirectoryTimeout);
@@ -438,6 +471,8 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Creates a directory on the guest operating system.
         /// </summary>
+        /// <param name="guestPathName">Directory location on the guest operating system.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void CreateDirectoryInGuest(string guestPathName, int timeoutInSeconds)
         {
             VMWareJobCallback callback = new VMWareJobCallback();
@@ -450,6 +485,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Creates a temp file on the guest operating system.
         /// </summary>
+        /// <returns>Name of the temporary file created.</returns>
         public string CreateTempFileInGuest()
         {
             return CreateTempFileInGuest(VMWareInterop.Timeouts.CreateTempFileTimeout);
@@ -459,6 +495,7 @@ namespace Vestris.VMWareLib
         /// Creates a temp file on the guest operating system.
         /// </summary>
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        /// <returns>Name of the temporary file created.</returns>
         public string CreateTempFileInGuest(int timeoutInSeconds)
         {
             VMWareJobCallback callback = new VMWareJobCallback();
@@ -1108,6 +1145,31 @@ namespace Vestris.VMWareLib
             VMWareJob job = new VMWareJob(_handle.UpgradeVirtualHardware(
                 0, callback), callback);
             job.Wait(timeoutInSeconds);            
+        }
+
+        /// <summary>
+        /// Creates a copy of the virtual machine at current state.
+        /// </summary>
+        /// <param name="cloneType">Virtual Machine clone type.</param>
+        /// <param name="destConfigPathName">The path name of the virtual machine configuration file that will be created.</param>
+        public void Clone(VMWareVirtualMachineCloneType cloneType, string destConfigPathName)
+        {
+            Clone(cloneType, destConfigPathName, VMWareInterop.Timeouts.CloneTimeout);
+        }
+
+        /// <summary>
+        /// Creates a copy of the virtual machine at current state.
+        /// </summary>
+        /// <param name="cloneType">Virtual Machine clone type.</param>
+        /// <param name="destConfigPathName">The path name of the virtual machine configuration file that will be created.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        public void Clone(VMWareVirtualMachineCloneType cloneType, string destConfigPathName, int timeoutInSeconds)
+        {
+            VMWareJobCallback callback = new VMWareJobCallback();
+            VMWareJob job = new VMWareJob(_handle.Clone(
+                null, (int)cloneType, destConfigPathName, 0, null, callback),
+                callback);
+            job.Wait(timeoutInSeconds);
         }
     }
 }

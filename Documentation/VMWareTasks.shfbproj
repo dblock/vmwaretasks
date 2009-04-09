@@ -19,7 +19,7 @@
     <ProjectSummary>
     </ProjectSummary>
     <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, Namespace, TypeParameter</MissingTags>
-    <VisibleItems>InheritedMembers, InheritedFrameworkMembers, Protected, SealedProtected</VisibleItems>
+    <VisibleItems>InheritedMembers</VisibleItems>
     <HtmlHelp1xCompilerPath>
     </HtmlHelp1xCompilerPath>
     <HtmlHelp2xCompilerPath>
@@ -32,13 +32,15 @@
     </BuildLogFile>
     <FrameworkVersion>2.0.50727</FrameworkVersion>
     <PresentationStyle>Prototype</PresentationStyle>
-    <HelpFileVersion>1.0</HelpFileVersion>
+    <HelpFileVersion>1.2.0.0</HelpFileVersion>
     <DocumentationSources>
       <DocumentationSource sourceFile="..\Source\VMWareLib\bin\$(Configuration)\Interop.VixCOM.dll" xmlns="" />
       <DocumentationSource sourceFile="..\Source\VMWareLib\bin\$(Configuration)\Vestris.VMWareLib.dll" xmlns="" />
       <DocumentationSource sourceFile="..\Source\VMWareLib\bin\$(Configuration)\Vestris.VMWareLib.xml" xmlns="" />
+      <DocumentationSource sourceFile="..\Source\VMWareLib\VMWareLibNamespace.xml" xmlns="" />
       <DocumentationSource sourceFile="..\Source\VMWareTools\bin\$(Configuration)\Vestris.VMWareTools.dll" xmlns="" />
       <DocumentationSource sourceFile="..\Source\VMWareTools\bin\$(Configuration)\Vestris.VMWareTools.xml" xmlns="" />
+      <DocumentationSource sourceFile="..\Source\VMWareTools\VMWareToolsNamespace.xml" xmlns="" />
     </DocumentationSources>
     <KeepLogFile>False</KeepLogFile>
     <CopyrightText>$(Copyright)</CopyrightText>
@@ -49,7 +51,7 @@
     </NamespaceSummaries>
     <RootNamespaceContainer>True</RootNamespaceContainer>
     <RootNamespaceTitle>Library Reference</RootNamespaceTitle>
-    <HelpFileFormat>Help1xAndWebsite</HelpFileFormat>
+    <HelpFileFormat>HtmlHelp1x</HelpFileFormat>
   </PropertyGroup>
   <!-- There are no properties for these two groups but they need to appear in
        order for Visual Studio to perform the build. -->

@@ -40,6 +40,10 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Wait for the job to complete, return a result.
         /// </summary>
+        /// <param name="properties">Properties array.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        /// <typeparam name="T">Type of the property to return.</typeparam>
+        /// <returns>Job result.</returns>
         public T Wait<T>(object[] properties, int timeoutInSeconds)
         {
             _callback.WaitForCompletion(timeoutInSeconds * 1000);
@@ -49,8 +53,9 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Wait for the job to complete and enumerate results.
         /// </summary>
-        /// <param name="properties">properties to yield</param>
+        /// <param name="properties">Properties to yield.</param>
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        /// <returns>A results enumerator.</returns>
         public IEnumerable<object[]> YieldWait(object[] properties, int timeoutInSeconds)
         {
             _callback.WaitForCompletion(timeoutInSeconds * 1000);
@@ -63,10 +68,11 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Wait for the job to complete, return a result.
         /// </summary>
-        /// <param name="properties">properties to yield</param>
-        /// <param name="index">property index to yield</param>
+        /// <param name="properties">Properties to yield.</param>
+        /// <param name="index">Property index to yield.</param>
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
-        /// <typeparam name="T">type of the property to return</typeparam>
+        /// <typeparam name="T">Type of the property to return.</typeparam>
+        /// <returns>Job result.</returns>
         public T Wait<T>(object[] properties, int index, int timeoutInSeconds)
         {
             _callback.WaitForCompletion(timeoutInSeconds * 1000);
@@ -76,9 +82,10 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Wait for the job to complete, return a single result.
         /// </summary>
-        /// <param name="propertyId">property id</param>
+        /// <param name="propertyId">Property id.</param>
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
-        /// <typeparam name="T">type of property to return</typeparam>
+        /// <typeparam name="T">Type of property to return.</typeparam>
+        /// <returns>A single job result.</returns>
         public T Wait<T>(int propertyId, int timeoutInSeconds)
         {
             object[] properties = { propertyId };
@@ -88,8 +95,9 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Wait for the job to complete, return a result.
         /// </summary>
-        /// <param name="properties">properties to return</param>
-        /// <typeparam name="T">type of results</typeparam>
+        /// <param name="properties">Properties to return.</param>
+        /// <typeparam name="T">Type of results.</typeparam>
+        /// <returns>A job result.</returns>
         private T Wait<T>(object[] properties)
         {
             object result = null;
@@ -100,9 +108,9 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Get n-th properties.
         /// </summary>
-        /// <typeparam name="T">type of result</typeparam>
-        /// <param name="index">property index</param>
-        /// <param name="properties">property objects</param>
+        /// <typeparam name="T">Type of result.</typeparam>
+        /// <param name="index">Property index.</param>
+        /// <param name="properties">Property objects.</param>
         /// <returns>N'th properties.</returns>
         public T GetNthProperties<T>(int index, object[] properties)
         {
@@ -114,6 +122,8 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Get the number of property values returned by the job.
         /// </summary>
+        /// <param name="property">Property ID.</param>
+        /// <returns>The number of property values returned by the job.</returns>
         public int GetNumProperties(int property)
         {
             return _handle.GetNumProperties(property);
