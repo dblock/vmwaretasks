@@ -605,7 +605,7 @@ namespace Vestris.VMWareLib
         /// <returns>Process information.</returns>
         public Process DetachScriptInGuest(string interpreter, string scriptText)
         {
-            return RunScriptInGuest(interpreter, scriptText, 
+            return RunScriptInGuest(interpreter, scriptText,
                 VixCOM.Constants.VIX_RUNPROGRAM_RETURN_IMMEDIATELY,
                 VMWareInterop.Timeouts.RunScriptTimeout);
         }
@@ -1098,8 +1098,8 @@ namespace Vestris.VMWareLib
         {
             VMWareJobCallback callback = new VMWareJobCallback();
             VMWareJob job = new VMWareJob(_handle.BeginRecording(name, description, 0, null, callback), callback);
-            VMWareSnapshot snapshot = new VMWareSnapshot(_handle, 
-                job.Wait<ISnapshot>(Constants.VIX_PROPERTY_JOB_RESULT_HANDLE, timeoutInSeconds), 
+            VMWareSnapshot snapshot = new VMWareSnapshot(_handle,
+                job.Wait<ISnapshot>(Constants.VIX_PROPERTY_JOB_RESULT_HANDLE, timeoutInSeconds),
                 null);
             _snapshots.Add(snapshot);
             return snapshot;
@@ -1144,7 +1144,7 @@ namespace Vestris.VMWareLib
             VMWareJobCallback callback = new VMWareJobCallback();
             VMWareJob job = new VMWareJob(_handle.UpgradeVirtualHardware(
                 0, callback), callback);
-            job.Wait(timeoutInSeconds);            
+            job.Wait(timeoutInSeconds);
         }
 
         /// <summary>
@@ -1169,6 +1169,46 @@ namespace Vestris.VMWareLib
             VMWareJob job = new VMWareJob(_handle.Clone(
                 null, (int)cloneType, destConfigPathName, 0, null, callback),
                 callback);
+            job.Wait(timeoutInSeconds);
+        }
+
+        /// <summary>
+        /// Permanently deletes a virtual machine from the host system.
+        /// </summary>
+        /// <remarks>
+        /// Does not delete all associated files.
+        /// </remarks>
+        public void Delete()
+        {
+            Delete(0, VMWareInterop.Timeouts.DeleteTimeout);
+        }
+
+        /// <summary>
+        /// Permanently deletes a virtual machine from the host system.
+        /// </summary>
+        /// <param name="deleteOptions">Delete options.
+        /// <list type="bullet">
+        ///  <listItem>VixCOM.Constants.VIX_VMDELETE_DISK_FILES: delete all associated files.</listItem>
+        /// </list>
+        /// </param>
+        public void Delete(int deleteOptions)
+        {
+            Delete(deleteOptions, VMWareInterop.Timeouts.DeleteTimeout);
+        }
+
+        /// <summary>
+        /// Permanently deletes a virtual machine from the host system.
+        /// </summary>
+        /// <param name="deleteOptions">
+        /// <list type="bullet">
+        ///  <listItem>VixCOM.Constants.VIX_VMDELETE_DISK_FILES: delete all associated files.</listItem>
+        /// </list>
+        /// </param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        public void Delete(int deleteOptions, int timeoutInSeconds)
+        {
+            VMWareJobCallback callback = new VMWareJobCallback();
+            VMWareJob job = new VMWareJob(_handle.Delete(deleteOptions, callback), callback);
             job.Wait(timeoutInSeconds);
         }
     }

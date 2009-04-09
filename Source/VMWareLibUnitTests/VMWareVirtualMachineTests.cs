@@ -327,6 +327,28 @@ namespace Vestris.VMWareLibUnitTests
             Directory.Delete(vmxPathName, true);
         }
 
+
+        [Test]
+        public void TestDeleteVirtualMachine()
+        {
+            if (VMWareTest.Instance.TestType != VMWareTestType.Workstation)
+                Assert.Ignore("Skipping, test requires server admin privileges for ESX, test applies to Workstation only.");
+
+            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.VirtualMachine;
+            if (virtualMachine.IsRunning) virtualMachine.PowerOff();
+            string vmxPathName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            Console.WriteLine("Creating linked clone: {0}", vmxPathName);
+            Directory.CreateDirectory(vmxPathName);
+            string vmxFileName = Path.Combine(vmxPathName, "Clone.vmx");
+            virtualMachine.Clone(VMWareVirtualMachineCloneType.Linked, vmxFileName);
+            Assert.IsTrue(File.Exists(vmxFileName));
+
+            VMWareVirtualMachine virtualMachineClone = VMWareTest.Instance.VirtualHost.Open(vmxFileName);
+            virtualMachineClone.Delete(VixCOM.Constants.VIX_VMDELETE_DISK_FILES);
+            Assert.IsFalse(File.Exists(vmxFileName));
+            Assert.IsFalse(Directory.Exists(vmxPathName));
+        }
+
         [Test]
         public void TestCloneVirtualMachineSnapshot()
         {

@@ -221,6 +221,11 @@ namespace Vestris.VMWareLib
         /// </summary>
         [VMWareTimeoutAttribute(Multiplier = 5)]
         public int CloneTimeout;
+        /// <summary>
+        /// Maximum time, in seconds, to delete a virtual machine.
+        /// </summary>
+        [VMWareTimeoutAttribute]
+        public int DeleteTimeout;
 
         /// <summary>
         /// A collection of timeouts based on a default 60-seconds base timeout.
