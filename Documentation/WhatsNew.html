@@ -31,6 +31,15 @@
             Added VMWareVirtualMachine.Reset, Suspend, Pause, UnPause, IsPaused and IsSuspended.</li>
         <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1913">1913</a>:
             Added VMWareVirtualHost.IsConnected.</li>
+        <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=2232">
+            2232</a>: Added VMWareTools, a wrapper library with Shell and GuestOS functions, 
+            including GetEnvironmentVariables, ReadFile, ReadFileLines, ReadFileBytes.</li>
+        <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1634">
+            1634</a>: Added VMWareVirtualMachine.RunScriptInGuest.</li>
+        <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1632">
+            1632</a>: Added VMWareVirtualMachine.OpenUrlInGuest.</li>
+        <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1635">
+            1635</a>: Added VMWareVirtualMachine.UpgradeVirtualHardware.</li>
         <li>Interface change: split Login into LoginInGuest and WaitForToolsInGuest to be consistent
             with VIX COM API and allow poweron without tools installed. Exposed a login function
             with power options.</li>
@@ -45,6 +54,8 @@
         <li>Bug: removing a shared folder doesn't remove it from the collection when not the
             same object.</li>
         <li>Bug: fixed different behavior of ListDirectoryInGuest between Workstation and VI.</li>
+        <li>Bug: API-level errors aren&#39;t surfaced and the callback wait will never be set 
+            when VixCOM is not installed.</li>
     </ul>
     <h3>
         1.1 (12-Feb-2008)</h3>
