@@ -56,6 +56,18 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Connect to a WMWare Workstation.
         /// </summary>
+        /// <example>
+        /// <code>
+        /// using System;
+        /// using System.Collections.Generic;
+        /// using Vestris.VMWareLib;
+        /// 
+        /// VMWareVirtualHost virtualHost = new VMWareVirtualHost();
+        /// virtualHost.ConnectToVMWareWorkstation();
+        /// VMWareVirtualMachine virtualMachine = virtualHost.Open("C:\Virtual Machines\xp\xp.vmx");
+        /// virtualMachine.PowerOn();
+        /// </code>
+        /// </example>
         public void ConnectToVMWareWorkstation()
         {
             ConnectToVMWareWorkstation(VMWareInterop.Timeouts.ConnectTimeout);
@@ -75,6 +87,18 @@ namespace Vestris.VMWareLib
         /// <param name="hostName">VMWare host name.</param>
         /// <param name="username">Username.</param>
         /// <param name="password">Password.</param>
+        /// <example>
+        /// <code>
+        /// using System;
+        /// using System.Collections.Generic;
+        /// using Vestris.VMWareLib;
+        /// 
+        /// VMWareVirtualHost virtualHost = new VMWareVirtualHost();
+        /// virtualHost.ConnectToVMWareVIServer("esx.mycompany.com", "vmuser", "password");
+        /// VMWareVirtualMachine virtualMachine = virtualHost.Open("[storage] testvm/testvm.vmx");
+        /// virtualMachine.PowerOn();
+        /// </code>
+        /// </example>
         public void ConnectToVMWareVIServer(string hostName, string username, string password)
         {
             ConnectToVMWareVIServer(new Uri(string.Format("https://{0}/sdk", hostName)),

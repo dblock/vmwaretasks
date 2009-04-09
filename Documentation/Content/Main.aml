@@ -1,19 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <topic id="C73DDB0A-3EC4-4fa4-A341-6A054FDA07DC" revisionNumber="1">
- <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <introduction>
-   <para>
-    The VMWare SDKs offer a rich set of programmable interfaces that enable developers to drive virtual machines programmatically with an asynchronous,
-    job-based programming model. Unfortunately that turns out to be too complicated for 99.9% of scenarios and most developers want to use a simple
-    object-oriented interface for common VMWare tasks. The VMWareTasks library implements that interface and makes programming against virtual machines a no brainer.
-   </para>
-   <para>
-    This library is maintained on CodePlex at
-    <externalLink>
-     <linkHref>http://www.codeplex.com/vmwaretasks/</linkHref>
-     <linkText>http://www.codeplex.com/vmwaretasks/</linkText>
-    </externalLink>.
-   </para>
-  </introduction>
- </developerConceptualDocument>
+  <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <introduction>
+      <para>
+        The VMWare SDK, specifically VixCOM, offers a rich set of programmable interfaces that enable developers to drive virtual machines
+        programmatically with an asynchronous, job-based programming model. Unfortunately that turns out to be too comhplicated for 99.9%
+        of scenarios and most developers want to use a simple object-oriented interface for common VMWare tasks. The VMWareTasks library
+        implements that interface and makes programming against virtual machines a no brainer.
+      </para>
+      <para>
+        VMWareTasks contains a VixCOM wrapper 
+        <codeEntityReference qualifyHint="true">T:Vestris.VMWareLib</codeEntityReference> (VMWareLib.dll)
+        and a library <codeEntityReference qualifyHint="true">T:Vestris.VMWareLib.Tools</codeEntityReference>
+        (VMWareTools.dll) that implements additional functionality based on the pure VixCOM API.
+      </para>
+      <para>
+        This library is maintained on CodePlex at
+        <externalLink>
+          <linkHref>http://www.codeplex.com/vmwaretasks/</linkHref>
+          <linkText>http://www.codeplex.com/vmwaretasks/</linkText>
+        </externalLink>.
+      </para>
+    </introduction>
+  </developerConceptualDocument>
 </topic>

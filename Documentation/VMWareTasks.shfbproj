@@ -37,6 +37,8 @@
       <DocumentationSource sourceFile="..\Source\VMWareLib\bin\$(Configuration)\Interop.VixCOM.dll" xmlns="" />
       <DocumentationSource sourceFile="..\Source\VMWareLib\bin\$(Configuration)\Vestris.VMWareLib.dll" xmlns="" />
       <DocumentationSource sourceFile="..\Source\VMWareLib\bin\$(Configuration)\Vestris.VMWareLib.xml" xmlns="" />
+      <DocumentationSource sourceFile="..\Source\VMWareTools\bin\$(Configuration)\Vestris.VMWareTools.dll" xmlns="" />
+      <DocumentationSource sourceFile="..\Source\VMWareTools\bin\$(Configuration)\Vestris.VMWareTools.xml" xmlns="" />
     </DocumentationSources>
     <KeepLogFile>False</KeepLogFile>
     <CopyrightText>$(Copyright)</CopyrightText>

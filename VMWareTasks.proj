@@ -45,8 +45,11 @@
     <SourceCodeFiles Include="Source/**/License.txt" />
   </ItemGroup>
   <ItemGroup>
-    <BinaryFiles Include="Source/**/$(Configuration)/Vestris.*.dll" />
-    <BinaryFiles Include="Source/**/$(Configuration)/Interop.*.dll" />
+    <BinaryFiles Include="Source/**/$(Configuration)/Vestris.VMWareLib.config" />
+    <BinaryFiles Include="Source/**/$(Configuration)/Vestris.VMWareLib.dll" />
+    <BinaryFiles Include="Source/**/$(Configuration)/Vestris.VMWareTools.config" />
+    <BinaryFiles Include="Source/**/$(Configuration)/Vestris.VMWareTools.dll" />
+    <BinaryFiles Include="Source/**/$(Configuration)/Interop.VixCOM.dll" />
   </ItemGroup>
   <ItemGroup>
     <ArticleFiles Include="Article/**/*.html" />
