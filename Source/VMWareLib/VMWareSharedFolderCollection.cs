@@ -175,5 +175,19 @@ namespace Vestris.VMWareLib
         {
             return SharedFolders.GetEnumerator();
         }
+
+        /// <summary>
+        /// Enable/disable all shared folders as a feature on a virtual machine. 
+        /// </summary>
+        public bool Enabled
+        {
+            set
+            {
+                VMWareJobCallback callback = new VMWareJobCallback();
+                VMWareJob job = new VMWareJob(_vm.EnableSharedFolders(value, 0, callback), callback);
+                job.Wait(VMWareInterop.Timeouts.EnableSharedFoldersTimeout);
+                _sharedFolders = null;
+            }
+        }
     }
 }

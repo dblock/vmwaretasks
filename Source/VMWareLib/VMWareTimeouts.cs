@@ -162,6 +162,11 @@ namespace Vestris.VMWareLib
         [VMWareTimeoutAttribute]
         public int WriteVariableTimeout;
         /// <summary>
+        /// Maximum time, in seconds, to wait to enable or disable shared folders.
+        /// </summary>
+        [VMWareTimeoutAttribute]
+        public int EnableSharedFoldersTimeout;
+        /// <summary>
         /// Maximum time, in seconds, to wait to fetch the list of shared folders.
         /// </summary>
         [VMWareTimeoutAttribute]
@@ -226,6 +231,11 @@ namespace Vestris.VMWareLib
         /// </summary>
         [VMWareTimeoutAttribute]
         public int DeleteTimeout;
+        /// <summary>
+        /// Maximum time, in seconds, to get file information from a guest operating system.
+        /// </summary>
+        [VMWareTimeoutAttribute]
+        public int GetFileInfoTimeout;
 
         /// <summary>
         /// A collection of timeouts based on a default 60-seconds base timeout.

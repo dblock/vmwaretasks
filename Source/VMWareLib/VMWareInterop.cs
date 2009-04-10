@@ -30,5 +30,16 @@ namespace Vestris.VMWareLib
                 throw new VMWareException(errCode);
             }
         }
+
+        /// <summary>
+        /// VMWare VIX date/time is expressed in UNIX EPOCH (number of seconds since January 1st, 1970).
+        /// Convert VIX date/time into .NET DateTime.
+        /// </summary>
+        /// <param name="dt">Unix epoch date/time.</param>
+        /// <returns>DateTime in .NET format.</returns>
+        public static DateTime FromUnixEpoch(long dt)
+        {
+            return new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(dt);
+        }
     }
 }

@@ -30,6 +30,69 @@ namespace Vestris.VMWareLib
     public class VMWareVirtualMachine : VMWareVixHandle<IVM2>
     {
         /// <summary>
+        /// Guest file info.
+        /// </summary>
+        public class GuestFileInfo
+        {
+            private int _flags = 0;
+            private long _fileSize = 0;
+            private Nullable<DateTime> _lastModified = null;
+            private string _guestPathName;
+
+            /// <summary>
+            /// File size in bytes, zero for directories.
+            /// </summary>
+            public long FileSize
+            {
+                get { return _fileSize; }
+                set { _fileSize = value; }
+            }
+
+            /// <summary>
+            /// File attributes/flags.
+            /// </summary>
+            public int Flags
+            {
+                get { return _flags; }
+                set { _flags = value; }
+            }
+
+            /// <summary>
+            /// True if directory.
+            /// </summary>
+            public bool IsDirectory
+            {
+                get { return (_flags & VixCOM.Constants.VIX_FILE_ATTRIBUTES_DIRECTORY) > 0; }
+            }
+
+            /// <summary>
+            /// True if symbolic link.
+            /// </summary>
+            public bool IsSymLink
+            {
+                get { return (_flags & VixCOM.Constants.VIX_FILE_ATTRIBUTES_SYMLINK) > 0; }
+            }
+
+            /// <summary>
+            /// Last modified time.
+            /// </summary>
+            public Nullable<DateTime> LastModified
+            {
+                get { return _lastModified; }
+                set { _lastModified = value; }
+            }
+
+            /// <summary>
+            /// Guest file or directory name.
+            /// </summary>
+            public string GuestPathName
+            {
+                get { return _guestPathName; }
+                set { _guestPathName = value; }
+            }
+        }
+
+        /// <summary>
         /// An indexer for variables.
         /// </summary>
         public class VariableIndexer
@@ -503,6 +566,41 @@ namespace Vestris.VMWareLib
                 0, null, callback),
                 callback);
             return job.Wait<string>(Constants.VIX_PROPERTY_JOB_RESULT_ITEM_NAME, timeoutInSeconds);
+        }
+
+        /// <summary>
+        /// Return information about a file or directory in the guest operating system.
+        /// </summary>
+        /// <param name="guestPathName">File or path in the guest operating system.</param>
+        /// <returns>Guest file information.</returns>
+        public GuestFileInfo GetFileInfoInGuest(string guestPathName)
+        {
+            return GetFileInfoInGuest(guestPathName, VMWareInterop.Timeouts.GetFileInfoTimeout);
+        }
+
+        /// <summary>
+        /// Return information about a file or directory in the guest operating system.
+        /// </summary>
+        /// <param name="guestPathName">File or path in the guest operating system.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        /// <returns>Guest file information.</returns>
+        public GuestFileInfo GetFileInfoInGuest(string guestPathName, int timeoutInSeconds)
+        {
+            VMWareJobCallback callback = new VMWareJobCallback();
+            VMWareJob job = new VMWareJob(_handle.GetFileInfoInGuest(guestPathName, callback), callback);
+            object[] properties = 
+            { 
+                Constants.VIX_PROPERTY_JOB_RESULT_FILE_SIZE,
+                Constants.VIX_PROPERTY_JOB_RESULT_FILE_FLAGS,
+                Constants.VIX_PROPERTY_JOB_RESULT_FILE_MOD_TIME
+            };
+            object[] propertyValues = job.Wait<object[]>(properties, timeoutInSeconds);
+            GuestFileInfo fileInfo = new GuestFileInfo();
+            fileInfo.GuestPathName = guestPathName;
+            fileInfo.FileSize = (long)propertyValues[0];
+            fileInfo.Flags = (int)propertyValues[1];
+            fileInfo.LastModified = VMWareInterop.FromUnixEpoch((long) propertyValues[2]);
+            return fileInfo;
         }
 
         /// <summary>

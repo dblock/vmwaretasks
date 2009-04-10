@@ -528,7 +528,7 @@ public IEnumerable &lt;object[]&gt; YieldWait(object[] properties, int timeoutIn
   Date/time in VMWare VIX is expressed in UNIX EPOCH (number of seconds since January
   1st, 1970).
  </p>
- <pre lang="cs">DateTime currentDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds((int) dt);</pre>
+ <pre lang="cs">DateTime currentDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds((long) dt);</pre>
  <h2>
   Source Code and Patches
  </h2>

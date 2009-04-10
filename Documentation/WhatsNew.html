@@ -25,6 +25,10 @@
     <h3>
         1.2 (TBD)</h3>
     <ul>
+        <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1629">1629</a>:
+            Added VMWareVirtualMachine.Snapshots.Enabled.</li>
+        <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1630">1630</a>:
+            Added VMWareVirtualMachine.GetFileInfoInGuest.</li>
         <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=2688">2688</a>:
             Added VMWareVirtualMachine.Clone and VMWareSnapshot.Clone.</li>
         <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=2691">2691</a>:
@@ -35,16 +39,16 @@
             Added VMWareVirtualMachine.Reset, Suspend, Pause, UnPause, IsPaused and IsSuspended.</li>
         <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1913">1913</a>:
             Added VMWareVirtualHost.IsConnected.</li>
-        <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=2232">
-            2232</a>: Added VMWareTools, a wrapper library with Shell and GuestOS functions, 
-            including GetEnvironmentVariables, RunCommandInGuest that returns StdOut and StdErr output,
+        <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=2232">2232</a>:
+            Added VMWareTools, a wrapper library with Shell and GuestOS functions, including
+            GetEnvironmentVariables, RunCommandInGuest that returns StdOut and StdErr output,
             ReadFile, ReadFileLines and ReadFileBytes.</li>
-        <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1634">
-            1634</a>: Added VMWareVirtualMachine.RunScriptInGuest.</li>
-        <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1632">
-            1632</a>: Added VMWareVirtualMachine.OpenUrlInGuest.</li>
-        <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1635">
-            1635</a>: Added VMWareVirtualMachine.UpgradeVirtualHardware.</li>
+        <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1634">1634</a>:
+            Added VMWareVirtualMachine.RunScriptInGuest.</li>
+        <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1632">1632</a>:
+            Added VMWareVirtualMachine.OpenUrlInGuest.</li>
+        <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1635">1635</a>:
+            Added VMWareVirtualMachine.UpgradeVirtualHardware.</li>
         <li>Interface change: split Login into LoginInGuest and WaitForToolsInGuest to be consistent
             with VIX COM API and allow poweron without tools installed. Exposed a login function
             with power options.</li>
@@ -59,7 +63,7 @@
         <li>Bug: removing a shared folder doesn't remove it from the collection when not the
             same object.</li>
         <li>Bug: fixed different behavior of ListDirectoryInGuest between Workstation and VI.</li>
-        <li>Bug: API-level errors aren&#39;t surfaced and the callback wait will never be set 
+        <li>Bug: API-level errors aren&#39;t surfaced and the callback wait will never be set
             when VixCOM is not installed.</li>
     </ul>
     <h3>

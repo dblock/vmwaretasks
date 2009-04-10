@@ -117,10 +117,13 @@ namespace Vestris.VMWareLibUnitTests
             VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
             try
             {
+                Console.WriteLine("Enabling shared folders ...");
+                virtualMachine.SharedFolders.Enabled = true;
                 int count = virtualMachine.SharedFolders.Count;
                 Console.WriteLine("Shared folders: {0}", count);
                 // add a shared folder
-                VMWareSharedFolder currentDirectory = new VMWareSharedFolder(Guid.NewGuid().ToString(), Environment.CurrentDirectory);
+                VMWareSharedFolder currentDirectory = new VMWareSharedFolder(
+                    Guid.NewGuid().ToString(), Environment.CurrentDirectory);
                 virtualMachine.SharedFolders.Add(currentDirectory);
                 Assert.AreEqual(count + 1, virtualMachine.SharedFolders.Count);
                 foreach (VMWareSharedFolder sharedFolder in virtualMachine.SharedFolders)
@@ -364,6 +367,48 @@ namespace Vestris.VMWareLibUnitTests
             virtualMachine.Snapshots.GetCurrentSnapshot().Clone(VMWareVirtualMachineCloneType.Linked, vmxFileName);
             Assert.IsTrue(File.Exists(vmxFileName));
             Directory.Delete(vmxPathName, true);
+        }
+
+        [Test]
+        public void TestGetFolderInfoInGuest()
+        {
+            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
+            string tmpPath = virtualMachine.GuestEnvironmentVariables["tmp"];
+            VMWareVirtualMachine.GuestFileInfo tmpPathInfo = virtualMachine.GetFileInfoInGuest(tmpPath);
+            Console.WriteLine("{0}: {1}, {2} byte(s)", 
+                tmpPathInfo.GuestPathName, 
+                tmpPathInfo.LastModified, 
+                tmpPathInfo.FileSize);
+            Assert.AreEqual(0, tmpPathInfo.FileSize);
+            Assert.AreEqual(tmpPath, tmpPathInfo.GuestPathName);
+            Assert.AreEqual(true, tmpPathInfo.IsDirectory);
+            Assert.AreEqual(false, tmpPathInfo.IsSymLink);
+            Assert.IsTrue(tmpPathInfo.LastModified > DateTime.MinValue);
+        }
+
+        [Test]
+        public void TestGetFileInfoInGuest()
+        {
+            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
+            string hostTmpFilename = Path.GetTempFileName();
+            File.WriteAllText(hostTmpFilename, Guid.NewGuid().ToString());
+            FileInfo hostTmpFileInfo = new FileInfo(hostTmpFilename);
+            string guestTmpPath = virtualMachine.GuestEnvironmentVariables["tmp"];
+            string guestTmpFilename = Path.Combine(guestTmpPath, Path.GetFileName(hostTmpFilename));
+            DateTime dtBeforeCopy = DateTime.Now;
+            virtualMachine.CopyFileFromHostToGuest(hostTmpFilename, guestTmpFilename);
+            VMWareVirtualMachine.GuestFileInfo tmpPathInfo = virtualMachine.GetFileInfoInGuest(guestTmpFilename);
+            Console.WriteLine("{0}: {1}, {2} byte(s)",
+                tmpPathInfo.GuestPathName,
+                tmpPathInfo.LastModified,
+                tmpPathInfo.FileSize);
+            Assert.AreEqual(hostTmpFileInfo.Length, tmpPathInfo.FileSize);
+            Assert.AreEqual(guestTmpFilename, tmpPathInfo.GuestPathName);
+            Assert.AreEqual(false, tmpPathInfo.IsDirectory);
+            Assert.AreEqual(false, tmpPathInfo.IsSymLink);
+            Assert.IsTrue(tmpPathInfo.LastModified >= dtBeforeCopy);
+            virtualMachine.DeleteFileFromGuest(guestTmpFilename);
+            File.Delete(hostTmpFilename);
         }
     }
 }
