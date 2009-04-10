@@ -599,7 +599,7 @@ namespace Vestris.VMWareLib
             fileInfo.GuestPathName = guestPathName;
             fileInfo.FileSize = (long)propertyValues[0];
             fileInfo.Flags = (int)propertyValues[1];
-            fileInfo.LastModified = VMWareInterop.FromUnixEpoch((long) propertyValues[2]);
+            fileInfo.LastModified = VMWareInterop.FromUnixEpoch((long)propertyValues[2]);
             return fileInfo;
         }
 
@@ -811,16 +811,16 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Remove any guest operating system authentication context created by a previous call to LoginInGuest(), ie. Logout.
         /// </summary>
-        public void Logout()
+        public void LogoutFromGuest()
         {
-            Logout(VMWareInterop.Timeouts.LogoutTimeout);
+            LogoutFromGuest(VMWareInterop.Timeouts.LogoutTimeout);
         }
 
         /// <summary>
         /// Remove any guest operating system authentication context created by a previous call to LoginInGuest(), ie. Logout.
         /// </summary>
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
-        public void Logout(int timeoutInSeconds)
+        public void LogoutFromGuest(int timeoutInSeconds)
         {
             VMWareJobCallback callback = new VMWareJobCallback();
             VMWareJob job = new VMWareJob(_handle.LogoutFromGuest(callback), callback);
@@ -1307,6 +1307,37 @@ namespace Vestris.VMWareLib
         {
             VMWareJobCallback callback = new VMWareJobCallback();
             VMWareJob job = new VMWareJob(_handle.Delete(deleteOptions, callback), callback);
+            job.Wait(timeoutInSeconds);
+        }
+
+        /// <summary>
+        /// Prepares to install VMware Tools on the guest operating system.
+        /// </summary>
+        /// <remarks>
+        /// Prepares an ISO image to install VMware Tools on the guest operating system. 
+        /// If autorun is enabled, as it often is on Windows, installation begins, otherwise 
+        /// you must initiate installation. If VMware Tools is already installed, this function 
+        /// prepares to upgrade it to the version matching the product. 
+        /// </remarks>
+        public void InstallTools()
+        {
+            InstallTools(VMWareInterop.Timeouts.InstallToolsTimeout);
+        }
+
+        /// <summary>
+        /// Prepares to install VMware Tools on the guest operating system.
+        /// </summary>
+        /// <remarks>
+        /// Prepares an ISO image to install VMware Tools on the guest operating system. 
+        /// If autorun is enabled, as it often is on Windows, installation begins, otherwise 
+        /// you must initiate installation. If VMware Tools is already installed, this function 
+        /// prepares to upgrade it to the version matching the product. 
+        /// </remarks>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        public void InstallTools(int timeoutInSeconds)
+        {
+            VMWareJobCallback callback = new VMWareJobCallback();
+            VMWareJob job = new VMWareJob(_handle.InstallTools(0, null, callback), callback);
             job.Wait(timeoutInSeconds);
         }
     }

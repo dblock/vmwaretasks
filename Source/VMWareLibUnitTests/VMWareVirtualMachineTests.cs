@@ -330,7 +330,6 @@ namespace Vestris.VMWareLibUnitTests
             Directory.Delete(vmxPathName, true);
         }
 
-
         [Test]
         public void TestDeleteVirtualMachine()
         {
@@ -409,6 +408,13 @@ namespace Vestris.VMWareLibUnitTests
             Assert.IsTrue(tmpPathInfo.LastModified >= dtBeforeCopy);
             virtualMachine.DeleteFileFromGuest(guestTmpFilename);
             File.Delete(hostTmpFilename);
+        }
+
+        [Test]
+        protected void TestInstallTools()
+        {
+            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
+            virtualMachine.InstallTools();
         }
     }
 }

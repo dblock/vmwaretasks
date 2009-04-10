@@ -25,6 +25,10 @@
     <h3>
         1.2 (TBD)</h3>
     <ul>
+        <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1626">1626</a>:
+            Added VMWareVirtualHost.Register and Unregister.</li>
+        <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1631">1631</a>:
+            Added VMWareVirtualMachine.InstallTools.</li>
         <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1629">1629</a>:
             Added VMWareVirtualMachine.Snapshots.Enabled.</li>
         <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1630">1630</a>:
@@ -49,9 +53,9 @@
             Added VMWareVirtualMachine.OpenUrlInGuest.</li>
         <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1635">1635</a>:
             Added VMWareVirtualMachine.UpgradeVirtualHardware.</li>
-        <li>Interface change: split Login into LoginInGuest and WaitForToolsInGuest to be consistent
-            with VIX COM API and allow poweron without tools installed. Exposed a login function
-            with power options.</li>
+        <li>Interface change: split Login into LoginInGuest and WaitForToolsInGuest and renamed
+            Logout to LogoutFromGuest to be consistent with VIX COM API and allow poweron without
+            tools installed. Exposed a LoginInGuest function with power options.</li>
         <li>Added support for VMWare Server, added ConnectToVMWareServer.</li>
         <li>Added VMWareVirtualMachine.ShutdownGuest and PowerOff that specify shutdown parameters
             explicitly.</li>

@@ -39,10 +39,15 @@ namespace Vestris.VMWareLib
         [VMWareTimeoutAttribute]
         public int ConnectTimeout;
         /// <summary>
-        /// Maximum time, in seconds, to open a file in a VMWare guest operating system.
+        /// Maximum time, in seconds, to open a virtual machine.
         /// </summary>
         [VMWareTimeoutAttribute]
-        public int OpenFileTimeout;
+        public int OpenVMTimeout;
+        /// <summary>
+        /// Maximum time, in seconds, to register or unregister a virtual machine.
+        /// </summary>
+        [VMWareTimeoutAttribute]
+        public int RegisterVMTimeout;
         /// <summary>
         /// Maximum time, in seconds, to revert a snapshot.
         /// </summary>
@@ -236,6 +241,11 @@ namespace Vestris.VMWareLib
         /// </summary>
         [VMWareTimeoutAttribute]
         public int GetFileInfoTimeout;
+        /// <summary>
+        /// Maximum time, in seconds, to prepare to install or upgrade VMWare Tools.
+        /// </summary>
+        [VMWareTimeoutAttribute]
+        public int InstallToolsTimeout;
 
         /// <summary>
         /// A collection of timeouts based on a default 60-seconds base timeout.

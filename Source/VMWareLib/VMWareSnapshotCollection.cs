@@ -25,8 +25,8 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Snapshot collection constructor.
         /// </summary>
-        /// <param name="vm">virtual machine</param>
-        /// <param name="parent">snapshot parent</param>
+        /// <param name="vm">Virtual machine.</param>
+        /// <param name="parent">Snapshot parent.</param>
         public VMWareSnapshotCollection(IVM2 vm, VMWareSnapshot parent)
         {
             _vm = vm;
@@ -51,7 +51,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Find a snapshot.
         /// </summary>
-        /// <param name="pathToSnapshot">path to a snapshot</param>
+        /// <param name="pathToSnapshot">Path to a snapshot.</param>
         /// <returns>A snapshot, null if not found.</returns>
         public VMWareSnapshot FindSnapshot(string pathToSnapshot)
         {
@@ -75,7 +75,7 @@ namespace Vestris.VMWareLib
         /// doesn't throw an exception when there're two snapshots of the same name, it returns
         /// the first snapshot found.
         /// </summary>
-        /// <param name="name">name of a snapshot</param>
+        /// <param name="name">Name of a snapshot.</param>
         /// <returns>The first snapshot that matches the name, null if not found.</returns>
         public VMWareSnapshot FindSnapshotByName(string name)
         {
@@ -99,7 +99,7 @@ namespace Vestris.VMWareLib
         /// Find all snapshots by name. This can return multiple snapshots
         /// that have the same name.
         /// </summary>
-        /// <param name="name">name of a snapshot</param>
+        /// <param name="name">Name of a snapshot.</param>
         /// <returns>The first snapshot that matches the name, null if not found.</returns>
         public IEnumerable<VMWareSnapshot> FindSnapshotsByName(string name)
         {
@@ -121,8 +121,8 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Copy to an array of VMWareSnapshots.
         /// </summary>
-        /// <param name="array">target array</param>
-        /// <param name="arrayIndex">array index</param>
+        /// <param name="array">Target array.</param>
+        /// <param name="arrayIndex">Array index.</param>
         public void CopyTo(VMWareSnapshot[] array, int arrayIndex)
         {
             Snapshots.CopyTo(array, arrayIndex);
@@ -131,7 +131,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Returns true if this virtual machine has the snapshot specified.
         /// </summary>
-        /// <param name="item">snapshot</param>
+        /// <param name="item">Nnapshot.</param>
         /// <returns>True if the virtual machine contains the specified snapshot.</returns>
         public bool Contains(VMWareSnapshot item)
         {
@@ -182,7 +182,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Add a snapshot to the list.
         /// </summary>
-        /// <param name="snapshot">snapshot to add</param>
+        /// <param name="snapshot">Snapshot to add.</param>
         public void Add(VMWareSnapshot snapshot)
         {
             if (snapshot.Parent != null && snapshot.Parent != _parent)
@@ -196,7 +196,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Remove a snapshot from this collection, append orphaned children.
         /// </summary>
-        /// <param name="snapshot">removed snapshot</param>
+        /// <param name="snapshot">Snapshot to remove.</param>
         public void Remove(VMWareSnapshot snapshot)
         {
             _snapshots.Remove(snapshot);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using Vestris.VMWareLib;
 using System.Configuration;
+using System.IO;
 
 namespace Vestris.VMWareLibUnitTests
 {
@@ -92,6 +93,12 @@ namespace Vestris.VMWareLibUnitTests
                     virtualMachine.PathName, virtualMachine.IsRunning,
                     virtualMachine.MemorySize, virtualMachine.CPUCount);
             }
+        }
+
+        [Test]
+        protected void TestRegisterUnregisterVirtualMachine()
+        {
+            // todo: test on ESX, requires admin privileges
         }
     }
 }

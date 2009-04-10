@@ -143,7 +143,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Connects to a VMWare VI Server, VMWare Server or Workstation.
         /// </summary>
-        private void Connect(ServiceProviderType serviceProviderType, 
+        private void Connect(ServiceProviderType serviceProviderType,
             string hostName, int hostPort, string username, string password, int timeout)
         {
             int serviceProvider = (int)serviceProviderType;
@@ -163,7 +163,7 @@ namespace Vestris.VMWareLib
         /// <returns>An instance of a virtual machine.</returns>
         public VMWareVirtualMachine Open(string fileName)
         {
-            return Open(fileName, VMWareInterop.Timeouts.OpenFileTimeout);
+            return Open(fileName, VMWareInterop.Timeouts.OpenVMTimeout);
         }
 
         /// <summary>
@@ -184,6 +184,78 @@ namespace Vestris.VMWareLib
             return new VMWareVirtualMachine(job.Wait<IVM2>(
                 Constants.VIX_PROPERTY_JOB_RESULT_HANDLE,
                 timeoutInSeconds));
+        }
+
+        /// <summary>
+        /// Add a virtual machine to the host's inventory.
+        /// </summary>
+        /// <param name="fileName">Virtual Machine file, local .vmx or [storage] .vmx.</param>
+        public void Register(string fileName)
+        {
+            Register(fileName, VMWareInterop.Timeouts.RegisterVMTimeout);
+        }
+
+        /// <summary>
+        /// Add a virtual machine to the host's inventory.
+        /// </summary>
+        /// <param name="fileName">Virtual Machine file, local .vmx or [storage] .vmx.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        public void Register(string fileName, int timeoutInSeconds)
+        {
+            if (_handle == null)
+            {
+                throw new InvalidOperationException("No connection established");
+            }
+
+            switch (ConnectionType)
+            {
+                case ServiceProviderType.VirtualInfrastructureServer:
+                case ServiceProviderType.Server:
+                    break;
+                default:
+                    throw new NotSupportedException(string.Format("Register is not supported on {0}",
+                        ConnectionType));
+            }
+
+            VMWareJobCallback callback = new VMWareJobCallback();
+            VMWareJob job = new VMWareJob(_handle.RegisterVM(fileName, callback), callback);
+            job.Wait(timeoutInSeconds);
+        }
+
+        /// <summary>
+        /// Remove a virtual machine from the host's inventory.
+        /// </summary>
+        /// <param name="fileName">Virtual Machine file, local .vmx or [storage] .vmx.</param>
+        public void Unregister(string fileName)
+        {
+            Unregister(fileName, VMWareInterop.Timeouts.RegisterVMTimeout);
+        }
+
+        /// <summary>
+        /// Remove a virtual machine from the host's inventory.
+        /// </summary>
+        /// <param name="fileName">Virtual Machine file, local .vmx or [storage] .vmx.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        public void Unregister(string fileName, int timeoutInSeconds)
+        {
+            if (_handle == null)
+            {
+                throw new InvalidOperationException("No connection established");
+            }
+
+            switch (ConnectionType)
+            {
+                case ServiceProviderType.VirtualInfrastructureServer:
+                case ServiceProviderType.Server:
+                    break;
+                default:
+                    throw new NotSupportedException(string.Format("Unregister is not supported on {0}",
+                        ConnectionType));
+            }
+
+            VMWareJobCallback callback = new VMWareJobCallback();
+            VMWareJob job = new VMWareJob(_handle.UnregisterVM(fileName, callback), callback);
+            job.Wait(timeoutInSeconds);
         }
 
         /// <summary>
@@ -249,14 +321,14 @@ namespace Vestris.VMWareLib
 
                 VMWareJobCallback callback = new VMWareJobCallback();
                 VMWareJob job = new VMWareJob(_handle.FindItems(
-                    Constants.VIX_FIND_RUNNING_VMS, null, -1, callback), 
+                    Constants.VIX_FIND_RUNNING_VMS, null, -1, callback),
                     callback);
-                
+
                 object[] properties = { Constants.VIX_PROPERTY_FOUND_ITEM_LOCATION };
                 foreach (object[] runningVirtualMachine in job.YieldWait(
                     properties, VMWareInterop.Timeouts.FindItemsTimeout))
                 {
-                    yield return this.Open((string) runningVirtualMachine[0]);
+                    yield return this.Open((string)runningVirtualMachine[0]);
                 }
             }
         }
@@ -272,24 +344,24 @@ namespace Vestris.VMWareLib
                 switch (ConnectionType)
                 {
                     case ServiceProviderType.VirtualInfrastructureServer:
-                        VMWareJobCallback callback = new VMWareJobCallback();
-                        VMWareJob job = new VMWareJob(_handle.FindItems(
-                            Constants.VIX_FIND_REGISTERED_VMS, null, -1, callback),
-                            callback);
-                        
-                        object[] properties = { Constants.VIX_PROPERTY_FOUND_ITEM_LOCATION };
-                        foreach (object[] runningVirtualMachine in job.YieldWait(properties, VMWareInterop.Timeouts.FindItemsTimeout))
-                        {
-                            yield return this.Open((string)runningVirtualMachine[0]);
-                        }
-
+                    case ServiceProviderType.Server:
                         break;
                     default:
                         throw new NotSupportedException(string.Format("RegisteredVirtualMachines is not supported on {0}",
                             ConnectionType));
                 }
+
+                VMWareJobCallback callback = new VMWareJobCallback();
+                VMWareJob job = new VMWareJob(_handle.FindItems(
+                    Constants.VIX_FIND_REGISTERED_VMS, null, -1, callback),
+                    callback);
+
+                object[] properties = { Constants.VIX_PROPERTY_FOUND_ITEM_LOCATION };
+                foreach (object[] runningVirtualMachine in job.YieldWait(properties, VMWareInterop.Timeouts.FindItemsTimeout))
+                {
+                    yield return this.Open((string)runningVirtualMachine[0]);
+                }
             }
         }
-
     }
 }
