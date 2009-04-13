@@ -35,6 +35,8 @@
     <DeleteTree Directories="Documentation\$(Configuration)" />
     <DeleteTree Directories="$(ReleaseDir)" Recursive="true" />
     <Delete Files="Vestris.VMWareTasks.zip" />
+    <Delete Files="Source\Version\GlobalAssemblyInfo.cs" />
+    <DeleteTree Directories="Source\**\bin;Source\**\obj" Recursive="true" />
   </Target>
   <Target Name="build">
     <MSBuild Projects="VMWareTasks.sln" />
@@ -44,15 +46,16 @@
     <SourceCodeFiles Include="*.proj" />
     <SourceCodeFiles Include="*.cmd" />
     <SourceCodeFiles Include="Source/**/*.cs" />
+    <SourceCodeFiles Include="Source/Version/GlobalAssemblyInfo.cs" />
     <SourceCodeFiles Include="Source/**/*.csproj" />
-    <SourceCodeFiles Include="Source/**/License.txt" />
+    <SourceCodeFiles Include="Source/License.txt" />
   </ItemGroup>
   <ItemGroup>
-    <BinaryFiles Include="Source/**/$(Configuration)/Vestris.VMWareLib.config" />
-    <BinaryFiles Include="Source/**/$(Configuration)/Vestris.VMWareLib.dll" />
-    <BinaryFiles Include="Source/**/$(Configuration)/Vestris.VMWareTools.config" />
-    <BinaryFiles Include="Source/**/$(Configuration)/Vestris.VMWareTools.dll" />
-    <BinaryFiles Include="Source/**/$(Configuration)/Interop.VixCOM.dll" />
+    <BinaryFiles Include="Source/VMWareLib/bin/$(Configuration)/Vestris.VMWareLib.dll.config" />
+    <BinaryFiles Include="Source/VMWareLib/bin/$(Configuration)/Vestris.VMWareLib.dll" />
+    <BinaryFiles Include="Source/VMWareTools/bin/$(Configuration)/Vestris.VMWareTools.dll.config" />
+    <BinaryFiles Include="Source/VMWareTools/bin/$(Configuration)/Vestris.VMWareTools.dll" />
+    <BinaryFiles Include="Source/VMWareLib/bin/$(Configuration)/Interop.VixCOM.dll" />
   </ItemGroup>
   <ItemGroup>
     <ArticleFiles Include="Article/**/*.html" />
