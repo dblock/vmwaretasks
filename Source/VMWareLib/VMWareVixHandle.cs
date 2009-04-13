@@ -8,6 +8,7 @@ namespace Vestris.VMWareLib
     /// <summary>
     /// A wrapper for a VixCOM handle. 
     /// </summary>
+    /// <typeparam name="T">Type of VixCOM handle.</typeparam>
     /// <remarks>
     /// Most VixCOM objects returned from VixCOM API functions implement IVixHandle.
     /// </remarks>

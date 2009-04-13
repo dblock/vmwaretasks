@@ -32,6 +32,9 @@
   </Target>
   <Target Name="clean">
     <MSBuild Projects="VMWareTasks.sln" Targets="Clean" />
+    <DeleteTree Directories="Documentation\$(Configuration)" />
+    <DeleteTree Directories="$(ReleaseDir)" Recursive="true" />
+    <Delete Files="Vestris.VMWareTasks.zip" />
   </Target>
   <Target Name="build">
     <MSBuild Projects="VMWareTasks.sln" />

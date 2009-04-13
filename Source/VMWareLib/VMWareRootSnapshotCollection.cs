@@ -90,7 +90,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Delete/remove a snapshot.
         /// </summary>
-        /// <param name="item">snapshot to delete</param>
+        /// <param name="item">Snapshot to delete.</param>
         /// <returns>True if the snapshot was deleted.</returns>
         public void RemoveSnapshot(VMWareSnapshot item)
         {
@@ -101,7 +101,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Delete a snapshot.
         /// </summary>
-        /// <param name="name">name of the snapshot to delete</param>
+        /// <param name="name">Name of the snapshot to delete.</param>
         public void RemoveSnapshot(string name)
         {
             RemoveSnapshot(GetNamedSnapshot(name));
@@ -110,8 +110,8 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Create a new snapshot, child of the current snapshot.
         /// </summary>
-        /// <param name="name">snapshot name</param>
-        /// <param name="description">snapshot description</param>
+        /// <param name="name">Snapshot name.</param>
+        /// <param name="description">Snapshot description.</param>
         public void CreateSnapshot(string name, string description)
         {
             CreateSnapshot(name, description, 0, VMWareInterop.Timeouts.CreateSnapshotTimeout);
@@ -120,9 +120,9 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Create a new snapshot, child of the current snapshot.
         /// </summary>
-        /// <param name="name">snapshot name</param>
-        /// <param name="description">snapshot description</param>
-        /// <param name="flags">flags, one of 
+        /// <param name="name">Snapshot name.</param>
+        /// <param name="description">Snapshot description.</param>
+        /// <param name="flags">Flags, one of 
         /// <list type="bullet">
         ///  <item>VIX_SNAPSHOT_INCLUDE_MEMORY: Captures the full state of a running virtual machine, including the memory</item>
         /// </list>

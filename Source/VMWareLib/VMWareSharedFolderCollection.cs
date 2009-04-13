@@ -20,7 +20,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// A collection of shared folders that belong to a virtual machine.
         /// </summary>
-        /// <param name="vm">virtual machine</param>
+        /// <param name="vm">Virtual machine.</param>
         public VMWareSharedFolderCollection(IVM vm)
         {
             _vm = vm;
@@ -29,7 +29,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Add (create) a shared folder.
         /// </summary>
-        /// <param name="sharedFolder">the shared folder to add</param>
+        /// <param name="sharedFolder">The shared folder to add.</param>
         public void Add(VMWareSharedFolder sharedFolder)
         {
             VMWareJobCallback callback = new VMWareJobCallback();
@@ -103,8 +103,8 @@ namespace Vestris.VMWareLib
         /// A function to copy shared folder objects between arrays.
         /// Don't use externally.
         /// </summary>
-        /// <param name="array">target array</param>
-        /// <param name="arrayIndex">array index</param>
+        /// <param name="array">Target array.</param>
+        /// <param name="arrayIndex">Array index.</param>
         public void CopyTo(VMWareSharedFolder[] array, int arrayIndex) 
         { 
             SharedFolders.CopyTo(array, arrayIndex); 
@@ -113,7 +113,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Returns true if this virtual machine has the folder specified.
         /// </summary>
-        /// <param name="item">shared folder</param>
+        /// <param name="item">Shared folder.</param>
         /// <returns>True if the virtual machine contains the specified shared folder.</returns>
         public bool Contains(VMWareSharedFolder item)
         {
@@ -123,7 +123,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Delete a shared folder.
         /// </summary>
-        /// <param name="item">shared folder to delete</param>
+        /// <param name="item">Shared folder to delete.</param>
         /// <returns>True if the folder was deleted.</returns>
         public bool Remove(VMWareSharedFolder item) 
         {

@@ -131,7 +131,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Returns true if this virtual machine has the snapshot specified.
         /// </summary>
-        /// <param name="item">Nnapshot.</param>
+        /// <param name="item">Snapshot.</param>
         /// <returns>True if the virtual machine contains the specified snapshot.</returns>
         public bool Contains(VMWareSnapshot item)
         {

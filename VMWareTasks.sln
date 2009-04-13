@@ -34,6 +34,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Content", "Content", "{748E0786-A7ED-4B61-AFA6-B67A07E6CE24}"
 	ProjectSection(SolutionItems) = preProject
+		Documentation\Content\AboutHelp.aml = Documentation\Content\AboutHelp.aml
 		Documentation\Content\GettingStarted.aml = Documentation\Content\GettingStarted.aml
 		Documentation\Content\License.aml = Documentation\Content\License.aml
 		Documentation\Content\Main.aml = Documentation\Content\Main.aml

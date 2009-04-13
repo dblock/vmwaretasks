@@ -52,6 +52,7 @@
     <RootNamespaceContainer>True</RootNamespaceContainer>
     <RootNamespaceTitle>Library Reference</RootNamespaceTitle>
     <HelpFileFormat>HtmlHelp1x</HelpFileFormat>
+    <SyntaxFilters>CSharp</SyntaxFilters>
   </PropertyGroup>
   <!-- There are no properties for these two groups but they need to appear in
        order for Visual Studio to perform the build. -->
@@ -60,6 +61,8 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
   </PropertyGroup>
   <ItemGroup>
+    <None Include="Content\AboutHelp.aml" />
+    <None Include="Content\HelpAndAbout.aml" />
     <None Include="Content\License.aml" />
     <None Include="Content\GettingStarted.aml" />
     <None Include="Content\Main.aml" />
@@ -69,6 +72,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\" />
+    <Folder Include="Images\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Images\VMWareLogo.jpg">
+      <ImageId>VMWareLogo.jpg</ImageId>
+    </Image>
   </ItemGroup>
   <!-- Import the SHFB build targets -->
   <Import Project="$(SHFBROOT)\SandcastleHelpFileBuilder.targets" />

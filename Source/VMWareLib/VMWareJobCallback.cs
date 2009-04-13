@@ -35,7 +35,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Wait for completion of the job with a timeout.
         /// </summary>
-        /// <param name="timeoutInMilliseconds">timeout in milliseconds</param>
+        /// <param name="timeoutInMilliseconds">Timeout in milliseconds.</param>
         /// <returns>True if job completed, false if timeout expired.</returns>
         public bool TryWaitForCompletion(int timeoutInMilliseconds)
         {
@@ -46,7 +46,7 @@ namespace Vestris.VMWareLib
         /// Wait for completion of the job with a timeout.
         /// A <see ref="System.TimeoutException" /> occurs if the job hasn't completed within the timeout specified.
         /// </summary>
-        /// <param name="timeoutInMilliseconds">timeout in milliseconds</param>
+        /// <param name="timeoutInMilliseconds">Timeout in milliseconds.</param>
         public void WaitForCompletion(int timeoutInMilliseconds)
         {
             if (!TryWaitForCompletion(timeoutInMilliseconds))

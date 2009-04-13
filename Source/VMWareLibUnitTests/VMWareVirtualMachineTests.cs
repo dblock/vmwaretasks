@@ -392,8 +392,7 @@ namespace Vestris.VMWareLibUnitTests
             string hostTmpFilename = Path.GetTempFileName();
             File.WriteAllText(hostTmpFilename, Guid.NewGuid().ToString());
             FileInfo hostTmpFileInfo = new FileInfo(hostTmpFilename);
-            string guestTmpPath = virtualMachine.GuestEnvironmentVariables["tmp"];
-            string guestTmpFilename = Path.Combine(guestTmpPath, Path.GetFileName(hostTmpFilename));
+            string guestTmpFilename = virtualMachine.CreateTempFileInGuest();
             DateTime dtBeforeCopy = DateTime.Now;
             virtualMachine.CopyFileFromHostToGuest(hostTmpFilename, guestTmpFilename);
             VMWareVirtualMachine.GuestFileInfo tmpPathInfo = virtualMachine.GetFileInfoInGuest(guestTmpFilename);

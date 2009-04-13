@@ -27,14 +27,22 @@ namespace Vestris.VMWareToolsUnitTests
             File.WriteAllText(_tempHostFilename, sb.ToString());
             // copy the file to the guest OS
             _vm = VMWareTest.Instance.PoweredVirtualMachine;
-            _tempGuestFilename = Path.Combine(_vm.GuestEnvironmentVariables["tmp"], Guid.NewGuid().ToString());
+            _tempGuestFilename = _vm.CreateTempFileInGuest();
             _vm.CopyFileFromHostToGuest(_tempHostFilename, _tempGuestFilename);
         }
 
         public override void TearDown()
         {
-            if (!string.IsNullOrEmpty(_tempGuestFilename)) _vm.DeleteFileFromGuest(_tempGuestFilename);
-            if (!string.IsNullOrEmpty(_tempHostFilename)) File.Delete(_tempHostFilename);
+            if (!string.IsNullOrEmpty(_tempGuestFilename))
+            {
+                _vm.DeleteFileFromGuest(_tempGuestFilename);
+            }
+
+            if (!string.IsNullOrEmpty(_tempHostFilename))
+            {
+                File.Delete(_tempHostFilename);
+            }
+
             base.TearDown();
         }
 

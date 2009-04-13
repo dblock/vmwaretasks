@@ -19,9 +19,9 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// A VMWare snapshot constructor.
         /// </summary>
-        /// <param name="vm">virtual machine</param>
-        /// <param name="snapshot">snapshot</param>
-        /// <param name="parent">parent snapshot</param>
+        /// <param name="vm">Virtual machine.</param>
+        /// <param name="snapshot">Snapshot.</param>
+        /// <param name="parent">Parent snapshot.</param>
         public VMWareSnapshot(IVM2 vm, ISnapshot snapshot, VMWareSnapshot parent)
             : base(snapshot)
         {

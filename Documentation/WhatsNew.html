@@ -23,52 +23,79 @@
 </head>
 <body>
     <h3>
-        1.2 (TBD)</h3>
+        1.2 (??-Apr-2009)</h3>
     <ul>
-        <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1626">1626</a>:
-            Added VMWareVirtualHost.Register and Unregister.</li>
-        <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1631">1631</a>:
-            Added VMWareVirtualMachine.InstallTools.</li>
-        <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1629">1629</a>:
-            Added VMWareVirtualMachine.Snapshots.Enabled.</li>
-        <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1630">1630</a>:
-            Added VMWareVirtualMachine.GetFileInfoInGuest.</li>
-        <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=2688">2688</a>:
-            Added VMWareVirtualMachine.Clone and VMWareSnapshot.Clone.</li>
-        <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=2691">2691</a>:
-            Added VMWareVirtualMachine.Delete.</li>
-        <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1628">1628</a>:
-            Added support for recording and replaying snapshots.</li>
-        <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1633">1633</a>:
-            Added VMWareVirtualMachine.Reset, Suspend, Pause, UnPause, IsPaused and IsSuspended.</li>
-        <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1913">1913</a>:
-            Added VMWareVirtualHost.IsConnected.</li>
-        <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=2232">2232</a>:
-            Added VMWareTools, a wrapper library with Shell and GuestOS functions, including
-            GetEnvironmentVariables, RunCommandInGuest that returns StdOut and StdErr output,
-            ReadFile, ReadFileLines and ReadFileBytes.</li>
-        <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1634">1634</a>:
-            Added VMWareVirtualMachine.RunScriptInGuest.</li>
-        <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1632">1632</a>:
-            Added VMWareVirtualMachine.OpenUrlInGuest.</li>
-        <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1635">1635</a>:
-            Added VMWareVirtualMachine.UpgradeVirtualHardware.</li>
-        <li>Interface change: split Login into LoginInGuest and WaitForToolsInGuest and renamed
-            Logout to LogoutFromGuest to be consistent with VIX COM API and allow poweron without
-            tools installed. Exposed a LoginInGuest function with power options.</li>
-        <li>Added support for VMWare Server, added ConnectToVMWareServer.</li>
-        <li>Added VMWareVirtualMachine.ShutdownGuest and PowerOff that specify shutdown parameters
+        <li>Completed VixCOM API full support.<ul>
+            <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1626">1626</a>:
+            VMWareVirtualHost.Register and Unregister.</li>
+            <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1631">1631</a>:
+            VMWareVirtualMachine.InstallTools.</li>
+            <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1629">1629</a>:
+            VMWareVirtualMachine.Snapshots.Enabled.</li>
+            <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1630">1630</a>:
+            VMWareVirtualMachine.GetFileInfoInGuest.</li>
+            <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=2688">2688</a>:
+            VMWareVirtualMachine.Clone and VMWareSnapshot.Clone.</li>
+            <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=2691">2691</a>:
+            VMWareVirtualMachine.Delete.</li>
+            <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1628">1628</a>:
+                VMWareVirtualMachine.BeginRecording and EndRecording, VMWareSnapshot.BeginReplay 
+                and EndReplay.</li>
+            <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1633">1633</a>:
+            VMWareVirtualMachine.Reset, Suspend, Pause, UnPause, IsPaused and IsSuspended.</li>
+            <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1913">1913</a>:
+            VMWareVirtualHost.IsConnected.</li>
+            <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1634">1634</a>:
+            VMWareVirtualMachine.RunScriptInGuest.</li>
+            <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1632">1632</a>:
+            VMWareVirtualMachine.OpenUrlInGuest.</li>
+            <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=1635">1635</a>:
+            VMWareVirtualMachine.UpgradeVirtualHardware.</li>
+            </ul>
+        </li>
+        <li>Added an optional VMWareTools package built on top of VMWareLib.<ul>
+            <li>VMWareLib.Tools.GuestOS.IpAddress: guest operating system IP address 
+                information.</li>
+                <li>VMWareLib.Tools.GuestOS.ReadFile, ReadFileLines and ReadFileBytes: read remote 
+                    files as binary data or text with encoding support.</li>
+                <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=2232">2232</a>: 
+                    VMWareLib.Tools.Windows.Shell.GetEnvironmentVariables: obtain logged-in user 
+                    environment.</li>
+                <li>VMWareLib.Tools.Windows.Shell.RunCommandInGuest: runs commands and collect 
+                    console output.</li>
+                <li>VMWareLib.Tools.Windows.MappedNetworkDrive: maps guest operating system network 
+                    resources.</li>
+            </ul>
+        </li>
+        <li>Backwards incompatible interface changes:<ul>
+            <li>VMWareVirtaulMachine.PowerOn no longer calls WaitForRenamed VMWareVirtualMachine.Login into LoginInGuest and renamed 
+                VMWareVirtualMachine.Logout to LogoutFromGuest to be consistent with VIX COM API 
+                and allow power-on without tools installed.</li>
+            </ul>
+        </li>
+        <li>Misc improvements./li>
+        <li>MiscAdded VMWareVirtualMachine.ShutdownGuest and PowerOff that allow specifying shutdown parameters
             explicitly.</li>
-        <li>Bug: GetNamedSnapshot behaves differently on Workstation and VI, now throws exception
+            <li>Added support for VMWare Server with VMWareVirtualMachine.ConnectToVMWareServer.</li>
+            <li>Exposed a VMWareVirtualMachine.LoginInGuest function with power options.</li>
+            <li>Lots of new documentation with examples.</li>
+            </ul>
+        </li>
+        <li>Bugs.l>
+        </li>
+        <li>Bugs.<ul>
+            <li>GetNamedSnapshot behaves differently on Workstation and VI, now throws exception
             when snapshot not found. Use FindSnapshotByName to get a null result when the snapshot
             doesn't exist.</li>
-        <li>Bug: KillProcessInGuest unit test needs to wait for process to actually die according
+            <li>KillProcessInGuest unit test needs to wait for process to actually die according
             to VMWare docs.</li>
-        <li>Bug: removing a shared folder doesn't remove it from the collection when not the
+            <li>Removing a shared folder doesn't remove it from the collection when not the
             same object.</li>
-        <li>Bug: fixed different behavior of ListDirectoryInGuest between Workstation and VI.</li>
-        <li>Bug: API-level errors aren&#39;t surfaced and the callback wait will never be set
+            <li>Fixed different behavior of ListDirectoryInGuest between Workstation and VI.</li>
+            <li>API-level errors aren&#39;t surfaced and the callback wait will never be set
             when VixCOM is not installed.</li>
+            </ul>
+        </li>
     </ul>
     <h3>
         1.1 (12-Feb-2008)</h3>

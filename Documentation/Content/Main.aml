@@ -3,27 +3,34 @@
   <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
     <introduction>
       <para>
+        <mediaLink>
+          <image xlink:href="VMWareLogo.jpg" />
+        </mediaLink>
+      </para>
+      <para>
         The VMWare SDK, specifically VixCOM, offers a rich set of programmable interfaces that enable developers to drive virtual machines
         programmatically with an asynchronous, job-based programming model. Unfortunately that turns out to be too comhplicated for 99.9%
         of scenarios and most developers want to use a simple object-oriented interface for common VMWare tasks. The VMWareTasks library
         implements that interface and makes programming against virtual machines a no brainer.
       </para>
       <para>
-        VMWareTasks contains a complete VixCOM wrapper 
+        VMWareTasks contains a complete VixCOM wrapper
         <codeEntityReference qualifyHint="true">N:Vestris.VMWareLib</codeEntityReference> (<localUri>Vestris.VMWareLib.dll</localUri>)
         and a library <codeEntityReference qualifyHint="true">N:Vestris.VMWareLib.Tools</codeEntityReference>
-        (<localUri>Vestris.VMWareTools.dll</localUri>) that implements additional functionality based on the pure VixCOM API.
+        (<localUri>Vestris.VMWareTools.dll</localUri>) that implements additional commonly needed functionality or addresses
+        known VixCOM API limitations.
       </para>
       <para>
-        This library is maintained on CodePlex at
+        The VMWareTasks library is maintained on CodePlex at
         <externalLink>
-          <linkHref>http://www.codeplex.com/vmwaretasks/</linkHref>
-          <linkText>http://www.codeplex.com/vmwaretasks/</linkText>
+          <linkHref>http://vmwaretasks.codeplex.com/</linkHref>
+          <linkText>http://vmwaretasks.codeplex.com</linkText>
         </externalLink>.
       </para>
     </introduction>
     <relatedTopics>
       <link topicType_id="DAC3A6A0-C863-4E5B-8F65-79EFC6A4BA09" xlink:href="a6f46303-b703-4ff3-9572-55d8131eb883" />
+      <link tipicType_id="DAC3A6A0-C863-4E5B-8F65-79EFC6A4BA09" xlink:href="8471e09f-12dd-42b3-af74-c67134cc3816" />
       <codeEntityReference qualifyHint="true">N:Vestris.VMWareLib</codeEntityReference>
       <codeEntityReference qualifyHint="true">N:Vestris.VMWareLib.Tools</codeEntityReference>
       <codeEntityReference qualifyHint="true">N:Vestris.VMWareLib.Tools.Windows</codeEntityReference>

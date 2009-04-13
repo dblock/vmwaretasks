@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="8471e09f-12dd-42b3-af74-c67134cc3816" revisionNumber="1">
+  <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <introduction>
+      <para>
+        <mediaLink>
+          <image xlink:href="VMWareLogo.jpg" />
+        </mediaLink>
+      </para>
+      <para>
+        The VMWareTasks library was written by
+        <externalLink>
+          <linkHref>http://code.dblock.org/</linkHref>
+          <linkText>Daniel Doubrovkine (dB.)</linkText>
+        </externalLink>
+        and is maintained on CodePlex at
+        <externalLink>
+          <linkHref>http://vmwaretasks.codeplex.com/</linkHref>
+          <linkText>http://vmwaretasks.codeplex.com</linkText>
+        </externalLink>.
+      </para>
+    </introduction>
+    <section address="gettinghelp">
+      <title>Getting Help</title>
+      <content>
+        <para>
+          Feel free to ask library-specific questions in the
+          <externalLink>
+            <linkHref>http://vmwaretasks.codeplex.com/Thread/List.aspx</linkHref>
+            <linkText>discussions section of vmwaretasks.codeplex.com</linkText>
+          </externalLink>. For general VixCOM API questions, use the
+          <externalLink>
+            <linkHref>http://communities.vmware.com/community/developer/automationapi</linkHref>
+            <linkText>VMWare Communities Automation API Developer Forum</linkText>
+          </externalLink>.
+        </para>
+      </content>
+    </section>
+  </developerConceptualDocument>
+</topic>

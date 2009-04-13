@@ -321,7 +321,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Power on a virtual machine.
         /// </summary>
-        /// <param name="timeoutInSeconds">timeout</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void PowerOn(int timeoutInSeconds)
         {
             PowerOn(Constants.VIX_VMPOWEROP_NORMAL | Constants.VIX_VMPOWEROP_LAUNCH_GUI,
@@ -410,7 +410,7 @@ namespace Vestris.VMWareLib
         /// </param>
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         /// <remarks>
-        /// Logins are supported on Linux and Windows. To log in as a Windows Domain user, specify the 'userName' parameter in 
+        /// Logins are supported on Linux and Windows. To log in as a Windows Domain user, specify the "userName" parameter in 
         /// the form "domain\username". Other guest operating systems are not supported for login, including Solaris, FreeBSD, 
         /// and Netware.
         /// </remarks>
@@ -852,7 +852,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         /// <param name="powerOffOptions">Power-off options. Passing the VIX_VMPOWEROP_FROM_GUEST flag will cause the function 
         /// to try to power off the guest OS. This will ensure a clean shutdown of the guest. This option requires that the 
-        /// VMware Tools be installed and running in the guest. If VIX_VMPOWEROP_NORMAL is passed as the 'powerOffOptions' parameter, 
+        /// VMware Tools be installed and running in the guest. If VIX_VMPOWEROP_NORMAL is passed as the "powerOffOptions" parameter, 
         /// then the virtual machine will be powered off at the hardware level. Any state of the guest that has not been committed 
         /// to disk will be lost.
         /// </param>
@@ -1167,8 +1167,8 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Records a virtual machine's activity as a snapshot object.
         /// </summary>
-        /// <param name="name">snapshot name</param>
-        /// <returns>resulting snapshot</returns>
+        /// <param name="name">Snapshot name.</param>
+        /// <returns>Resulting snapshot.</returns>
         public VMWareSnapshot BeginRecording(string name)
         {
             return BeginRecording(name, string.Empty);
@@ -1177,9 +1177,9 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Records a virtual machine's activity as a snapshot object.
         /// </summary>
-        /// <param name="name">snapshot name</param>
-        /// <param name="description">snapshot description</param>
-        /// <returns>resulting snapshot</returns>
+        /// <param name="name">Snapshot name.</param>
+        /// <param name="description">Snapshot description.</param>
+        /// <returns>Resulting snapshot.</returns>
         public VMWareSnapshot BeginRecording(string name, string description)
         {
             return BeginRecording(name, description, VMWareInterop.Timeouts.RecordingTimeout);
@@ -1188,10 +1188,10 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Records a virtual machine's activity as a snapshot object.
         /// </summary>
-        /// <param name="name">snapshot name</param>
-        /// <param name="description">snapshot description</param>
-        /// <param name="timeoutInSeconds">timeout in seconds</param>
-        /// <returns>resulting snapshot</returns>
+        /// <param name="name">Snapshot name.</param>
+        /// <param name="description">Snapshot description.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        /// <returns>Resulting snapshot.</returns>
         public VMWareSnapshot BeginRecording(string name, string description, int timeoutInSeconds)
         {
             VMWareJobCallback callback = new VMWareJobCallback();
@@ -1286,7 +1286,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         /// <param name="deleteOptions">Delete options.
         /// <list type="bullet">
-        ///  <listItem>VixCOM.Constants.VIX_VMDELETE_DISK_FILES: delete all associated files.</listItem>
+        ///  <item>VixCOM.Constants.VIX_VMDELETE_DISK_FILES: delete all associated files.</item>
         /// </list>
         /// </param>
         public void Delete(int deleteOptions)
@@ -1299,7 +1299,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         /// <param name="deleteOptions">
         /// <list type="bullet">
-        ///  <listItem>VixCOM.Constants.VIX_VMDELETE_DISK_FILES: delete all associated files.</listItem>
+        ///  <item>VixCOM.Constants.VIX_VMDELETE_DISK_FILES: delete all associated files.</item>
         /// </list>
         /// </param>
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
