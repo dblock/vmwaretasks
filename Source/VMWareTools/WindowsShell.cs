@@ -77,22 +77,10 @@ namespace Vestris.VMWareLib.Tools.Windows
         /// </summary>
         /// <returns>Environment variables.</returns>
         /// <example>
-        /// <code>
-        /// using System;
-        /// using System.Collections.Generic;
-        /// using Vestris.VMWareLib;
-        /// using Vestris.VMWareLib.Tools.Windows;
-        /// 
-        /// VMWareVirtualHost virtualHost = new VMWareVirtualHost();
-        /// virtualHost.ConnectToVMWareWorkstation();
-        /// VMWareVirtualMachine virtualMachine = virtualHost.Open("C:\Virtual Machines\xp\xp.vmx");
-        /// virtualMachine.PowerOn();
-        /// virtualMachine.WaitForToolsInGuest();
-        /// virtualMachine.LoginInGuest("Administrator", "password");
-        /// Shell guestShell = new Shell(poweredVirtualMachine);
-        /// Dictionary&lt;string, string&gt; guestEnvironmentVariables = guestShell.GetEnvironmentVariables();
-        /// Console.WriteLine(guestEnvironmentVariables["ProgramFiles"]);
-        /// </code>
+        /// <para>
+        /// The following example retrieves the ProgramFiles environment variable from the guest operating system.
+        /// <code language="cs" source="..\Source\VMWareToolsSamples\WindowsShellSamples.cs" region="Example: Enumerating Environment Variables on the GuestOS without VixCOM" />
+        /// </para>
         /// </example>
         public Dictionary<string, string> GetEnvironmentVariables()
         {

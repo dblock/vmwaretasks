@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using Vestris.VMWareLib;
+using NUnit.Framework;
 
-namespace VMWareLibSamples
+namespace Vestris.VMWareLibSamples
 {
+    [TestFixture]
     public class VMWareVirtualHostSamples
     {
+        [Test]
         public void GettingStartedWorkstation()
         {
             #region Example: Getting Started (Workstation)
@@ -39,6 +42,7 @@ namespace VMWareLibSamples
             #endregion
         }
 
+        [Test]
         public void GettingStartedVI()
         {
             #region Example: Getting Started (VI)

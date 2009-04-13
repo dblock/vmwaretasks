@@ -45,6 +45,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VMWareToolsUnitTests", "Sou
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VMWareLibSamples", "Source\VMWareLibSamples\VMWareLibSamples.csproj", "{B6B7DD17-C9BA-4166-971B-665736882322}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VMWareToolsSamples", "Source\VMWareToolsSamples\VMWareToolsSamples.csproj", "{3AC08947-61C7-46D7-B7EA-9CDE37351453}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,10 @@ Global
 		{B6B7DD17-C9BA-4166-971B-665736882322}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6B7DD17-C9BA-4166-971B-665736882322}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6B7DD17-C9BA-4166-971B-665736882322}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AC08947-61C7-46D7-B7EA-9CDE37351453}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AC08947-61C7-46D7-B7EA-9CDE37351453}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AC08947-61C7-46D7-B7EA-9CDE37351453}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AC08947-61C7-46D7-B7EA-9CDE37351453}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

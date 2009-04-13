@@ -18,6 +18,8 @@ namespace Vestris.VMWareLibUnitTests
         VMWareVirtualHost VirtualHost { get; }
         VMWareVirtualMachine VirtualMachine { get; }
         VMWareVirtualMachine PoweredVirtualMachine { get; }
+        string Username { get; }
+        string Password { get; }
     }
 
     /// <summary>
@@ -117,6 +119,20 @@ namespace Vestris.VMWareLibUnitTests
                 _instance = value;
             }
         }
+
+        #region IVMWareTestProvider Members
+
+        public string Username
+        {
+            get { return _provider.Username; }
+        }
+
+        public string Password
+        {
+            get { return _provider.Password; }
+        }
+
+        #endregion
     }
 
     public class VMWareTestSetup

@@ -25,6 +25,17 @@ namespace Vestris.VMWareLib.Tools
         }
 
         /// <summary>
+        /// Remote IP address.
+        /// </summary>
+        public string IpAddress
+        {
+            get
+            {
+                return _vm.GuestVariables["ip"];
+            }
+        }
+
+        /// <summary>
         /// Read a file in the guest operating system.
         /// </summary>
         /// <param name="guestFilename">File in the guest operating system.</param>
