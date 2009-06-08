@@ -8,7 +8,7 @@ namespace Vestris.VMWareLib.Tools
     /// <summary>
     /// Generic remote operating system wrapper.
     /// </summary>
-    public class GuestOS
+    public class GuestOS : IDisposable
     {
         /// <summary>
         /// Virtual Machine instance.
@@ -112,6 +112,22 @@ namespace Vestris.VMWareLib.Tools
             {
                 File.Delete(tempFilename);
             }
+        }
+
+        /// <summary>
+        /// Release any references to the virtual machine.
+        /// </summary>
+        public void Dispose()
+        {
+            _vm = null; // don't hold another reference, http://communities.vmware.com/message/1144091
+        }
+
+        /// <summary>
+        /// Dispose the object, release any references to the virtual machine.
+        /// </summary>
+        ~GuestOS()
+        {
+            Dispose();
         }
     }
 }

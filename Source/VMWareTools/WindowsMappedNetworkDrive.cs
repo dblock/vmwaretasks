@@ -184,6 +184,7 @@ namespace Vestris.VMWareLib.Tools.Windows
                 UnMapNetworkDrive();
             }
 
+            _vm = null; // don't hold another reference, http://communities.vmware.com/message/1144091
         }
 
         /// <summary>
