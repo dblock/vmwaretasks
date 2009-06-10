@@ -93,8 +93,8 @@ namespace VMWareCrash
                 {
                     //new ConnectionInfo(@"c:\Users\dblock\Virtual Machines\Windows XP Pro SP2\winXPPro.vmx"),
                     //new ConnectionInfo(@"c:\Users\dblock\Documents\Virtual Machines\WinXP Pro SP3\WinXP Pro SP3.vmx"),
-                    new ConnectionInfo("https://linc.nycapt35k.com/sdk", "vmuser", "admin123", "[welby] ddoub-red/ddoub-red.vmx"),
-                    new ConnectionInfo("https://tubbs.nycapt35k.com/sdk", "vmuser", "admin123", "[hawkeye-tubbs] vlada2k/vlada2k.vmx"),
+                    new ConnectionInfo("https://linc.nycapt35k.com/sdk", "vmuser", "admin123", "[dbprotect-1] ddoub-red/ddoub-red.vmx"),
+                    new ConnectionInfo("https://crockett.nycapt35k.com/sdk", "vmuser", "admin123", "[console-2] vlad2k8/vlad2k8.vmx"),
                 };
 
                 // spawn threads

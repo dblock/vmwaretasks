@@ -32,7 +32,7 @@ namespace VMWareCrash
                     {
                         // open a vm
                         Console.WriteLine("Opening VM");
-                        IJob openJob = host.OpenVM("[welby] ddoub-red/ddoub-red.vmx", null);
+                        IJob openJob = host.OpenVM("[dbprotect-1] ddoub-red/ddoub-red.vmx", null);
                         object[] openProperties = { Constants.VIX_PROPERTY_JOB_RESULT_HANDLE };
                         object openResults = null;
                         rc = openJob.Wait(openProperties, ref openResults);
@@ -47,23 +47,15 @@ namespace VMWareCrash
                         // revert to the snapshot
                         IJob revertJob = vm.RevertToSnapshot(snapshot, Constants.VIX_VMPOWEROP_NORMAL, null, null);
                         revertJob.WaitWithoutResults();
-
-                        openJob = null;
-                        vm = null;
-                        revertJob = null;
-                        snapshot = null;
                     }
-
-                    Console.WriteLine("GC");
-
-                    #region Remove to repro AV
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-                    #endregion
 
                     // disconnect
                     Console.WriteLine("Disconnecting");
                     host.Disconnect();
+
+                    Console.WriteLine("GC");
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
                 }
                 catch (Exception ex)
                 {
