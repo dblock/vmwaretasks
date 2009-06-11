@@ -12,69 +12,70 @@ namespace VMWareCrash
 
         private static void ThreadProc(object param)
         {
-            ConnectionInfo connectionInfo = (ConnectionInfo) param;
+            ConnectionInfo connectionInfo = (ConnectionInfo)param;
 
-            try
+            while (true)
             {
-                // connect to a VI host
-                ConsoleOutput.WriteLine("Connecting to {0}", string.IsNullOrEmpty(connectionInfo.Uri) 
-                    ? "VMWare Workstation" 
-                    : connectionInfo.Uri);
-                IJob connectJob = vix.Connect(Constants.VIX_API_VERSION, connectionInfo.HostType,
-                    connectionInfo.Uri, 0, connectionInfo.Username, connectionInfo.Password, 0, null, null);
-                object[] connectProperties = { Constants.VIX_PROPERTY_JOB_RESULT_HANDLE };
-                object hosts = null;
-                ulong rc = connectJob.Wait(connectProperties, ref hosts);
-                if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
-                IHost host = (IHost)((object[])hosts)[0];
-
+                try
                 {
-                    // open a vm
-                    ConsoleOutput.WriteLine("Opening {0}", connectionInfo.Vmx);
-                    IJob openJob = host.OpenVM(connectionInfo.Vmx, null);
-                    object[] openProperties = { Constants.VIX_PROPERTY_JOB_RESULT_HANDLE };
-                    object openResults = null;
-                    rc = openJob.Wait(openProperties, ref openResults);
+                    // connect to a VI host
+                    ConsoleOutput.WriteLine("Connecting to {0}", string.IsNullOrEmpty(connectionInfo.Uri)
+                        ? "VMWare Workstation"
+                        : connectionInfo.Uri);
+                    IJob connectJob = vix.Connect(Constants.VIX_API_VERSION, connectionInfo.HostType,
+                        connectionInfo.Uri, 0, connectionInfo.Username, connectionInfo.Password, 0, null, null);
+                    object[] connectProperties = { Constants.VIX_PROPERTY_JOB_RESULT_HANDLE };
+                    object hosts = null;
+                    ulong rc = connectJob.Wait(connectProperties, ref hosts);
                     if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
-                    ConsoleOutput.WriteLine("Opened {0}", connectionInfo.Vmx);
-                    /*
-                    IVM2 vm = (IVM2)((object[])openResults)[0];
-                    // get root snapshot
-                    ConsoleOutput.WriteLine("Fetching root snapshot");
-                    ISnapshot snapshot = null;
-                    rc = vm.GetRootSnapshot(0, out snapshot);
-                    if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
-                    ConsoleOutput.WriteLine("Reverting to snapshot");
-                    // revert to the snapshot
-                    IJob revertJob = vm.RevertToSnapshot(snapshot, Constants.VIX_VMPOWEROP_NORMAL, null, null);
-                    rc = revertJob.WaitWithoutResults();
-                    if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
-                    // power on
-                    ConsoleOutput.WriteLine("Powering on");
-                    IJob powerOnJob = vm.PowerOn(VixCOM.Constants.VIX_VMPOWEROP_NORMAL, null, null);
-                    rc = powerOnJob.WaitWithoutResults();
-                    if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
-                    // wait for tools in guest
-                    ConsoleOutput.WriteLine("Waiting for tools");
-                    IJob waitForToolsJob = vm.WaitForToolsInGuest(240, null);
-                    rc = waitForToolsJob.WaitWithoutResults();
-                    if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
-                    // power off
-                    ConsoleOutput.WriteLine("Powering off");
-                    IJob powerOffJob = vm.PowerOff(VixCOM.Constants.VIX_VMPOWEROP_NORMAL, null);
-                    rc = powerOffJob.WaitWithoutResults();
-                    if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
-                     */
-                }
+                    IHost host = (IHost)((object[])hosts)[0];
 
-                // disconnect
-                ConsoleOutput.WriteLine("Disconnecting");
-                host.Disconnect();
-            }
-            catch (Exception ex)
-            {
-                ConsoleOutput.WriteLine("ERROR: {0}", ex.Message);
-                ConsoleOutput.WriteLine("{0}", ex.StackTrace);
+                    {
+                        // open a vm
+                        ConsoleOutput.WriteLine("Opening {0}", connectionInfo.Vmx);
+                        IJob openJob = host.OpenVM(connectionInfo.Vmx, null);
+                        object[] openProperties = { Constants.VIX_PROPERTY_JOB_RESULT_HANDLE };
+                        object openResults = null;
+                        rc = openJob.Wait(openProperties, ref openResults);
+                        if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
+                        ConsoleOutput.WriteLine("Opened {0}", connectionInfo.Vmx);
+                        IVM2 vm = (IVM2)((object[])openResults)[0];
+                        // get root snapshot
+                        ConsoleOutput.WriteLine("Fetching root snapshot");
+                        ISnapshot snapshot = null;
+                        rc = vm.GetRootSnapshot(0, out snapshot);
+                        if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
+                        ConsoleOutput.WriteLine("Reverting to snapshot");
+                        // revert to the snapshot
+                        IJob revertJob = vm.RevertToSnapshot(snapshot, Constants.VIX_VMPOWEROP_NORMAL, null, null);
+                        rc = revertJob.WaitWithoutResults();
+                        if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
+                        // power on
+                        ConsoleOutput.WriteLine("Powering on");
+                        IJob powerOnJob = vm.PowerOn(VixCOM.Constants.VIX_VMPOWEROP_NORMAL, null, null);
+                        rc = powerOnJob.WaitWithoutResults();
+                        if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
+                        // wait for tools in guest
+                        ConsoleOutput.WriteLine("Waiting for tools");
+                        IJob waitForToolsJob = vm.WaitForToolsInGuest(240, null);
+                        rc = waitForToolsJob.WaitWithoutResults();
+                        if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
+                        // power off
+                        ConsoleOutput.WriteLine("Powering off");
+                        IJob powerOffJob = vm.PowerOff(VixCOM.Constants.VIX_VMPOWEROP_NORMAL, null);
+                        rc = powerOffJob.WaitWithoutResults();
+                        if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
+                    }
+
+                    // disconnect
+                    ConsoleOutput.WriteLine("Disconnecting");
+                    host.Disconnect();
+                }
+                catch (Exception ex)
+                {
+                    ConsoleOutput.WriteLine("ERROR: {0}", ex.Message);
+                    ConsoleOutput.WriteLine("{0}", ex.StackTrace);
+                }
             }
         }
 
@@ -86,28 +87,23 @@ namespace VMWareCrash
         {
             try
             {
-                int connectionThreads = 3;
-
                 ConnectionInfo[] connections = 
                 {
                     //new ConnectionInfo(@"c:\Users\dblock\Virtual Machines\Windows XP Pro SP2\winXPPro.vmx"),
                     //new ConnectionInfo(@"c:\Users\dblock\Documents\Virtual Machines\WinXP Pro SP3\WinXP Pro SP3.vmx"),
                     new ConnectionInfo("https://linc.nycapt35k.com/sdk", "vmuser", "admin123", "[dbprotect-1] ddoub-red/ddoub-red.vmx"),
-                    new ConnectionInfo("https://crockett.nycapt35k.com/sdk", "vmuser", "admin123", "[console-2] vlad2k8/vlad2k8.vmx"),
+                    new ConnectionInfo("https://crockett.nycapt35k.com/sdk", "vmuser", "admin123", "[console-2] nkrasnov2k8/nkrasnov2k8.vmx"),
                 };
 
                 // spawn threads
                 List<Thread> threads = new List<Thread>(connections.Length);
                 foreach (ConnectionInfo connectionInfo in connections)
                 {
-                    for (int n = 0; n < connectionThreads; n++)
-                    {
-                        ConsoleOutput.WriteLine("Starting thread {0}.{1}", threads.Count + 1, n);
-                        ParameterizedThreadStart threadStart = new ParameterizedThreadStart(ThreadProc);
-                        Thread thread = new Thread(threadStart);
-                        thread.Start(connectionInfo);
-                        threads.Add(thread);
-                    }
+                    ConsoleOutput.WriteLine("Starting thread {0}.", threads.Count + 1);
+                    ParameterizedThreadStart threadStart = new ParameterizedThreadStart(ThreadProc);
+                    Thread thread = new Thread(threadStart);
+                    thread.Start(connectionInfo);
+                    threads.Add(thread);
                 }
 
                 // wait for the threads to complete
