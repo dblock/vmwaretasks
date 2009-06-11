@@ -36,6 +36,8 @@ namespace VMWareCrash
                     object openResults = null;
                     rc = openJob.Wait(openProperties, ref openResults);
                     if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
+                    ConsoleOutput.WriteLine("Opened {0}", connectionInfo.Vmx);
+                    /*
                     IVM2 vm = (IVM2)((object[])openResults)[0];
                     // get root snapshot
                     ConsoleOutput.WriteLine("Fetching root snapshot");
@@ -62,14 +64,8 @@ namespace VMWareCrash
                     IJob powerOffJob = vm.PowerOff(VixCOM.Constants.VIX_VMPOWEROP_NORMAL, null);
                     rc = powerOffJob.WaitWithoutResults();
                     if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
+                     */
                 }
-
-                ConsoleOutput.WriteLine("GC");
-
-                #region Remove to repro AV
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                #endregion
 
                 // disconnect
                 ConsoleOutput.WriteLine("Disconnecting");
@@ -78,6 +74,7 @@ namespace VMWareCrash
             catch (Exception ex)
             {
                 ConsoleOutput.WriteLine("ERROR: {0}", ex.Message);
+                ConsoleOutput.WriteLine("{0}", ex.StackTrace);
             }
         }
 
@@ -89,6 +86,8 @@ namespace VMWareCrash
         {
             try
             {
+                int connectionThreads = 3;
+
                 ConnectionInfo[] connections = 
                 {
                     //new ConnectionInfo(@"c:\Users\dblock\Virtual Machines\Windows XP Pro SP2\winXPPro.vmx"),
@@ -101,11 +100,14 @@ namespace VMWareCrash
                 List<Thread> threads = new List<Thread>(connections.Length);
                 foreach (ConnectionInfo connectionInfo in connections)
                 {
-                    ConsoleOutput.WriteLine("Starting thread {0}", threads.Count + 1);
-                    ParameterizedThreadStart threadStart = new ParameterizedThreadStart(ThreadProc);
-                    Thread thread = new Thread(threadStart);
-                    thread.Start(connectionInfo);
-                    threads.Add(thread);
+                    for (int n = 0; n < connectionThreads; n++)
+                    {
+                        ConsoleOutput.WriteLine("Starting thread {0}.{1}", threads.Count + 1, n);
+                        ParameterizedThreadStart threadStart = new ParameterizedThreadStart(ThreadProc);
+                        Thread thread = new Thread(threadStart);
+                        thread.Start(connectionInfo);
+                        threads.Add(thread);
+                    }
                 }
 
                 // wait for the threads to complete
