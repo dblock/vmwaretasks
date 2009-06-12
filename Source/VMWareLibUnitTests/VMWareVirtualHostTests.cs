@@ -8,13 +8,13 @@ using System.IO;
 namespace Vestris.VMWareLibUnitTests
 {
     [TestFixture]
-    public class VMWareVirtualHostTests : VMWareTestSetup
+    public class VMWareVirtualHostTests
     {
         [Test]
         public void TestWorkstationIDisposable()
         {
-            if (VMWareTest.Instance.TestType != VMWareTestType.Workstation)
-                Assert.Ignore("Skipping, test applies to Workstation only.");
+            if (!VMWareTest.RunWorkstationTests)
+                Assert.Ignore("Skipping, Workstation tests disabled.");
 
             using (VMWareVirtualHost virtualHost = new VMWareVirtualHost())
             {
@@ -26,13 +26,13 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestWorkstationSynchronousConnect()
         {
-            if (VMWareTest.Instance.TestType != VMWareTestType.Workstation)
-                Assert.Ignore("Skipping, test applies to Workstation only.");
+            if (!VMWareTest.RunWorkstationTests)
+                Assert.Ignore("Skipping, Workstation tests disabled.");
 
             VixCOM.VixLib vix = new VixCOM.VixLib();
             VixCOM.IJob job = vix.Connect(
                 VixCOM.Constants.VIX_API_VERSION,
-                VixCOM.Constants.VIX_SERVICEPROVIDER_VMWARE_WORKSTATION, 
+                VixCOM.Constants.VIX_SERVICEPROVIDER_VMWARE_WORKSTATION,
                 null, 0, null, null, 0, null, null);
             ulong rc = job.WaitWithoutResults();
             Console.WriteLine("rc: {0}", rc);
@@ -43,9 +43,8 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestWorkstationConnectDisconnect()
         {
-
-            if (VMWareTest.Instance.TestType != VMWareTestType.Workstation)
-                Assert.Ignore("Skipping, test applies to Workstation only.");
+            if (!VMWareTest.RunWorkstationTests)
+                Assert.Ignore("Skipping, Workstation tests disabled.");
 
             VMWareVirtualHost virtualHost = new VMWareVirtualHost();
             Assert.IsFalse(virtualHost.IsConnected);
@@ -61,8 +60,8 @@ namespace Vestris.VMWareLibUnitTests
         [Test, ExpectedException(typeof(InvalidOperationException))]
         public void TestWorkstationConnectDisconnectTwice()
         {
-            if (VMWareTest.Instance.TestType != VMWareTestType.Workstation)
-                Assert.Ignore("Skipping, test applies to Workstation only.");
+            if (!VMWareTest.RunWorkstationTests)
+                Assert.Ignore("Skipping, Workstation tests disabled.");
 
             VMWareVirtualHost virtualHost = new VMWareVirtualHost();
             virtualHost.ConnectToVMWareWorkstation();
@@ -73,21 +72,24 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void ShowRunningVirtualMachines()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.VirtualHost.RunningVirtualMachines)
+            foreach (VMWareVirtualHost virtualHost in VMWareTest.VirtualHosts)
             {
-                Console.WriteLine("{0}: running={1}, memory={2}, CPUs={3}",
-                    virtualMachine.PathName, virtualMachine.IsRunning,
-                    virtualMachine.MemorySize, virtualMachine.CPUCount);
+                foreach (VMWareVirtualMachine virtualMachine in virtualHost.RunningVirtualMachines)
+                {
+                    Console.WriteLine("{0}: running={1}, memory={2}, CPUs={3}",
+                        virtualMachine.PathName, virtualMachine.IsRunning,
+                        virtualMachine.MemorySize, virtualMachine.CPUCount);
+                }
             }
         }
 
         [Test]
         public void ShowVIRegisteredVirtualMachines()
         {
-            if (VMWareTest.Instance.TestType != VMWareTestType.VI)
-                Assert.Ignore("Skipping, test applies to VI only.");
+            if (!VMWareTest.RunVITests)
+                Assert.Ignore("Skipping, VI tests disabled.");
 
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.VirtualHost.RegisteredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in TestVI.Instance.VirtualHost.RegisteredVirtualMachines)
             {
                 Console.WriteLine("{0}: running={1}, memory={2}, CPUs={3}",
                     virtualMachine.PathName, virtualMachine.IsRunning,

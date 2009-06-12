@@ -10,7 +10,7 @@ using System.IO;
 namespace Vestris.VMWareToolsUnitTests
 {
     [TestFixture]
-    public class GuestOSUnitTests : VMWareTestSetup
+    public class GuestOSUnitTests
     {
     }
 }

@@ -6,12 +6,15 @@ using Vestris.VMWareLib;
 namespace Vestris.VMWareLibUnitTests
 {
     [TestFixture]
-    public class VMWareExceptionTests : VMWareTestSetup
+    public class VMWareExceptionTests
     {
-        public override void SetUp()
+        [SetUp]
+        public void SetUp()
         {
-            base.SetUp();
-            Console.WriteLine("Virtual machine: {0}", VMWareTest.Instance.PoweredVirtualMachine.PathName);
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            {
+                Console.WriteLine("Powered VM: {0}", virtualMachine.RuntimeConfigVariables["name"]);
+            }
         }
 
         [Test]

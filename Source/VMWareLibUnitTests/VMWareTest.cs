@@ -3,16 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using Vestris.VMWareLib;
 using System.Configuration;
-using NUnit.Framework;
 
 namespace Vestris.VMWareLibUnitTests
 {
-    public enum VMWareTestType
-    {
-        VI,
-        Workstation
-    }
-
     public interface IVMWareTestProvider
     {
         VMWareVirtualHost VirtualHost { get; }
@@ -22,134 +15,79 @@ namespace Vestris.VMWareLibUnitTests
         string Password { get; }
     }
 
-    /// <summary>
-    /// An abstract VMWareTest driver.
-    /// </summary>
-    public class VMWareTest : IVMWareTestProvider, IDisposable
+    public abstract class VMWareTest
     {
-        private VMWareTestType _testType = VMWareTestType.Workstation;
-        private IVMWareTestProvider _provider = null;
-
-        public VMWareTest()
-            : this((VMWareTestType) Enum.Parse(typeof(VMWareTestType), ConfigurationManager.AppSettings["testType"]))
-        {
-
-        }
-
-        /// <summary>
-        /// Current test type.
-        /// </summary>
-        public VMWareTestType TestType
+        public static bool RunVITests
         {
             get
             {
-                return _testType;
+                return bool.Parse(ConfigurationManager.AppSettings["testVI"]);
             }
         }
 
-        public VMWareTest(VMWareTestType testType)
+        public static bool RunWorkstationTests
         {
-            _testType = testType;
-            switch (testType)
+            get
             {
-                case VMWareTestType.VI:
-                    _provider = new TestVI();
-                    break;
-                case VMWareTestType.Workstation:
-                default:
-                    _provider = new TestWorkstation();
-                    break;
+                return bool.Parse(ConfigurationManager.AppSettings["testWorkstation"]);
             }
         }
 
         /// <summary>
-        /// A virtual machine.
+        /// A set of generic virtual machines to run tests on.
         /// </summary>
-        public VMWareVirtualMachine VirtualMachine
+        public static IEnumerable<VMWareVirtualMachine> VirtualMachines
         {
             get
             {
-                return _provider.VirtualMachine;
+                if (RunVITests)
+                    yield return TestVI.Instance.VirtualMachine;
+                if (RunWorkstationTests)
+                    yield return TestWorkstation.Instance.VirtualMachine;
             }
         }
 
         /// <summary>
-        /// A powered VM.
+        /// A set of generic virtual machines to run tests on.
         /// </summary>
-        public VMWareVirtualMachine PoweredVirtualMachine
+        public static IEnumerable<VMWareVirtualMachine> PoweredVirtualMachines
         {
             get
             {
-                return _provider.PoweredVirtualMachine;
+                if (RunVITests)
+                    yield return TestVI.Instance.PoweredVirtualMachine;
+
+                if (RunWorkstationTests)
+                    yield return TestWorkstation.Instance.PoweredVirtualMachine;
             }
         }
 
         /// <summary>
-        /// A virtual host.
+        /// A set of generic virtual hosts.
         /// </summary>
-        public VMWareVirtualHost VirtualHost
+        public static IEnumerable<VMWareVirtualHost> VirtualHosts
         {
             get
             {
-                return _provider.VirtualHost;
+                if (RunVITests)
+                    yield return TestVI.Instance.VirtualHost;
+                if (RunWorkstationTests)
+                    yield return TestWorkstation.Instance.VirtualHost;
             }
         }
 
-        public void Dispose()
-        {
-            _provider = null;
-            GC.SuppressFinalize(this);
-        }
-
-        private static VMWareTest _instance = null;
-
-        public static VMWareTest Instance
+        /// <summary>
+        /// A set of test providers.
+        /// </summary>
+        public static IEnumerable<IVMWareTestProvider> Providers
         {
             get
             {
-                return _instance;
-            }
-            set
-            {
-                if (_instance != null)
-                {
-                    _instance.Dispose();
-                }
-
-                _instance = value;
+                if (RunVITests)
+                    yield return TestVI.Instance;
+                if (RunWorkstationTests)
+                    yield return TestWorkstation.Instance;
             }
         }
-
-        #region IVMWareTestProvider Members
-
-        public string Username
-        {
-            get { return _provider.Username; }
-        }
-
-        public string Password
-        {
-            get { return _provider.Password; }
-        }
-
-        #endregion
-    }
-
-    public class VMWareTestSetup
-    {
-        [SetUp]
-        public virtual void SetUp()
-        {
-            VMWareTest.Instance = new VMWareTest();
-        }
-
-        [TearDown]
-        public virtual void TearDown()
-        {
-            VMWareTest.Instance = null;
-            // work around VMWare VIXCOM API AVs
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-        }
-    }
+    }   
 }

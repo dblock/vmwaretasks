@@ -12,81 +12,99 @@ using VixCOM;
 namespace Vestris.VMWareLibUnitTests
 {
     [TestFixture]
-    public class VMWareVirtualMachineTests : VMWareTestSetup
+    public class VMWareVirtualMachineTests
     {
         [Test]
         public void TestTasks()
         {
-            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
-            // copy a batch file to the remote machine, execute it and collect results
-            string localTempFilename = Path.GetTempFileName();
-            string remoteTempFilename = string.Format(@"C:\{0}", Path.GetFileName(localTempFilename));
-            string remoteBatFilename = string.Format(@"C:\{0}.bat", Path.GetFileNameWithoutExtension(localTempFilename));
-            File.WriteAllText(localTempFilename, string.Format(@"dir C:\ > {0}", remoteTempFilename));
-            virtualMachine.CopyFileFromHostToGuest(localTempFilename, remoteBatFilename);
-            VMWareVirtualMachine.Process cmdProcess = virtualMachine.RunProgramInGuest(
-                "cmd.exe", string.Format("/C \"{0}\"", remoteBatFilename));
-            Assert.IsNotNull(cmdProcess);
-            Assert.AreEqual(0, cmdProcess.ExitCode);
-            virtualMachine.CopyFileFromGuestToHost(remoteTempFilename, localTempFilename);
-            string remoteDirectoryListing = File.ReadAllText(localTempFilename);
-            Console.WriteLine(remoteDirectoryListing);
-            Assert.IsTrue(remoteDirectoryListing.Contains(Path.GetFileName(remoteTempFilename)));
-            Assert.IsTrue(remoteDirectoryListing.Contains(Path.GetFileName(remoteBatFilename)));
-            // delete the temp files
-            virtualMachine.DeleteFileFromGuest(remoteTempFilename);
-            virtualMachine.DeleteFileFromGuest(remoteBatFilename);
-            File.Delete(localTempFilename);
-            // virtualMachine.PowerOff();
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            {
+                // copy a batch file to the remote machine, execute it and collect results
+                string localTempFilename = Path.GetTempFileName();
+                string remoteTempFilename = string.Format(@"C:\{0}", Path.GetFileName(localTempFilename));
+                string remoteBatFilename = string.Format(@"C:\{0}.bat", Path.GetFileNameWithoutExtension(localTempFilename));
+                File.WriteAllText(localTempFilename, string.Format(@"dir C:\ > {0}", remoteTempFilename));
+                virtualMachine.CopyFileFromHostToGuest(localTempFilename, remoteBatFilename);
+                VMWareVirtualMachine.Process cmdProcess = virtualMachine.RunProgramInGuest(
+                    "cmd.exe", string.Format("/C \"{0}\"", remoteBatFilename));
+                Assert.IsNotNull(cmdProcess);
+                Assert.AreEqual(0, cmdProcess.ExitCode);
+                virtualMachine.CopyFileFromGuestToHost(remoteTempFilename, localTempFilename);
+                string remoteDirectoryListing = File.ReadAllText(localTempFilename);
+                Console.WriteLine(remoteDirectoryListing);
+                Assert.IsTrue(remoteDirectoryListing.Contains(Path.GetFileName(remoteTempFilename)));
+                Assert.IsTrue(remoteDirectoryListing.Contains(Path.GetFileName(remoteBatFilename)));
+                // delete the temp files
+                virtualMachine.DeleteFileFromGuest(remoteTempFilename);
+                virtualMachine.DeleteFileFromGuest(remoteBatFilename);
+                File.Delete(localTempFilename);
+                // virtualMachine.PowerOff();
+            }
         }
 
-        [Test, ExpectedException(typeof(VMWareException))]
+        [Test]
         public void TestListDirectoryInGuestInvalidDirectory()
         {
-            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
-            virtualMachine.ListDirectoryInGuest(string.Format(@"C:\{0}", Guid.NewGuid()), false);
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            {
+                try
+                {
+                    virtualMachine.ListDirectoryInGuest(string.Format(@"C:\{0}", Guid.NewGuid()), false);
+                    throw new Exception("Expected VMWareException");
+                }
+                catch (VMWareException)
+                {
+                    // expected
+                }
+            }
         }
 
         [Test]
         public void TestListDirectoryInGuestEmptyDirectory()
         {
-            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
-            // create an empty directory
-            string directory = string.Format(@"C:\{0}", Guid.NewGuid());
-            virtualMachine.CreateDirectoryInGuest(directory);
-            try
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
             {
-                // list the directory
-                List<string> listOfEmptyDirectory = virtualMachine.ListDirectoryInGuest(directory, false);
-                Assert.AreEqual(0, listOfEmptyDirectory.Count);
-            }
-            finally
-            {
-                virtualMachine.DeleteDirectoryFromGuest(directory);
+                // create an empty directory
+                string directory = string.Format(@"C:\{0}", Guid.NewGuid());
+                virtualMachine.CreateDirectoryInGuest(directory);
+                try
+                {
+                    // list the directory
+                    List<string> listOfEmptyDirectory = virtualMachine.ListDirectoryInGuest(directory, false);
+                    Assert.AreEqual(0, listOfEmptyDirectory.Count);
+                }
+                finally
+                {
+                    virtualMachine.DeleteDirectoryFromGuest(directory);
+                }
             }
         }
 
         [Test]
         public void TestListDirectoryInGuest()
         {
-            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
-            List<string> listOfDrivers = virtualMachine.ListDirectoryInGuest(@"C:\WINDOWS\system32\drivers", false);
-            List<string> listOfDriversWithSub = virtualMachine.ListDirectoryInGuest(@"C:\WINDOWS\system32\drivers", true);
-            Assert.IsTrue(listOfDrivers.Count < listOfDriversWithSub.Count);
-            Assert.IsTrue(listOfDriversWithSub.Contains(@"C:\WINDOWS\system32\drivers\etc\hosts"));
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            {
+                List<string> listOfDrivers = virtualMachine.ListDirectoryInGuest(@"C:\WINDOWS\system32\drivers", false);
+                List<string> listOfDriversWithSub = virtualMachine.ListDirectoryInGuest(@"C:\WINDOWS\system32\drivers", true);
+                Assert.IsTrue(listOfDrivers.Count < listOfDriversWithSub.Count);
+                Assert.IsTrue(listOfDriversWithSub.Contains(@"C:\WINDOWS\system32\drivers\etc\hosts"));
+            }
         }
 
         [Test]
         public void TestGetSetGuestVariables()
         {
-            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
-            string ip = virtualMachine.GuestVariables["ip"];
-            Assert.IsFalse(string.IsNullOrEmpty(ip));
-            Console.WriteLine("IP: {0}", ip);
-            string guid = Guid.NewGuid().ToString();
-            Assert.IsTrue(string.IsNullOrEmpty(virtualMachine.GuestVariables[guid]));
-            virtualMachine.GuestVariables[guid] = guid;
-            Assert.AreEqual(guid, virtualMachine.GuestVariables[guid]);
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            {
+                string ip = virtualMachine.GuestVariables["ip"];
+                Assert.IsFalse(string.IsNullOrEmpty(ip));
+                Console.WriteLine("IP: {0}", ip);
+                string guid = Guid.NewGuid().ToString();
+                Assert.IsTrue(string.IsNullOrEmpty(virtualMachine.GuestVariables[guid]));
+                virtualMachine.GuestVariables[guid] = guid;
+                Assert.AreEqual(guid, virtualMachine.GuestVariables[guid]);
+            }
         }
 
         /// <summary>
@@ -95,55 +113,61 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         protected void TestGetSetGuestEnvironmentVariables()
         {
-            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
-            string guid = Guid.NewGuid().ToString();
-            Assert.IsTrue(string.IsNullOrEmpty(virtualMachine.GuestEnvironmentVariables[guid]));
-            virtualMachine.GuestVariables[guid] = guid;
-            Assert.AreEqual(guid, virtualMachine.GuestEnvironmentVariables[guid]);
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            {
+                string guid = Guid.NewGuid().ToString();
+                Assert.IsTrue(string.IsNullOrEmpty(virtualMachine.GuestEnvironmentVariables[guid]));
+                virtualMachine.GuestVariables[guid] = guid;
+                Assert.AreEqual(guid, virtualMachine.GuestEnvironmentVariables[guid]);
+            }
         }
 
         [Test]
         public void TestGetSetRuntimeConfigVariables()
         {
-            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
-            string displayName = virtualMachine.RuntimeConfigVariables["displayname"];
-            Console.WriteLine("Display name: {0}", displayName);
-            Assert.IsFalse(string.IsNullOrEmpty(displayName));
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            {
+                string displayName = virtualMachine.RuntimeConfigVariables["displayname"];
+                Console.WriteLine("Display name: {0}", displayName);
+                Assert.IsFalse(string.IsNullOrEmpty(displayName));
+            }
         }
 
         [Test]
         public void TestGetAddRemoveSharedFolders()
         {
-            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
-            try
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
             {
-                Console.WriteLine("Enabling shared folders ...");
-                virtualMachine.SharedFolders.Enabled = true;
-                int count = virtualMachine.SharedFolders.Count;
-                Console.WriteLine("Shared folders: {0}", count);
-                // add a shared folder
-                VMWareSharedFolder currentDirectory = new VMWareSharedFolder(
-                    Guid.NewGuid().ToString(), Environment.CurrentDirectory);
-                virtualMachine.SharedFolders.Add(currentDirectory);
-                Assert.AreEqual(count + 1, virtualMachine.SharedFolders.Count);
-                foreach (VMWareSharedFolder sharedFolder in virtualMachine.SharedFolders)
+                try
                 {
-                    Console.WriteLine("Shared folder: {0} ({1})",
-                        sharedFolder.ShareName, sharedFolder.HostPath);
+                    Console.WriteLine("Enabling shared folders ...");
+                    virtualMachine.SharedFolders.Enabled = true;
+                    int count = virtualMachine.SharedFolders.Count;
+                    Console.WriteLine("Shared folders: {0}", count);
+                    // add a shared folder
+                    VMWareSharedFolder currentDirectory = new VMWareSharedFolder(
+                        Guid.NewGuid().ToString(), Environment.CurrentDirectory);
+                    virtualMachine.SharedFolders.Add(currentDirectory);
+                    Assert.AreEqual(count + 1, virtualMachine.SharedFolders.Count);
+                    foreach (VMWareSharedFolder sharedFolder in virtualMachine.SharedFolders)
+                    {
+                        Console.WriteLine("Shared folder: {0} ({1})",
+                            sharedFolder.ShareName, sharedFolder.HostPath);
+                    }
+                    // remove the shared folder
+                    virtualMachine.SharedFolders.Remove(currentDirectory);
+                    Assert.AreEqual(count, virtualMachine.SharedFolders.Count);
                 }
-                // remove the shared folder
-                virtualMachine.SharedFolders.Remove(currentDirectory);
-                Assert.AreEqual(count, virtualMachine.SharedFolders.Count);
-            }
-            catch (VMWareException ex)
-            {
-                switch (ex.ErrorCode)
+                catch (VMWareException ex)
                 {
-                    case Constants.VIX_E_NOT_SUPPORTED:
-                        Assert.Ignore("Shared folders not supported on this VMWare platform.");
-                        break;
-                    default:
-                        throw;
+                    switch (ex.ErrorCode)
+                    {
+                        case Constants.VIX_E_NOT_SUPPORTED:
+                            Assert.Ignore("Shared folders not supported on this VMWare platform.");
+                            break;
+                        default:
+                            throw;
+                    }
                 }
             }
         }
@@ -151,77 +175,90 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestCaptureScreenImage()
         {
-            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
-            Image image = virtualMachine.CaptureScreenImage();
-            Console.WriteLine("Image: {0}x{1}", image.Width, image.Height);
-            Assert.IsTrue(image.Width > 0);
-            Assert.IsTrue(image.Height > 0);
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            {
+                Image image = virtualMachine.CaptureScreenImage();
+                Console.WriteLine("Image: {0}x{1}", image.Width, image.Height);
+                Assert.IsTrue(image.Width > 0);
+                Assert.IsTrue(image.Height > 0);
+            }
         }
 
         [Test]
         public void TestCreateDeleteDirectory()
         {
-            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
-            string directoryName = string.Format(@"c:\{0}", Guid.NewGuid());
-            Assert.IsTrue(!virtualMachine.DirectoryExistsInGuest(directoryName));
-            Assert.IsTrue(!virtualMachine.FileExistsInGuest(directoryName));
-            virtualMachine.CreateDirectoryInGuest(directoryName);
-            Assert.IsTrue(virtualMachine.DirectoryExistsInGuest(directoryName));
-            Assert.IsTrue(!virtualMachine.FileExistsInGuest(directoryName));
-            virtualMachine.DeleteDirectoryFromGuest(directoryName);
-            Assert.IsTrue(!virtualMachine.DirectoryExistsInGuest(directoryName));
-            Assert.IsTrue(!virtualMachine.FileExistsInGuest(directoryName));
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            {
+                string directoryName = string.Format(@"c:\{0}", Guid.NewGuid());
+                Assert.IsTrue(!virtualMachine.DirectoryExistsInGuest(directoryName));
+                Assert.IsTrue(!virtualMachine.FileExistsInGuest(directoryName));
+                virtualMachine.CreateDirectoryInGuest(directoryName);
+                Assert.IsTrue(virtualMachine.DirectoryExistsInGuest(directoryName));
+                Assert.IsTrue(!virtualMachine.FileExistsInGuest(directoryName));
+                virtualMachine.DeleteDirectoryFromGuest(directoryName);
+                Assert.IsTrue(!virtualMachine.DirectoryExistsInGuest(directoryName));
+                Assert.IsTrue(!virtualMachine.FileExistsInGuest(directoryName));
+            }
         }
 
         [Test]
         public void TestCreateDeleteTempFile()
         {
-            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
-            string fileName = virtualMachine.CreateTempFileInGuest();
-            Assert.IsFalse(string.IsNullOrEmpty(fileName));
-            Console.WriteLine("Temp filename: {0}", fileName);
-            Assert.IsTrue(!virtualMachine.DirectoryExistsInGuest(fileName));
-            Assert.IsTrue(virtualMachine.FileExistsInGuest(fileName));
-            virtualMachine.DeleteFileFromGuest(fileName);
-            Assert.IsTrue(!virtualMachine.DirectoryExistsInGuest(fileName));
-            Assert.IsTrue(!virtualMachine.FileExistsInGuest(fileName));
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            {
+                string fileName = virtualMachine.CreateTempFileInGuest();
+                Assert.IsFalse(string.IsNullOrEmpty(fileName));
+                Console.WriteLine("Temp filename: {0}", fileName);
+                Assert.IsTrue(!virtualMachine.DirectoryExistsInGuest(fileName));
+                Assert.IsTrue(virtualMachine.FileExistsInGuest(fileName));
+                virtualMachine.DeleteFileFromGuest(fileName);
+                Assert.IsTrue(!virtualMachine.DirectoryExistsInGuest(fileName));
+                Assert.IsTrue(!virtualMachine.FileExistsInGuest(fileName));
+            }
         }
 
         [Test]
         public void TestListAndKillProcesses()
         {
-            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
-            VMWareVirtualMachine.Process notepadProcess = virtualMachine.DetachProgramInGuest("notepad.exe");
-            Console.WriteLine("Notepad.exe: {0}", notepadProcess.Id);
-            Dictionary<long, VMWareVirtualMachine.Process> guestProcesses = virtualMachine.GuestProcesses;
-            Assert.IsTrue(guestProcesses.ContainsKey(notepadProcess.Id));
-            foreach (KeyValuePair<long, VMWareVirtualMachine.Process> process in guestProcesses)
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
             {
-                Assert.IsTrue(process.Value.Id >= 0);
-                Assert.IsFalse(string.IsNullOrEmpty(process.Value.Name));
-                Console.WriteLine("{0}: {1} [{2}] ({3})", process.Value.Id, process.Value.Name, process.Value.Command, process.Value.Owner);
+                VMWareVirtualMachine.Process notepadProcess = virtualMachine.DetachProgramInGuest("notepad.exe");
+                Console.WriteLine("Notepad.exe: {0}", notepadProcess.Id);
+                Dictionary<long, VMWareVirtualMachine.Process> guestProcesses = virtualMachine.GuestProcesses;
+                Assert.IsTrue(guestProcesses.ContainsKey(notepadProcess.Id));
+                foreach (KeyValuePair<long, VMWareVirtualMachine.Process> process in guestProcesses)
+                {
+                    Assert.IsTrue(process.Value.Id >= 0);
+                    Assert.IsFalse(string.IsNullOrEmpty(process.Value.Name));
+                    Console.WriteLine("{0}: {1} [{2}] ({3})", process.Value.Id, process.Value.Name, process.Value.Command, process.Value.Owner);
+                }
+                notepadProcess.KillProcessInGuest();
+                Thread.Sleep(3000); // doc says: depending on the behavior of the guest operating system, there may be a short delay after the job completes before the process truly disappears
+                Dictionary<long, VMWareVirtualMachine.Process> guestProcesses2 = virtualMachine.GuestProcesses;
+                Assert.IsFalse(guestProcesses2.ContainsKey(notepadProcess.Id));
             }
-            notepadProcess.KillProcessInGuest();
-            Thread.Sleep(3000); // doc says: depending on the behavior of the guest operating system, there may be a short delay after the job completes before the process truly disappears
-            Dictionary<long, VMWareVirtualMachine.Process> guestProcesses2 = virtualMachine.GuestProcesses;
-            Assert.IsFalse(guestProcesses2.ContainsKey(notepadProcess.Id));
         }
 
         [Test]
         public void TestPowerOnPoweredHost()
         {
-            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
-            virtualMachine.PowerOn();
-            virtualMachine.WaitForToolsInGuest();
-            virtualMachine.PowerOn();
-            virtualMachine.WaitForToolsInGuest();
-            Assert.IsTrue(virtualMachine.IsRunning);
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            {
+                virtualMachine.PowerOn();
+                virtualMachine.WaitForToolsInGuest();
+                virtualMachine.PowerOn();
+                virtualMachine.WaitForToolsInGuest();
+                Assert.IsTrue(virtualMachine.IsRunning);
+            }
         }
 
         [Test]
         public void TestPauseUnpause()
         {
-            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
+            if (!VMWareTest.RunWorkstationTests)
+                Assert.Ignore("Skipping, Workstation tests disabled.");
+
+            VMWareVirtualMachine virtualMachine = TestWorkstation.Instance.PoweredVirtualMachine;
             virtualMachine.Pause();
             Assert.AreEqual(true, virtualMachine.IsPaused);
             virtualMachine.Unpause();
@@ -229,191 +266,95 @@ namespace Vestris.VMWareLibUnitTests
         }
 
         [Test]
-        public void TestReset()
-        {
-            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
-            // hardware reset
-            Console.WriteLine("Reset ...");
-            virtualMachine.Reset();
-            Assert.AreEqual(true, virtualMachine.IsRunning);
-            Console.WriteLine("Wait ...");
-            virtualMachine.WaitForToolsInGuest();
-        }
-
-        [Test]
         public void TestSuspend()
         {
-            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
-            Console.WriteLine("Suspend ...");
-            virtualMachine.Suspend();
-            Assert.AreEqual(false, virtualMachine.IsPaused);
-            Assert.AreEqual(true, virtualMachine.IsSuspended);
-            Console.WriteLine("Power ...");
-            virtualMachine.PowerOn();
-            Console.WriteLine("Wait ...");
-            virtualMachine.WaitForToolsInGuest();
-        }
-
-        [Test]
-        public void TestBeginEndRecording()
-        {
-            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
-            Assert.IsFalse(virtualMachine.IsRecording);
-            string snapshotName = Guid.NewGuid().ToString();
-            Console.WriteLine("Begin recording ...");
-            VMWareSnapshot snapshot = virtualMachine.BeginRecording(snapshotName, Guid.NewGuid().ToString());
-            Assert.IsNotNull(snapshot);
-            Assert.IsTrue(virtualMachine.IsRecording);
-            Assert.IsFalse(virtualMachine.IsReplaying);
-            virtualMachine.WaitForToolsInGuest();
-            Console.WriteLine("Snapshot: {0}", snapshot.DisplayName);
-            VMWareVirtualMachine.Process cmdProcess = virtualMachine.RunProgramInGuest("cmd.exe", "/C dir");
-            Assert.IsNotNull(cmdProcess);
-            Console.WriteLine("Process: {0}", cmdProcess.Id);
-            Console.WriteLine("End recording ...");
-            virtualMachine.EndRecording();
-            Assert.IsFalse(virtualMachine.IsRecording);
-            Assert.IsFalse(virtualMachine.IsReplaying);
-            Console.WriteLine("Begin replay ...");
-            snapshot.BeginReplay(VixCOM.Constants.VIX_VMPOWEROP_LAUNCH_GUI, VMWareInterop.Timeouts.ReplayTimeout);
-            Assert.IsTrue(virtualMachine.IsReplaying);
-            Thread.Sleep(10000);
-            snapshot.EndReplay();
-            Assert.IsFalse(virtualMachine.IsReplaying);
-            Console.WriteLine("Removing snapshot ...");
-            snapshot.RemoveSnapshot();
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            {
+                Console.WriteLine("Suspend ...");
+                virtualMachine.Suspend();
+                Assert.AreEqual(false, virtualMachine.IsPaused);
+                Assert.AreEqual(true, virtualMachine.IsSuspended);
+                Console.WriteLine("Power ...");
+                virtualMachine.PowerOn();
+                Console.WriteLine("Wait ...");
+                virtualMachine.WaitForToolsInGuest();
+            }
         }
 
         [Test]
         protected void TestRunScriptInGuest()
         {
-            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
-            StringBuilder script = new StringBuilder();
-            script.AppendLine("print \"Hello World\";");
-            VMWareVirtualMachine.Process cmdProcess = virtualMachine.RunScriptInGuest(@"c:\perl\bin\perl.exe", script.ToString());
-            Assert.IsNotNull(cmdProcess);
-            Assert.AreEqual(0, cmdProcess.ExitCode);
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            {
+                StringBuilder script = new StringBuilder();
+                script.AppendLine("print \"Hello World\";");
+                VMWareVirtualMachine.Process cmdProcess = virtualMachine.RunScriptInGuest(@"c:\perl\bin\perl.exe", script.ToString());
+                Assert.IsNotNull(cmdProcess);
+                Assert.AreEqual(0, cmdProcess.ExitCode);
+            }
         }
 
         [Test]
         public void TestOpenUrlInGuest()
         {
-            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
-            virtualMachine.OpenUrlInGuest("http://vmwaretasks.codeplex.com/");
-        }
-
-        [Test]
-        protected void TestUpgradeVirtualHardware()
-        {
-            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.VirtualMachine;
-            // power off the virtual machine
-            if (virtualMachine.IsRunning) virtualMachine.PowerOff();
-            // upgrading virtual hardware should always succeed
-            Console.WriteLine("Upgrading virtual hardware ...");
-            virtualMachine.UpgradeVirtualHardware();
-        }
-
-        [Test]
-        public void TestCloneVirtualMachine()
-        {
-            if (VMWareTest.Instance.TestType != VMWareTestType.Workstation)
-                Assert.Ignore("Skipping, test requires server admin privileges for ESX, test applies to Workstation only.");
-
-            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.VirtualMachine;
-            if (virtualMachine.IsRunning) virtualMachine.PowerOff();
-            string vmxPathName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-            Console.WriteLine("Creating linked clone: {0}", vmxPathName);
-            Directory.CreateDirectory(vmxPathName);
-            string vmxFileName = Path.Combine(vmxPathName, "Clone.vmx");
-            virtualMachine.Clone(VMWareVirtualMachineCloneType.Linked, vmxFileName);
-            Assert.IsTrue(File.Exists(vmxFileName));
-            Directory.Delete(vmxPathName, true);
-        }
-
-        [Test]
-        public void TestDeleteVirtualMachine()
-        {
-            if (VMWareTest.Instance.TestType != VMWareTestType.Workstation)
-                Assert.Ignore("Skipping, test requires server admin privileges for ESX, test applies to Workstation only.");
-
-            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.VirtualMachine;
-            if (virtualMachine.IsRunning) virtualMachine.PowerOff();
-            string vmxPathName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-            Console.WriteLine("Creating linked clone: {0}", vmxPathName);
-            Directory.CreateDirectory(vmxPathName);
-            string vmxFileName = Path.Combine(vmxPathName, "Clone.vmx");
-            virtualMachine.Clone(VMWareVirtualMachineCloneType.Linked, vmxFileName);
-            Assert.IsTrue(File.Exists(vmxFileName));
-
-            VMWareVirtualMachine virtualMachineClone = VMWareTest.Instance.VirtualHost.Open(vmxFileName);
-            virtualMachineClone.Delete(VixCOM.Constants.VIX_VMDELETE_DISK_FILES);
-            Assert.IsFalse(File.Exists(vmxFileName));
-            Assert.IsFalse(Directory.Exists(vmxPathName));
-        }
-
-        [Test]
-        public void TestCloneVirtualMachineSnapshot()
-        {
-            if (VMWareTest.Instance.TestType != VMWareTestType.Workstation)
-                Assert.Ignore("Skipping, test requires server admin privileges for ESX, test applies to Workstation only.");
-
-            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.VirtualMachine;
-            if (virtualMachine.IsRunning) virtualMachine.PowerOff();
-            string vmxPathName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-            Console.WriteLine("Creating linked clone of root snapshot: {0}", vmxPathName);
-            Directory.CreateDirectory(vmxPathName);
-            string vmxFileName = Path.Combine(vmxPathName, "Clone.vmx");
-            virtualMachine.Snapshots.GetCurrentSnapshot().Clone(VMWareVirtualMachineCloneType.Linked, vmxFileName);
-            Assert.IsTrue(File.Exists(vmxFileName));
-            Directory.Delete(vmxPathName, true);
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            {
+                virtualMachine.OpenUrlInGuest("http://vmwaretasks.codeplex.com/");
+            }
         }
 
         [Test]
         public void TestGetFolderInfoInGuest()
         {
-            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
-            string tmpPath = virtualMachine.GuestEnvironmentVariables["tmp"];
-            VMWareVirtualMachine.GuestFileInfo tmpPathInfo = virtualMachine.GetFileInfoInGuest(tmpPath);
-            Console.WriteLine("{0}: {1}, {2} byte(s)", 
-                tmpPathInfo.GuestPathName, 
-                tmpPathInfo.LastModified, 
-                tmpPathInfo.FileSize);
-            Assert.AreEqual(0, tmpPathInfo.FileSize);
-            Assert.AreEqual(tmpPath, tmpPathInfo.GuestPathName);
-            Assert.AreEqual(true, tmpPathInfo.IsDirectory);
-            Assert.AreEqual(false, tmpPathInfo.IsSymLink);
-            Assert.IsTrue(tmpPathInfo.LastModified > DateTime.MinValue);
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            {
+                string tmpPath = virtualMachine.GuestEnvironmentVariables["tmp"];
+                VMWareVirtualMachine.GuestFileInfo tmpPathInfo = virtualMachine.GetFileInfoInGuest(tmpPath);
+                Console.WriteLine("{0}: {1}, {2} byte(s)",
+                    tmpPathInfo.GuestPathName,
+                    tmpPathInfo.LastModified,
+                    tmpPathInfo.FileSize);
+                Assert.AreEqual(0, tmpPathInfo.FileSize);
+                Assert.AreEqual(tmpPath, tmpPathInfo.GuestPathName);
+                Assert.AreEqual(true, tmpPathInfo.IsDirectory);
+                Assert.AreEqual(false, tmpPathInfo.IsSymLink);
+                Assert.IsTrue(tmpPathInfo.LastModified > DateTime.MinValue);
+            }
         }
 
         [Test]
         public void TestGetFileInfoInGuest()
         {
-            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
-            string hostTmpFilename = Path.GetTempFileName();
-            File.WriteAllText(hostTmpFilename, Guid.NewGuid().ToString());
-            FileInfo hostTmpFileInfo = new FileInfo(hostTmpFilename);
-            string guestTmpFilename = virtualMachine.CreateTempFileInGuest();
-            DateTime dtBeforeCopy = DateTime.Now;
-            virtualMachine.CopyFileFromHostToGuest(hostTmpFilename, guestTmpFilename);
-            VMWareVirtualMachine.GuestFileInfo tmpPathInfo = virtualMachine.GetFileInfoInGuest(guestTmpFilename);
-            Console.WriteLine("{0}: {1}, {2} byte(s)",
-                tmpPathInfo.GuestPathName,
-                tmpPathInfo.LastModified,
-                tmpPathInfo.FileSize);
-            Assert.AreEqual(hostTmpFileInfo.Length, tmpPathInfo.FileSize);
-            Assert.AreEqual(guestTmpFilename, tmpPathInfo.GuestPathName);
-            Assert.AreEqual(false, tmpPathInfo.IsDirectory);
-            Assert.AreEqual(false, tmpPathInfo.IsSymLink);
-            Assert.IsTrue(tmpPathInfo.LastModified >= dtBeforeCopy);
-            virtualMachine.DeleteFileFromGuest(guestTmpFilename);
-            File.Delete(hostTmpFilename);
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            {
+                string hostTmpFilename = Path.GetTempFileName();
+                File.WriteAllText(hostTmpFilename, Guid.NewGuid().ToString());
+                FileInfo hostTmpFileInfo = new FileInfo(hostTmpFilename);
+                string guestTmpFilename = virtualMachine.CreateTempFileInGuest();
+                DateTime dtBeforeCopy = DateTime.Now;
+                virtualMachine.CopyFileFromHostToGuest(hostTmpFilename, guestTmpFilename);
+                VMWareVirtualMachine.GuestFileInfo tmpPathInfo = virtualMachine.GetFileInfoInGuest(guestTmpFilename);
+                Console.WriteLine("{0}: {1}, {2} byte(s)",
+                    tmpPathInfo.GuestPathName,
+                    tmpPathInfo.LastModified,
+                    tmpPathInfo.FileSize);
+                Assert.AreEqual(hostTmpFileInfo.Length, tmpPathInfo.FileSize);
+                Assert.AreEqual(guestTmpFilename, tmpPathInfo.GuestPathName);
+                Assert.AreEqual(false, tmpPathInfo.IsDirectory);
+                Assert.AreEqual(false, tmpPathInfo.IsSymLink);
+                Assert.IsTrue(tmpPathInfo.LastModified >= dtBeforeCopy);
+                virtualMachine.DeleteFileFromGuest(guestTmpFilename);
+                File.Delete(hostTmpFilename);
+            }
         }
 
         [Test]
         protected void TestInstallTools()
         {
-            VMWareVirtualMachine virtualMachine = VMWareTest.Instance.PoweredVirtualMachine;
-            virtualMachine.InstallTools();
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            {
+                virtualMachine.InstallTools();
+            }
         }
     }
 }

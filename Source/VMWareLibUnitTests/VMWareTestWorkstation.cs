@@ -10,7 +10,6 @@ namespace Vestris.VMWareLibUnitTests
     {
         private VMWareVirtualHost _host = null;
         private VMWareVirtualMachine _virtualMachine = null;
-        private bool _poweredOn = false;
 
         public VMWareVirtualHost VirtualHost
         {
@@ -47,16 +46,15 @@ namespace Vestris.VMWareLibUnitTests
         {
             get
             {
-                if (!_poweredOn)
+                if (! VirtualMachine.IsRunning)
                 {
                     Console.WriteLine("Powering on: {0}", ConfigurationManager.AppSettings["testWorkstationFilename"]);
                     VirtualMachine.PowerOn();
                     Console.WriteLine("Waiting for tools ...");
                     VirtualMachine.WaitForToolsInGuest();
-                    Console.WriteLine("Logging in ...");
-                    VirtualMachine.LoginInGuest(Username, Password);
-                    _poweredOn = true;
                 }
+                Console.WriteLine("Logging in ...");
+                VirtualMachine.LoginInGuest(Username, Password);
                 return _virtualMachine;
             }
         }
