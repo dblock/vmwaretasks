@@ -35,14 +35,21 @@
      </code>
     </para>
     <para>
-     You can now connect to a local VMWare Workstation or a remote ESX server and perform VMWare tasks.
+     You can now connect to a local VMWare Workstation, local or remote VMWare Server or a remote 
+     ESX server and perform VMWare client and server tasks.
     </para>
     <para>
-      The following example creates, restores, powers on and removes a snapshot on a VMWare Workstation.
+      The following example creates, restores, powers on and removes a snapshot on a VMWare Workstation host.
       <code language="cs" source="..\Source\VMWareLibSamples\VMWareVirtualHostSamples.cs" region="Example: Getting Started (Workstation)" />
     </para>
     <para>
-     The following example creates, restores, powers on and removes a snapshot on a VMWare ESX server.
+      The following example creates, restores, powers on and removes a snapshot on a local VMWare Server 2.x host.
+      VMWare Server 2.x generally behaves like an ESX host, replace "localhost" with a real host name to make
+      a remote connection.
+      <code language="cs" source="..\Source\VMWareLibSamples\VMWareVirtualHostSamples.cs" region="Example: Getting Started (Server 2.x)" />
+    </para>
+    <para>
+     The following example creates, restores, powers on and removes a snapshot on a remote VMWare ESX host.
      <code language="cs" source="..\Source\VMWareLibSamples\VMWareVirtualHostSamples.cs" region="Example: Getting Started (VI)" />
     </para>
    </content>

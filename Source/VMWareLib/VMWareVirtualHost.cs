@@ -83,9 +83,9 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// Connect to a WMWare Virtual Infrastructure Server (eg. ESX).
+        /// Connect to a WMWare Virtual Infrastructure Server (eg. ESX or VMWare Server 2.x).
         /// </summary>
-        /// <param name="hostName">VMWare host name.</param>
+        /// <param name="hostName">VMWare host name and optional port.</param>
         /// <param name="username">Username.</param>
         /// <param name="password">Password.</param>
         /// <example>
@@ -97,6 +97,18 @@ namespace Vestris.VMWareLib
         /// VMWareVirtualHost virtualHost = new VMWareVirtualHost();
         /// virtualHost.ConnectToVMWareVIServer("esx.mycompany.com", "vmuser", "password");
         /// VMWareVirtualMachine virtualMachine = virtualHost.Open("[storage] testvm/testvm.vmx");
+        /// virtualMachine.PowerOn();
+        /// </code>
+        /// </example>
+        /// <example>
+        /// <code>
+        /// using System;
+        /// using System.Collections.Generic;
+        /// using Vestris.VMWareLib;
+        /// 
+        /// VMWareVirtualHost virtualHost = new VMWareVirtualHost();
+        /// virtualHost.ConnectToVMWareVIServer("localhost:8333", "vmuser", "password");
+        /// VMWareVirtualMachine virtualMachine = virtualHost.Open("[standard] testvm/testvm.vmx");
         /// virtualMachine.PowerOn();
         /// </code>
         /// </example>
