@@ -24,10 +24,9 @@
     </SvnVersion>
     <Message Text="Version: $(Major).$(Minor).$(Build).$(Revision)"/>
     <MakeDir Directories="Source\Version" />
-    <AssemblyInfo CodeLanguage="CS" OutputFile="Source\Version\GlobalAssemblyInfo.cs"
-     AssemblyDescription="VMWare Management Tasks Library" AssemblyConfiguration=""
+    <AssemblyInfo CodeLanguage="CS" OutputFile="Source\Version\GlobalAssemblyInfo.cs" AssemblyConfiguration=""
      AssemblyCompany="Vestris Inc." AssemblyProduct="VMWareTasks" AssemblyCopyright="Copyright (c) Daniel Doubrovkine, Vestris Inc. 2008"
-     AssemblyTrademark="" ComVisible="false" CLSCompliant="false" AssemblyDelaySign="false" AssemblyKeyName="" AssemblyCulture=""
+     AssemblyTrademark="" CLSCompliant="false" AssemblyDelaySign="false" AssemblyKeyName="" AssemblyCulture=""
      AssemblyVersion="$(Major).$(Minor).$(Build).$(Revision)" AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)" />
   </Target>
   <Target Name="clean">
@@ -51,6 +50,7 @@
     <SourceCodeFiles Include="Source/Version/GlobalAssemblyInfo.cs" />
     <SourceCodeFiles Include="Source/**/*.csproj" />
     <SourceCodeFiles Include="Source/**/App.config" />
+    <SourceCodeFiles Include="Source/**/*.vbs" />
     <SourceCodeFiles Include="Source/License.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -59,14 +59,16 @@
     <BinaryFiles Include="Source/VMWareTools/bin/$(Configuration)/Vestris.VMWareTools.dll.config" />
     <BinaryFiles Include="Source/VMWareTools/bin/$(Configuration)/Vestris.VMWareTools.dll" />
     <BinaryFiles Include="Source/VMWareLib/bin/$(Configuration)/Interop.VixCOM.dll" />
+    <BinaryFiles Include="Source/VMWareComLib/bin/$(Configuration)/Vestris.VMWareComLib.dll.config" />
+    <BinaryFiles Include="Source/VMWareComLib/bin/$(Configuration)/Vestris.VMWareComLib.dll" />
   </ItemGroup>
   <ItemGroup>
     <ArticleFiles Include="Article/**/*.html" />
     <ArticleFiles Include="Article/**/*.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <DocumentationFiles Include="Documentation\$(Configuration)\VMWareTasks.chm" />
-    <DocumentationFiles Include="Documentation\WhatsNew.html" />
+    <DocumentationFiles Include="Documentation/$(Configuration)/VMWareTasks.chm" />
+    <DocumentationFiles Include="Documentation/WhatsNew.html" />
   </ItemGroup>
   <Target Name="zip" DependsOnTargets="version">
     <Copy SourceFiles="@(SourceCodeProjects)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)\Source\%(RecursiveDir)" />

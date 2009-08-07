@@ -114,8 +114,44 @@ namespace Vestris.VMWareLib
         /// </example>
         public void ConnectToVMWareVIServer(string hostName, string username, string password)
         {
+            ConnectToVMWareVIServer(hostName, username, password, VMWareInterop.Timeouts.ConnectTimeout);
+        }
+
+        /// <summary>
+        /// Connect to a WMWare Virtual Infrastructure Server (eg. ESX or VMWare Server 2.x).
+        /// </summary>
+        /// <param name="hostName">VMWare host name and optional port.</param>
+        /// <param name="username">Username.</param>
+        /// <param name="password">Password.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        /// <example>
+        /// <code>
+        /// using System;
+        /// using System.Collections.Generic;
+        /// using Vestris.VMWareLib;
+        /// 
+        /// VMWareVirtualHost virtualHost = new VMWareVirtualHost();
+        /// virtualHost.ConnectToVMWareVIServer("esx.mycompany.com", "vmuser", "password");
+        /// VMWareVirtualMachine virtualMachine = virtualHost.Open("[storage] testvm/testvm.vmx");
+        /// virtualMachine.PowerOn();
+        /// </code>
+        /// </example>
+        /// <example>
+        /// <code>
+        /// using System;
+        /// using System.Collections.Generic;
+        /// using Vestris.VMWareLib;
+        /// 
+        /// VMWareVirtualHost virtualHost = new VMWareVirtualHost();
+        /// virtualHost.ConnectToVMWareVIServer("localhost:8333", "vmuser", "password");
+        /// VMWareVirtualMachine virtualMachine = virtualHost.Open("[standard] testvm/testvm.vmx");
+        /// virtualMachine.PowerOn();
+        /// </code>
+        /// </example>
+        public void ConnectToVMWareVIServer(string hostName, string username, string password, int timeoutInSeconds)
+        {
             ConnectToVMWareVIServer(new Uri(string.Format("https://{0}/sdk", hostName)),
-                username, password, VMWareInterop.Timeouts.ConnectTimeout);
+                username, password, timeoutInSeconds);
         }
 
         /// <summary>

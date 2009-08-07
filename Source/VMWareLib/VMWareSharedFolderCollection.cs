@@ -189,5 +189,18 @@ namespace Vestris.VMWareLib
                 _sharedFolders = null;
             }
         }
+
+        /// <summary>
+        /// Returns a shared folder at a given index.
+        /// </summary>
+        /// <param name="index">Shared folder index.</param>
+        /// <returns>A shared folder.</returns>
+        public VMWareSharedFolder this[int index]
+        {
+            get
+            {
+                return SharedFolders[index];
+            }
+        }
     }
 }

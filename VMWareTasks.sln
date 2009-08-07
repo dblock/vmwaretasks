@@ -48,6 +48,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VMWareLibSamples", "Source\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VMWareToolsSamples", "Source\VMWareToolsSamples\VMWareToolsSamples.csproj", "{3AC08947-61C7-46D7-B7EA-9CDE37351453}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VMWareComLib", "Source\VMWareComLib\VMWareComLib.csproj", "{F21814A9-1F76-4AB1-98D1-8AEB88258879}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DF9B8E13-AD32-4FEA-83CB-5048234FC2F3} = {DF9B8E13-AD32-4FEA-83CB-5048234FC2F3}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VMWareComLibSamples", "VMWareComLibSamples", "{30F8230C-657D-4D98-8602-994B8E1D562E}"
+	ProjectSection(SolutionItems) = preProject
+		Source\VMWareComLibSamples\GettingStartedWorkstation.vbs = Source\VMWareComLibSamples\GettingStartedWorkstation.vbs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -82,6 +92,10 @@ Global
 		{3AC08947-61C7-46D7-B7EA-9CDE37351453}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AC08947-61C7-46D7-B7EA-9CDE37351453}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3AC08947-61C7-46D7-B7EA-9CDE37351453}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F21814A9-1F76-4AB1-98D1-8AEB88258879}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F21814A9-1F76-4AB1-98D1-8AEB88258879}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F21814A9-1F76-4AB1-98D1-8AEB88258879}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F21814A9-1F76-4AB1-98D1-8AEB88258879}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

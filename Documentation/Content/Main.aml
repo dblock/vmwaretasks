@@ -21,6 +21,9 @@
         known VixCOM API limitations.
       </para>
       <para>
+        VMWareTasks exposes a C# interface, a COM-enabled interface for script clients and a Java bridge for Java programs.
+      </para>
+      <para>
         The VMWareTasks library is maintained on CodePlex at
         <externalLink>
           <linkHref>http://vmwaretasks.codeplex.com/</linkHref>

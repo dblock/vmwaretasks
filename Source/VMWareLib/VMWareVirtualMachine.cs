@@ -644,9 +644,22 @@ namespace Vestris.VMWareLib
         /// <returns>Process information.</returns>
         public Process DetachProgramInGuest(string guestProgramName, string commandLineArgs)
         {
+            return DetachProgramInGuest(guestProgramName, commandLineArgs,
+                VMWareInterop.Timeouts.RunProgramTimeout);
+        }
+
+        /// <summary>
+        /// Run a detached program in the guest operating system.
+        /// </summary>
+        /// <param name="guestProgramName">Program to execute.</param>
+        /// <param name="commandLineArgs">Additional command line arguments.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        /// <returns>Process information.</returns>
+        public Process DetachProgramInGuest(string guestProgramName, string commandLineArgs, int timeoutInSeconds)
+        {
             return RunProgramInGuest(guestProgramName, commandLineArgs,
                 Constants.VIX_RUNPROGRAM_ACTIVATE_WINDOW | Constants.VIX_RUNPROGRAM_RETURN_IMMEDIATELY,
-                VMWareInterop.Timeouts.RunProgramTimeout);
+                timeoutInSeconds);
         }
 
         /// <summary>
@@ -703,9 +716,22 @@ namespace Vestris.VMWareLib
         /// <returns>Process information.</returns>
         public Process DetachScriptInGuest(string interpreter, string scriptText)
         {
+            return DetachScriptInGuest(interpreter, scriptText, 
+                VMWareInterop.Timeouts.RunScriptTimeout);
+        }
+
+        /// <summary>
+        /// Detach a script in the guest operating system.
+        /// </summary>
+        /// <param name="interpreter">The path to the script interpreter.</param>
+        /// <param name="scriptText">The text of the script.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        /// <returns>Process information.</returns>
+        public Process DetachScriptInGuest(string interpreter, string scriptText, int timeoutInSeconds)
+        {
             return RunScriptInGuest(interpreter, scriptText,
                 VixCOM.Constants.VIX_RUNPROGRAM_RETURN_IMMEDIATELY,
-                VMWareInterop.Timeouts.RunScriptTimeout);
+                timeoutInSeconds);
         }
 
         /// <summary>
@@ -842,7 +868,17 @@ namespace Vestris.VMWareLib
         /// </summary>
         public void ShutdownGuest()
         {
-            PowerOff(Constants.VIX_VMPOWEROP_FROM_GUEST, VMWareInterop.Timeouts.PowerOffTimeout);
+            ShutdownGuest(VMWareInterop.Timeouts.PowerOffTimeout);
+        }
+
+        /// <summary>
+        /// Power off a virtual machine. The virtual machine will be powered off at the hardware level. 
+        /// Any state of the guest that has not been committed to disk will be lost. 
+        /// </summary>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        public void ShutdownGuest(int timeoutInSeconds)
+        {
+            PowerOff(Constants.VIX_VMPOWEROP_FROM_GUEST, timeoutInSeconds);
         }
 
         /// <summary>
