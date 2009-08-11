@@ -85,10 +85,13 @@ namespace Vestris.VMWareLibUnitTests
         {
             foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
             {
-                List<string> listOfDrivers = virtualMachine.ListDirectoryInGuest(@"C:\WINDOWS\system32\drivers", false);
-                List<string> listOfDriversWithSub = virtualMachine.ListDirectoryInGuest(@"C:\WINDOWS\system32\drivers", true);
+                string system32drivers = @"C:\WINDOWS\system32\drivers";
+                List<string> listOfDrivers = virtualMachine.ListDirectoryInGuest(system32drivers, false);
+                if (listOfDrivers.Count == 1 && listOfDrivers[0] == Path.Combine(system32drivers, "hfile.txt"))
+                    Assert.Ignore("Remote file system is protected.");
+                List<string> listOfDriversWithSub = virtualMachine.ListDirectoryInGuest(system32drivers, true);
                 Assert.IsTrue(listOfDrivers.Count < listOfDriversWithSub.Count);
-                Assert.IsTrue(listOfDriversWithSub.Contains(@"C:\WINDOWS\system32\drivers\etc\hosts"));
+                Assert.IsTrue(listOfDriversWithSub.Contains(Path.Combine(system32drivers, @"etc\hosts")));
             }
         }
 
