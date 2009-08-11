@@ -266,22 +266,6 @@ namespace Vestris.VMWareLibUnitTests
         }
 
         [Test]
-        public void TestSuspend()
-        {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
-            {
-                Console.WriteLine("Suspend ...");
-                virtualMachine.Suspend();
-                Assert.AreEqual(false, virtualMachine.IsPaused);
-                Assert.AreEqual(true, virtualMachine.IsSuspended);
-                Console.WriteLine("Power ...");
-                virtualMachine.PowerOn();
-                Console.WriteLine("Wait ...");
-                virtualMachine.WaitForToolsInGuest();
-            }
-        }
-
-        [Test]
         protected void TestRunScriptInGuest()
         {
             foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)

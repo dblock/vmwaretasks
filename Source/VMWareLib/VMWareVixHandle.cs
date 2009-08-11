@@ -12,13 +12,13 @@ namespace Vestris.VMWareLib
     /// <remarks>
     /// Most VixCOM objects returned from VixCOM API functions implement IVixHandle.
     /// </remarks>
-    public class VMWareVixHandle<T>
+    public class VMWareVixHandle<T> : IDisposable
     {
         /// <summary>
         /// Raw VixCOM handle of implemented type.
         /// </summary>
         protected T _handle = default(T);
-        
+
         /// <summary>
         /// Pointer to the IVixHandle interface.
         /// </summary>
@@ -26,7 +26,21 @@ namespace Vestris.VMWareLib
         {
             get
             {
-                return (IVixHandle) _handle;
+                return _handle as IVixHandle;
+            }
+        }
+
+        /// <summary>
+        /// Pointer to the IVixHandle2 interface.
+        /// </summary>
+        /// <remarks>
+        /// This type was introduced in VixCOM 1.6.3 and will return null with older versions of VixCOM.
+        /// </remarks>
+        protected IVixHandle2 _vixhandle2
+        {
+            get
+            {
+                return _handle as IVixHandle2;
             }
         }
 
@@ -56,7 +70,7 @@ namespace Vestris.VMWareLib
         {
             object result = null;
             VMWareInterop.Check(_vixhandle.GetProperties(properties, ref result));
-            return (object[]) result;
+            return (object[])result;
         }
 
         /// <summary>
@@ -68,7 +82,31 @@ namespace Vestris.VMWareLib
         public R GetProperty<R>(int propertyId)
         {
             object[] properties = { propertyId };
-            return (R) GetProperties(properties)[0];
+            return (R)GetProperties(properties)[0];
         }
+
+        /// <summary>
+        /// Close the handle.
+        /// </summary>
+        public void Close()
+        {
+            if (_vixhandle2 != null)
+            {
+                _vixhandle2.Close();
+                _handle = default(T);
+            }
+        }
+
+        #region IDisposable Members
+
+        /// <summary>
+        /// Close the handle with VixCOM 1.6.3 or newer.
+        /// </summary>
+        public void Dispose()
+        {
+            Close();            
+        }
+
+        #endregion
     }
 }

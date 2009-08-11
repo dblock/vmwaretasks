@@ -61,9 +61,11 @@ namespace Vestris.VMWareLib
         public void RevertToSnapshot(int powerOnOptions, int timeoutInSeconds)
         {
             VMWareJobCallback callback = new VMWareJobCallback();
-            VMWareJob job = new VMWareJob(_vm.RevertToSnapshot(
-                _handle, powerOnOptions, null, callback), callback);
-            job.Wait(timeoutInSeconds);
+            using (VMWareJob job = new VMWareJob(_vm.RevertToSnapshot(
+                _handle, powerOnOptions, null, callback), callback))
+            {
+                job.Wait(timeoutInSeconds);
+            }
         }
 
         /// <summary>
@@ -105,8 +107,10 @@ namespace Vestris.VMWareLib
             IEnumerable<VMWareSnapshot> childSnapshots = ChildSnapshots;
             // remove the snapshot
             VMWareJobCallback callback = new VMWareJobCallback();
-            VMWareJob job = new VMWareJob(_vm.RemoveSnapshot(_handle, 0, callback), callback);
-            job.Wait(timeoutInSeconds);
+            using (VMWareJob job = new VMWareJob(_vm.RemoveSnapshot(_handle, 0, callback), callback))
+            {
+                job.Wait(timeoutInSeconds);
+            }
             if (_parent != null)
             {
                 // child snapshots from this snapshot have now moved one level up
@@ -222,9 +226,11 @@ namespace Vestris.VMWareLib
         public void BeginReplay(int powerOnOptions, int timeoutInSeconds)
         {
             VMWareJobCallback callback = new VMWareJobCallback();
-            VMWareJob job = new VMWareJob(_vm.BeginReplay(
-                _handle, powerOnOptions, null, callback), callback);
-            job.Wait(timeoutInSeconds);
+            using (VMWareJob job = new VMWareJob(_vm.BeginReplay(
+                _handle, powerOnOptions, null, callback), callback))
+            {
+                job.Wait(timeoutInSeconds);
+            }
         }
 
         /// <summary>
@@ -242,9 +248,11 @@ namespace Vestris.VMWareLib
         public void EndReplay(int timeoutInSeconds)
         {
             VMWareJobCallback callback = new VMWareJobCallback();
-            VMWareJob job = new VMWareJob(_vm.EndReplay(
-                0, null, callback), callback);
-            job.Wait(timeoutInSeconds);
+            using (VMWareJob job = new VMWareJob(_vm.EndReplay(
+                0, null, callback), callback))
+            {
+                job.Wait(timeoutInSeconds);
+            }
         }
 
         /// <summary>
@@ -266,10 +274,12 @@ namespace Vestris.VMWareLib
         public void Clone(VMWareVirtualMachineCloneType cloneType, string destConfigPathName, int timeoutInSeconds)
         {
             VMWareJobCallback callback = new VMWareJobCallback();
-            VMWareJob job = new VMWareJob(_vm.Clone(
-                _handle, (int) cloneType, destConfigPathName, 0, null, callback),
-                callback);
-            job.Wait(timeoutInSeconds);
+            using (VMWareJob job = new VMWareJob(_vm.Clone(
+                _handle, (int)cloneType, destConfigPathName, 0, null, callback),
+                callback))
+            {
+                job.Wait(timeoutInSeconds);
+            }
         }
     }
 }

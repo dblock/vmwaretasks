@@ -131,8 +131,10 @@ namespace Vestris.VMWareLib
         public void CreateSnapshot(string name, string description, int flags, int timeoutInSeconds)
         {
             VMWareJobCallback callback = new VMWareJobCallback();
-            VMWareJob job = new VMWareJob(_vm.CreateSnapshot(name, description, flags, null, callback), callback);
-            job.Wait(timeoutInSeconds);
+            using (VMWareJob job = new VMWareJob(_vm.CreateSnapshot(name, description, flags, null, callback), callback))
+            {
+                job.Wait(timeoutInSeconds);
+            }
             _snapshots = null;
         }
     }
