@@ -27,7 +27,12 @@ namespace VMWareCrash
                     object[] connectProperties = { Constants.VIX_PROPERTY_JOB_RESULT_HANDLE };
                     object hosts = null;
                     ulong rc = connectJob.Wait(connectProperties, ref hosts);
-                    if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
+                    if (vix.ErrorIndicatesFailure(rc))
+                    {
+                        ((IVixHandle2) connectJob).Close();
+                        throw new Exception(vix.GetErrorText(rc, "en-US"));
+                    }
+
                     IHost host = (IHost)((object[])hosts)[0];
 
                     {
@@ -37,9 +42,14 @@ namespace VMWareCrash
                         object[] openProperties = { Constants.VIX_PROPERTY_JOB_RESULT_HANDLE };
                         object openResults = null;
                         rc = openJob.Wait(openProperties, ref openResults);
-                        if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
+                        if (vix.ErrorIndicatesFailure(rc))
+                        {
+                            ((IVixHandle2) openJob).Close();
+                            throw new Exception(vix.GetErrorText(rc, "en-US"));
+                        }
                         ConsoleOutput.WriteLine("Opened {0}", connectionInfo.Vmx);
                         IVM2 vm = (IVM2)((object[])openResults)[0];
+                        ((IVixHandle2)openJob).Close();
                         // get root snapshot
                         ConsoleOutput.WriteLine("Fetching root snapshot");
                         ISnapshot snapshot = null;
@@ -49,22 +59,28 @@ namespace VMWareCrash
                         // revert to the snapshot
                         IJob revertJob = vm.RevertToSnapshot(snapshot, Constants.VIX_VMPOWEROP_NORMAL, null, null);
                         rc = revertJob.WaitWithoutResults();
+                        ((IVixHandle2)snapshot).Close();
+                        ((IVixHandle2)revertJob).Close();
                         if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
                         // power on
                         ConsoleOutput.WriteLine("Powering on");
                         IJob powerOnJob = vm.PowerOn(VixCOM.Constants.VIX_VMPOWEROP_NORMAL, null, null);
                         rc = powerOnJob.WaitWithoutResults();
+                        ((IVixHandle2)powerOnJob).Close();
                         if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
                         // wait for tools in guest
                         ConsoleOutput.WriteLine("Waiting for tools");
                         IJob waitForToolsJob = vm.WaitForToolsInGuest(240, null);
                         rc = waitForToolsJob.WaitWithoutResults();
+                        ((IVixHandle2)waitForToolsJob).Close();
                         if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
                         // power off
                         ConsoleOutput.WriteLine("Powering off");
                         IJob powerOffJob = vm.PowerOff(VixCOM.Constants.VIX_VMPOWEROP_NORMAL, null);
                         rc = powerOffJob.WaitWithoutResults();
+                        ((IVixHandle2)powerOffJob).Close();
                         if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
+                        ((IVixHandle2)vm).Close();
                     }
 
                     // disconnect
@@ -91,8 +107,10 @@ namespace VMWareCrash
                 {
                     //new ConnectionInfo(@"c:\Users\dblock\Virtual Machines\Windows XP Pro SP2\winXPPro.vmx"),
                     //new ConnectionInfo(@"c:\Users\dblock\Documents\Virtual Machines\WinXP Pro SP3\WinXP Pro SP3.vmx"),
-                    new ConnectionInfo("https://linc.nycapt35k.com/sdk", "vmuser", "admin123", "[dbprotect-1] ddoub-red/ddoub-red.vmx"),
-                    new ConnectionInfo("https://crockett.nycapt35k.com/sdk", "vmuser", "admin123", "[console-2] nkrasnov2k8/nkrasnov2k8.vmx"),
+                    new ConnectionInfo("https://linc.nycapt35k.com/sdk", "vmuser", "admin123", "[dbprotect-1] ddoub-mauve/ddoub-mauve.vmx"),
+                    // new ConnectionInfo("https://linc.nycapt35k.com/sdk", "vmuser", "admin123", "[dbprotect-1] ddoub-purple/ddoub-purple.vmx"),
+                    // new ConnectionInfo("https://crockett.nycapt35k.com/sdk", "consoleuser", "admin123", "[console-doogie] nkrasnov2k8/nkrasnov2k8.vmx"),
+                    new ConnectionInfo("https://tubbs.nycapt35k.com/sdk", "vmuser", "admin123", "[adpro-1] snowtest-w2k8/snowtest-w2k8.vmx"),
                 };
 
                 // spawn threads

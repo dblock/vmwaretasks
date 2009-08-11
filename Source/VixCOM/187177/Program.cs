@@ -32,33 +32,47 @@ namespace VMWareCrash
                     object[] connectProperties = { Constants.VIX_PROPERTY_JOB_RESULT_HANDLE };
                     object hosts = null;
                     ulong rc = connectJob.Wait(connectProperties, ref hosts);
-                    if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
+                    if (vix.ErrorIndicatesFailure(rc))
+                    {
+                        ((IVixHandle2) connectJob).Close();
+                        throw new Exception(vix.GetErrorText(rc, "en-US"));
+                    }
+
                     host = (IHost)((object[])hosts)[0];
+                    ((IVixHandle2)connectJob).Close();
 
                     {
                         // open a vm
                         Console.WriteLine("Opening VM");
-                        IJob openJob = host.OpenVM("[dbprotect-1] ddoub-red/ddoub-red.vmx", null);
+                        IJob openJob = host.OpenVM("[dbprotect-1] ddoub-purple/ddoub-purple.vmx", null);
                         object[] openProperties = { Constants.VIX_PROPERTY_JOB_RESULT_HANDLE };
                         object openResults = null;
                         rc = openJob.Wait(openProperties, ref openResults);
-                        if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
+                        if (vix.ErrorIndicatesFailure(rc))
+                        {
+                            ((IVixHandle2) openJob).Close();
+                            throw new Exception(vix.GetErrorText(rc, "en-US"));
+                        }
+
                         vm = (IVM2)((object[])openResults)[0];
+                        ((IVixHandle2)openJob).Close();
+
                         // get root snapshot
                         Console.WriteLine("Fetching root snapshot");
                         ISnapshot snapshot = null;
                         rc = vm.GetRootSnapshot(0, out snapshot);
                         if (vix.ErrorIndicatesFailure(rc))
                         {
+                            ((IVixHandle2)openJob).Close();
                             throw new Exception(vix.GetErrorText(rc, "en-US"));
                         }
                         Console.WriteLine("Reverting to snapshot");
                         // revert to the snapshot
                         IJob revertJob = vm.RevertToSnapshot(snapshot, Constants.VIX_VMPOWEROP_NORMAL, null, null);
                         revertJob.WaitWithoutResults();
+                        ((IVixHandle2)revertJob).Close();
+                        ((IVixHandle2)snapshot).Close();
                     }
-
-                    // disconnect
                 }
                 catch (Exception ex)
                 {
@@ -69,7 +83,7 @@ namespace VMWareCrash
                     if (null != vm)
                     {
 						Console.WriteLine("Closing VM");
-                        vm.Close();
+                        ((IVixHandle2) vm).Close();
                     }
 
                     if (null != host)
