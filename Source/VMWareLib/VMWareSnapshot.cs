@@ -176,7 +176,9 @@ namespace Vestris.VMWareLib
                 switch ((ulError = _handle.GetParent(out parentSnapshot)))
                 {
                     case Constants.VIX_OK:
-                        return System.IO.Path.Combine(new VMWareSnapshot(_vm, parentSnapshot, null).Path, DisplayName);
+                        return parentSnapshot == null 
+                            ? DisplayName 
+                            : System.IO.Path.Combine(new VMWareSnapshot(_vm, parentSnapshot, null).Path, DisplayName);
                     case Constants.VIX_E_SNAPSHOT_NOTFOUND: // no parent
                         return DisplayName;
                     case Constants.VIX_E_INVALID_ARG: // root snapshot
