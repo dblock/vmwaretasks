@@ -37,6 +37,7 @@
       <codeEntityReference qualifyHint="true">N:Vestris.VMWareLib</codeEntityReference>
       <codeEntityReference qualifyHint="true">N:Vestris.VMWareLib.Tools</codeEntityReference>
       <codeEntityReference qualifyHint="true">N:Vestris.VMWareLib.Tools.Windows</codeEntityReference>
+      <codeEntityReference qualifyHint="true">N:Vestris.VMWareComLib</codeEntityReference>
     </relatedTopics>
   </developerConceptualDocument>
 </topic>

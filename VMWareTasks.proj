@@ -4,12 +4,13 @@
     <Configuration>Debug</Configuration>
   </PropertyGroup>
   <PropertyGroup>
-    <ReleaseDir>Vestris.VMWareTasks</ReleaseDir>
+    <ReleaseDir>$(MSBuildProjectDirectory)\Vestris.VMWareTasks</ReleaseDir>
   </PropertyGroup>
   <Target Name="all">
     <CallTarget Targets="version" />
     <CallTarget Targets="build" />
     <CallTarget Targets="doc" />
+    <CallTarget Targets="javainterface" />
     <CallTarget Targets="zip" />
   </Target>
   <Target Name="version">
@@ -33,6 +34,7 @@
     <MSBuild Projects="VMWareTasks.sln" Targets="Clean" />
     <DeleteTree Directories="Documentation\$(Configuration)" />
     <DeleteTree Directories="$(ReleaseDir)" Recursive="true" />
+    <DeleteTree Directories="Source\VMWareComLibJava" />
     <Delete Files="Vestris.VMWareTasks.zip" />
     <Delete Files="Source\Version\GlobalAssemblyInfo.cs" />
     <DeleteTree Directories="Source\**\bin;Source\**\obj" Recursive="true" />
@@ -52,6 +54,7 @@
     <SourceCodeFiles Include="Source/**/App.config" />
     <SourceCodeFiles Include="Source/**/*.vbs" />
     <SourceCodeFiles Include="Source/License.txt" />
+    <SourceCodeFiles Include="Source/**/*.java" />
   </ItemGroup>
   <ItemGroup>
     <BinaryFiles Include="Source/VMWareLib/bin/$(Configuration)/Vestris.VMWareLib.dll.config" />
@@ -61,6 +64,7 @@
     <BinaryFiles Include="Source/VMWareLib/bin/$(Configuration)/Interop.VixCOM.dll" />
     <BinaryFiles Include="Source/VMWareComLib/bin/$(Configuration)/Vestris.VMWareComLib.dll.config" />
     <BinaryFiles Include="Source/VMWareComLib/bin/$(Configuration)/Vestris.VMWareComLib.dll" />
+    <BinaryFiles Include="Source/VMWareComLibJava/Bin/vestris-vmwarecomlib.jar" />
   </ItemGroup>
   <ItemGroup>
     <ArticleFiles Include="Article/**/*.html" />
@@ -87,5 +91,14 @@
     <Delete Files="Documentation\$(Configuration)\VMWareTasks.chm" />
     <MSBuild Projects="Documentation\VMWareTasks.shfbproj" />
     <Error Condition="Exists('Documentation\$(Configuration)\LastBuild.log')" Text="Documentation build failed, check Documentation\$(Configuration)\LastBuild.log" />
+  </Target>
+  <Target Name="javainterface" DependsOnTargets="version">
+    <Exec WorkingDirectory="Source\VMWareComLib\bin\$(Configuration)" Command="regasm.exe /codebase /tlb:Vestris.VMWareComLib.tlb Vestris.VMWareComLib.dll" />
+    <Exec WorkingDirectory="Source\VMWareComLib\bin\$(Configuration)" Command="regasm.exe /codebase /regfile:Vestris.VMWareComLib.reg Vestris.VMWareComLib.dll" />
+    <Exec Command="java -jar Tools\Com4j\tlbimp.jar -p com.vestris.vmwarecomlib -o Source\VMWareComLibJava &quot;$(MSBuildProjectDirectory)/Source/VMWareComLib/bin/$(Configuration)/Vestris.VMWareComLib.tlb&quot;" />
+    <MakeDir Directories="$(ReleaseDir)\$(Major).$(Minor)\Bin" />
+    <Exec WorkingDirectory="Source\VMWareComLibJava" Command="&quot;$(JAVA_HOME)\bin\javac.exe&quot; com\vestris\vmwarecomlib\*.java -cp &quot;$(MSBuildProjectDirectory)\Tools\Com4j\com4j.jar&quot;" />
+    <Exec WorkingDirectory="Source\VMWareComLibJava" Command="&quot;$(JAVA_HOME)\bin\jar.exe&quot; cvf &quot;$(ReleaseDir)\$(Major).$(Minor)\Bin\vestris-vmwarecomlib.jar&quot; com\vestris\vmwarecomlib\*.class" />
+    <Exec WorkingDirectory="Source\VMWareComLibJava" Command="&quot;$(JAVA_HOME)\bin\jar.exe&quot; cvf &quot;$(ReleaseDir)\$(Major).$(Minor)\Bin\vestris-vmwarecomlib-src.zip&quot; com\vestris\vmwarecomlib\*.java" />
   </Target>
 </Project>

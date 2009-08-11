@@ -102,7 +102,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Close the handle with VixCOM 1.6.3 or newer.
         /// </summary>
-        public void Dispose()
+        public virtual void Dispose()
         {
             Close();            
         }

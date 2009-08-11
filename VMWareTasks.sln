@@ -36,6 +36,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Content", "Content", "{748E
 	ProjectSection(SolutionItems) = preProject
 		Documentation\Content\AboutHelp.aml = Documentation\Content\AboutHelp.aml
 		Documentation\Content\GettingStarted.aml = Documentation\Content\GettingStarted.aml
+		Documentation\Content\GettingStartedCOM.aml = Documentation\Content\GettingStartedCOM.aml
+		Documentation\Content\GettingStartedCSharp.aml = Documentation\Content\GettingStartedCSharp.aml
+		Documentation\Content\GettingStartedJava.aml = Documentation\Content\GettingStartedJava.aml
 		Documentation\Content\License.aml = Documentation\Content\License.aml
 		Documentation\Content\Main.aml = Documentation\Content\Main.aml
 	EndProjectSection
@@ -53,9 +56,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VMWareComLib", "Source\VMWa
 		{DF9B8E13-AD32-4FEA-83CB-5048234FC2F3} = {DF9B8E13-AD32-4FEA-83CB-5048234FC2F3}
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VMWareComLibSamples", "VMWareComLibSamples", "{30F8230C-657D-4D98-8602-994B8E1D562E}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VMWareComLibScriptSamples", "VMWareComLibScriptSamples", "{30F8230C-657D-4D98-8602-994B8E1D562E}"
 	ProjectSection(SolutionItems) = preProject
-		Source\VMWareComLibSamples\GettingStartedWorkstation.vbs = Source\VMWareComLibSamples\GettingStartedWorkstation.vbs
+		Source\VMWareComLibScriptSamples\GettingStartedWorkstation.vbs = Source\VMWareComLibScriptSamples\GettingStartedWorkstation.vbs
 	EndProjectSection
 EndProject
 Global

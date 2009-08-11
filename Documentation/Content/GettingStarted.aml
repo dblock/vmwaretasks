@@ -25,48 +25,21 @@
         </para>
       </content>
     </section>
-    <section address="sourcecodereferencecsharp">
-      <title>Using the Library (C#)</title>
+    <section address="usingvmwaretasks">
+      <title>Using the Library</title>
       <content>
         <para>
-          In your project add a reference to <localUri>Vestris.VMWareLib.dll</localUri> and a namespace reference.
-          <code language="cs">
-            using Vestris.VMWareLib;
-          </code>
-        </para>
-        <para>
-          You can now connect to a local VMWare Workstation, local or remote VMWare Server or a remote
-          ESX server and perform VMWare client and server tasks.
-        </para>
-        <para>
-          The following example creates, restores, powers on and removes a snapshot on a VMWare Workstation host.
-          <code language="cs" source="..\Source\VMWareLibSamples\VMWareVirtualHostSamples.cs" region="Example: Getting Started (Workstation)" />
-        </para>
-        <para>
-          The following example creates, restores, powers on and removes a snapshot on a local VMWare Server 2.x host.
-          VMWare Server 2.x generally behaves like an ESX host, replace "localhost" with a real host name to make
-          a remote connection.
-          <code language="cs" source="..\Source\VMWareLibSamples\VMWareVirtualHostSamples.cs" region="Example: Getting Started (Server 2.x)" />
-        </para>
-        <para>
-          The following example creates, restores, powers on and removes a snapshot on a remote VMWare ESX host.
-          <code language="cs" source="..\Source\VMWareLibSamples\VMWareVirtualHostSamples.cs" region="Example: Getting Started (VI)" />
-        </para>
-      </content>
-    </section>
-    <section address="sourcecodereferencecom">
-      <title>Using the Library (COM)</title>
-      <content>
-        <para>
-          TODO
-        </para>
-      </content>
-    </section>
-    <section address="sourcecodereferencejava">
-      <title>Using the Library (Java)</title>
-      <content>
-        <para>
-          TODO
+          <list class="bullet">
+            <listItem>
+              <link tipicType_id="DAC3A6A0-C863-4E5B-8F65-79EFC6A4BA09" xlink:href="c7928b8f-c6b0-4468-b288-2c6ad153fd18" />
+            </listItem>
+            <listItem>
+              <link topicType_id="DAC3A6A0-C863-4E5B-8F65-79EFC6A4BA09" xlink:href="3590e439-bec9-4740-912e-8cc12219db79" />
+            </listItem>
+            <listItem>
+              <link topicType_id="DAC3A6A0-C863-4E5B-8F65-79EFC6A4BA09" xlink:href="7cf34d88-fa75-4b7a-8e7d-85f843637a26" />
+            </listItem>
+          </list>
         </para>
       </content>
     </section>

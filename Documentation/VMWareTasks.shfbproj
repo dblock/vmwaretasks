@@ -41,6 +41,8 @@
       <DocumentationSource sourceFile="..\Source\VMWareTools\bin\$(Configuration)\Vestris.VMWareTools.dll" xmlns="" />
       <DocumentationSource sourceFile="..\Source\VMWareTools\bin\$(Configuration)\Vestris.VMWareTools.xml" xmlns="" />
       <DocumentationSource sourceFile="..\Source\VMWareTools\VMWareToolsNamespace.xml" xmlns="" />
+      <DocumentationSource sourceFile="..\Source\VMWareComLib\bin\$(Configuration)\Vestris.VMWareComLib.dll" xmlns="" />
+      <DocumentationSource sourceFile="..\Source\VMWareComLib\bin\$(Configuration)\Vestris.VMWareComLib.xml" xmlns="" />
     </DocumentationSources>
     <KeepLogFile>False</KeepLogFile>
     <CopyrightText>$(Copyright)</CopyrightText>
@@ -61,6 +63,9 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
   </PropertyGroup>
   <ItemGroup>
+    <None Include="Content\GettingStartedJava.aml" />
+    <None Include="Content\GettingStartedCOM.aml" />
+    <None Include="Content\GettingStartedCSharp.aml" />
     <None Include="Content\AboutHelp.aml" />
     <None Include="Content\HelpAndAbout.aml" />
     <None Include="Content\License.aml" />

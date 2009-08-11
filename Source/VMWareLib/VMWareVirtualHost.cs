@@ -7,7 +7,7 @@ namespace Vestris.VMWareLib
     /// <summary>
     /// A VMWare virtual host.
     /// </summary>
-    public class VMWareVirtualHost : VMWareVixHandle<IHost>, IDisposable
+    public class VMWareVirtualHost : VMWareVixHandle<IHost>
     {
         /// <summary>
         /// VMWare service provider type.
@@ -319,12 +319,13 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Dispose the object, hard-disconnect from the remote host.
         /// </summary>
-        public void Dispose()
+        public override void Dispose()
         {
             if (_handle != null)
             {
                 Disconnect();
             }
+
             GC.SuppressFinalize(this);
         }
 
