@@ -2,32 +2,23 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Runtime.InteropServices;
 
-namespace Vestris.VMWareLib.Tools
+namespace Vestris.VMWareComLib.Tools
 {
-    /// <summary>
-    /// Generic remote operating system wrapper.
-    /// </summary>
-    public class GuestOS : IDisposable
+    [ComVisible(true)]
+    [Guid("B344E97A-57E1-41d9-BFE0-28213BA5A419")]
+    [ComDefaultInterface(typeof(IGuestOS))]
+    [ProgId("VMWareComTools.GuestOS")]
+    public class GuestOS : IGuestOS
     {
-        /// <summary>
-        /// Virtual Machine instance.
-        /// </summary>
-        protected VMWareVirtualMachine _vm = null;
+        private Vestris.VMWareComLib.IVMWareVirtualMachine _vm = null;
 
-        /// <summary>
-        /// New instance of a guest operating system wrapper.
-        /// </summary>
-        /// <param name="vm">Powered virtual machine.</param>
-        public GuestOS(VMWareVirtualMachine vm)
+        public GuestOS()
         {
-            _vm = vm;
         }
 
-        /// <summary>
-        /// Virtual Machine
-        /// </summary>
-        public VMWareVirtualMachine VirtualMachine
+        public VMWareComLib.IVMWareVirtualMachine VirtualMachine
         {
             get
             {
@@ -127,22 +118,6 @@ namespace Vestris.VMWareLib.Tools
             {
                 File.Delete(tempFilename);
             }
-        }
-
-        /// <summary>
-        /// Release any references to the virtual machine.
-        /// </summary>
-        public void Dispose()
-        {
-            _vm = null; // don't hold another reference, http://communities.vmware.com/message/1144091
-        }
-
-        /// <summary>
-        /// Dispose the object, release any references to the virtual machine.
-        /// </summary>
-        ~GuestOS()
-        {
-            Dispose();
         }
     }
 }

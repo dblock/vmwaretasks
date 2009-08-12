@@ -7,7 +7,7 @@ using System.IO;
 using System.Drawing;
 using System.Threading;
 using System.Text;
-using VixCOM;
+using Interop.VixCOM;
 
 namespace Vestris.VMWareLibUnitTests
 {
@@ -38,7 +38,7 @@ namespace Vestris.VMWareLibUnitTests
             Assert.IsFalse(virtualMachine.IsRecording);
             Assert.IsFalse(virtualMachine.IsReplaying);
             Console.WriteLine("Begin replay ...");
-            snapshot.BeginReplay(VixCOM.Constants.VIX_VMPOWEROP_LAUNCH_GUI, VMWareInterop.Timeouts.ReplayTimeout);
+            snapshot.BeginReplay(Constants.VIX_VMPOWEROP_LAUNCH_GUI, VMWareInterop.Timeouts.ReplayTimeout);
             Assert.IsTrue(virtualMachine.IsReplaying);
             Thread.Sleep(10000);
             snapshot.EndReplay();

@@ -39,6 +39,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\Vestris.VMWareLib.XML</DocumentationFile>
+    <NoWarn>1699</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -48,8 +49,13 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\Vestris.VMWareLib.XML</DocumentationFile>
+    <NoWarn>1699</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Interop.VixCOM, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1a2e7e25925ba452, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Interop.VixCOM\Interop.VixCOM.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -73,17 +79,6 @@
     <Compile Include="VMWareVirtualHost.cs" />
     <Compile Include="VMWareVirtualMachine.cs" />
     <Compile Include="VMWareVixHandle.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <COMReference Include="VixCOM">
-      <Guid>{7A474EE3-0062-4239-AE91-134AC9BD5FD3}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <Private>True</Private>
-    </COMReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -117,4 +112,9 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PreBuildEvent>if not EXIST "$(SolutionDir)\Source\Interop.VixCOM\Interop.VixCOM.dll" ( 
+ call "$(SolutionDir)\build.cmd" vixcom /p:Configuration=$(ConfigurationName)
+)</PreBuildEvent>
+  </PropertyGroup>
 </Project>

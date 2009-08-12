@@ -7,7 +7,7 @@ using System.IO;
 using System.Drawing;
 using System.Threading;
 using System.Text;
-using VixCOM;
+using Interop.VixCOM;
 
 namespace Vestris.VMWareLibUnitTests
 {

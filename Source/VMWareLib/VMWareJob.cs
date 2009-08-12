@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using VixCOM;
+using Interop.VixCOM;
 
 namespace Vestris.VMWareLib
 {

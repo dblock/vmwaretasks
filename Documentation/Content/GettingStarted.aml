@@ -2,7 +2,7 @@
 <topic id="a6f46303-b703-4ff3-9572-55d8131eb883" revisionNumber="1">
   <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
     <introduction>
-      <para>This section explains how to get started with VMWare Tasks library.</para>
+      <para>This section explains how to get started with VMWareTasks library.</para>
     </introduction>
     <section address="requiredsoftware">
       <title>Required Software</title>
@@ -16,7 +16,7 @@
                 <linkHref>http://www.vmware.com/download/sdk/vmauto.html</linkHref>
                 <linkText>http://www.vmware.com/download/sdk/vmauto.html</linkText>
               </externalLink>.
-              Version 1.6.2 is required for VI support.
+              Version 1.6.2 or 1.6.3 is required for VI support.
             </listItem>
             <listItem>
               Either VMWare Workstation 6.5.2, VMWare Server 2.0 or a Virtual Infrastructure environment (eg. ESX).
@@ -31,7 +31,7 @@
         <para>
           <list class="bullet">
             <listItem>
-              <link tipicType_id="DAC3A6A0-C863-4E5B-8F65-79EFC6A4BA09" xlink:href="c7928b8f-c6b0-4468-b288-2c6ad153fd18" />
+              <link topicType_id="DAC3A6A0-C863-4E5B-8F65-79EFC6A4BA09" xlink:href="c7928b8f-c6b0-4468-b288-2c6ad153fd18" />
             </listItem>
             <listItem>
               <link topicType_id="DAC3A6A0-C863-4E5B-8F65-79EFC6A4BA09" xlink:href="3590e439-bec9-4740-912e-8cc12219db79" />

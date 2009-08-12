@@ -7,7 +7,7 @@ using System.IO;
 using System.Drawing;
 using System.Threading;
 using System.Text;
-using VixCOM;
+using Interop.VixCOM;
 
 namespace Vestris.VMWareLibUnitTests
 {
@@ -68,7 +68,7 @@ namespace Vestris.VMWareLibUnitTests
             Assert.IsTrue(File.Exists(vmxFileName));
 
             VMWareVirtualMachine virtualMachineClone = TestWorkstation.Instance.VirtualHost.Open(vmxFileName);
-            virtualMachineClone.Delete(VixCOM.Constants.VIX_VMDELETE_DISK_FILES);
+            virtualMachineClone.Delete(Constants.VIX_VMDELETE_DISK_FILES);
             Assert.IsFalse(File.Exists(vmxFileName));
             Assert.IsFalse(Directory.Exists(vmxPathName));
         }

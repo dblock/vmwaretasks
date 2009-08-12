@@ -10,8 +10,8 @@
       <para>
         The VMWare SDK, specifically VixCOM, offers a rich set of programmable interfaces that enable developers to drive virtual machines
         programmatically with an asynchronous, job-based programming model. Unfortunately that turns out to be too comhplicated for 99.9%
-        of scenarios and most developers want to use a simple object-oriented interface for common VMWare tasks. The VMWareTasks library
-        implements that interface and makes programming against virtual machines a no brainer.
+        of scenarios and most developers want to use a simple object-oriented interface for common VMWare virtual machine automation tasks.
+        The VMWareTasks library implements that interface and makes programming against virtual machines a no brainer.
       </para>
       <para>
         VMWareTasks contains a complete VixCOM wrapper

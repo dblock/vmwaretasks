@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Runtime.InteropServices;
-using VixCOM;
+using Interop.VixCOM;
 
 namespace Vestris.VMWareLib
 {
@@ -216,7 +216,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public void BeginReplay()
         {
-            BeginReplay(VixCOM.Constants.VIX_VMPOWEROP_NORMAL, 
+            BeginReplay(Constants.VIX_VMPOWEROP_NORMAL, 
                 VMWareInterop.Timeouts.ReplayTimeout);
         }
 

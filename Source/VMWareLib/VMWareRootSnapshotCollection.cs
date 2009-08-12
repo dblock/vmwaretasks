@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using VixCOM;
+using Interop.VixCOM;
 using System.IO;
 
 namespace Vestris.VMWareLib
@@ -67,7 +67,7 @@ namespace Vestris.VMWareLib
             ulong rc = _vm.GetNamedSnapshot(name, out snapshot);
             switch (rc)
             {
-                case VixCOM.Constants.VIX_OK:
+                case Constants.VIX_OK:
                     return new VMWareSnapshot(_vm, snapshot, null);
                 default:
                     VMWareInterop.Check(rc);

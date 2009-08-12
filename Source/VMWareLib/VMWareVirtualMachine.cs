@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using VixCOM;
+using Interop.VixCOM;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 using System.Drawing;
@@ -16,12 +16,12 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// A full, independent clone of the virtual machine.
         /// </summary>
-        Full = VixCOM.Constants.VIX_CLONETYPE_FULL,
+        Full = Constants.VIX_CLONETYPE_FULL,
         /// <summary>
         /// A linked clone is a copy of a virtual machine that shares virtual disks with the parent virtual 
         /// machine in an ongoing manner. 
         /// </summary>
-        Linked = VixCOM.Constants.VIX_CLONETYPE_LINKED
+        Linked = Constants.VIX_CLONETYPE_LINKED
     }
 
     /// <summary>
@@ -62,7 +62,7 @@ namespace Vestris.VMWareLib
             /// </summary>
             public bool IsDirectory
             {
-                get { return (_flags & VixCOM.Constants.VIX_FILE_ATTRIBUTES_DIRECTORY) > 0; }
+                get { return (_flags & Constants.VIX_FILE_ATTRIBUTES_DIRECTORY) > 0; }
             }
 
             /// <summary>
@@ -70,7 +70,7 @@ namespace Vestris.VMWareLib
             /// </summary>
             public bool IsSymLink
             {
-                get { return (_flags & VixCOM.Constants.VIX_FILE_ATTRIBUTES_SYMLINK) > 0; }
+                get { return (_flags & Constants.VIX_FILE_ATTRIBUTES_SYMLINK) > 0; }
             }
 
             /// <summary>
@@ -758,7 +758,7 @@ namespace Vestris.VMWareLib
         public Process DetachScriptInGuest(string interpreter, string scriptText, int timeoutInSeconds)
         {
             return RunScriptInGuest(interpreter, scriptText,
-                VixCOM.Constants.VIX_RUNPROGRAM_RETURN_IMMEDIATELY,
+                Constants.VIX_RUNPROGRAM_RETURN_IMMEDIATELY,
                 timeoutInSeconds);
         }
 

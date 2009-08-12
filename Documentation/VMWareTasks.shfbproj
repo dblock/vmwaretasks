@@ -43,13 +43,17 @@
       <DocumentationSource sourceFile="..\Source\VMWareTools\VMWareToolsNamespace.xml" xmlns="" />
       <DocumentationSource sourceFile="..\Source\VMWareComLib\bin\$(Configuration)\Vestris.VMWareComLib.dll" xmlns="" />
       <DocumentationSource sourceFile="..\Source\VMWareComLib\bin\$(Configuration)\Vestris.VMWareComLib.xml" xmlns="" />
+      <DocumentationSource sourceFile="..\Source\VMWareComLib\VMWareComLibNamespace.xml" xmlns="" />
+      <DocumentationSource sourceFile="..\Source\VMWareComTools\bin\$(Configuration)\Vestris.VMWareComTools.dll" xmlns="" />
+      <DocumentationSource sourceFile="..\Source\VMWareComTools\bin\$(Configuration)\Vestris.VMWareComTools.xml" xmlns="" />
+      <DocumentationSource sourceFile="..\Source\VMWareComTools\VMWareComToolsNamespace.xml" xmlns="" />
     </DocumentationSources>
     <KeepLogFile>False</KeepLogFile>
     <CopyrightText>$(Copyright)</CopyrightText>
     <HelpTitle>VMWareTasks Help</HelpTitle>
     <NamespaceSummaries>
       <NamespaceSummaryItem name="CommandLine" isDocumented="False" xmlns="" />
-      <NamespaceSummaryItem name="VixCOM" isDocumented="False" xmlns="" />
+      <NamespaceSummaryItem name="Interop.VixCOM" isDocumented="False" xmlns="" />
     </NamespaceSummaries>
     <RootNamespaceContainer>True</RootNamespaceContainer>
     <RootNamespaceTitle>Library Reference</RootNamespaceTitle>

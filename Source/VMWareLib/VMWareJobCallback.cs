@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
-using VixCOM;
+using Interop.VixCOM;
 
 namespace Vestris.VMWareLib
 {
@@ -26,7 +26,7 @@ namespace Vestris.VMWareLib
         {
             switch (eventType)
             {
-                case VixCOM.Constants.VIX_EVENTTYPE_JOB_COMPLETED:
+                case Constants.VIX_EVENTTYPE_JOB_COMPLETED:
                     _jobCompleted.Set();
                     break;
             }

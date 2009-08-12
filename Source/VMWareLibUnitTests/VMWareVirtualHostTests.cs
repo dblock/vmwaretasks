@@ -4,6 +4,7 @@ using NUnit.Framework;
 using Vestris.VMWareLib;
 using System.Configuration;
 using System.IO;
+using Interop.VixCOM;
 
 namespace Vestris.VMWareLibUnitTests
 {
@@ -29,10 +30,10 @@ namespace Vestris.VMWareLibUnitTests
             if (!VMWareTest.RunWorkstationTests)
                 Assert.Ignore("Skipping, Workstation tests disabled.");
 
-            VixCOM.VixLib vix = new VixCOM.VixLib();
-            VixCOM.IJob job = vix.Connect(
-                VixCOM.Constants.VIX_API_VERSION,
-                VixCOM.Constants.VIX_SERVICEPROVIDER_VMWARE_WORKSTATION,
+            VixLib vix = new VixLib();
+            IJob job = vix.Connect(
+                Constants.VIX_API_VERSION,
+                Constants.VIX_SERVICEPROVIDER_VMWARE_WORKSTATION,
                 null, 0, null, null, 0, null, null);
             ulong rc = job.WaitWithoutResults();
             Console.WriteLine("rc: {0}", rc);

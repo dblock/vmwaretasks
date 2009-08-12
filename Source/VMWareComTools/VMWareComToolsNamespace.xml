@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<doc>
+  <assembly>
+    <name>Vestris.VMWareComTools</name>
+  </assembly>
+  <members>
+    <member name="N:Vestris.VMWareComTools">
+      <summary>
+        A VMWareTasks Tools COM wrapper for scripting clients.
+      </summary>
+    </member>
+  </members>
+</doc>

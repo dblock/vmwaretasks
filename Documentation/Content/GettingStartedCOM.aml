@@ -2,12 +2,54 @@
 <topic id="3590e439-bec9-4740-912e-8cc12219db79" revisionNumber="1">
   <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
     <introduction>
-      <para>This section explains how to get started with VMWare Tasks library using a scripting language such as VBScript with COM.</para>
+      <para>
+        This section explains how to get started with VMWareTasks library using a scripting language, incluing
+        VBScript or JavaScript, with COM.
+      </para>
     </introduction>
     <section address="usingvmwaretaskscom">
-      <title>Using the Library (COM)</title>
+      <title>Registering the COM Library</title>
       <content>
         <para>
+          VMWareTasks COM interfaces are implemented in <localUri>VMWareComLib.dll</localUri> and <localUri>VMWareComTools.dll</localUri>.
+          They must first be registered on the system with <localUri>%FrameworkDir%\v2.0.50727\RegAsm.exe</localUri>.
+          <code language="cmd">
+            <![CDATA[
+%FrameworkDir%\v2.0.50727\regasm.exe /codebase VMWareComLib.dll /tlb:VMWareComLib.tlb
+%FrameworkDir%\v2.0.50727\regasm.exe /codebase VMWareComTools.dll /tlb:VMWareComTools.tlb
+            ]]>
+          </code>
+        </para>
+      </content>
+    </section>
+    <section address="usingthecominterface">
+      <title>Using the COM Interfaces</title>
+      <content>
+        <para>
+          VMWareTasks COM interfaces consist of
+          <codeEntityReference qualifyHint="true">N:Vestris.VMWareComLib</codeEntityReference> and
+          <codeEntityReference qualifyHint="true">N:Vestris.VMWareComLib.Tools</codeEntityReference>.
+          These are thin wrappers on top of
+          <codeEntityReference qualifyHint="true">N:Vestris.VMWareLib</codeEntityReference> and
+          <codeEntityReference qualifyHint="true">N:Vestris.VMWareLib.Tools</codeEntityReference> respectively.
+          They expose the vast majority of functionality within the managed C# interface. The functions that
+          don't take timeouts carry identical names to the managed C# interface.
+          <alert class="tip">
+            The functions that require
+            a timeout parameter end with a <literal>2</literal>. For example, the COM interface exposes
+            <codeEntityReference qualifyHint="true">
+              M:Vestris.VMWareComLib.IVMWareVirtualHost.ConnectToVMWareWorkstation
+            </codeEntityReference>
+            with no parameters and 
+            <codeEntityReference qualifyHint="true">
+              M:Vestris.VMWareComLib.IVMWareVirtualHost.ConnectToVMWareWorkstation2(System.Int32)
+            </codeEntityReference>
+            that takes a timeout.
+          </alert>
+        </para>
+        <para>
+          The following example creates, restores, powers on and removes a snapshot on a VMWare Workstation host.
+          <code language="vbs" source="..\Source\VMWareComLibScriptSamples\GettingStartedWorkstation.vbs" />
         </para>
       </content>
     </section>
