@@ -2,10 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="Com4j"/>
-	<classpathentry kind="src" path="Vestris.VMWareTasks"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
-	<classpathentry kind="lib" path="Vestris.VMWareTasks/1.3/Bin/vestris-vmwarecomlib.jar"/>
 	<classpathentry kind="lib" path="Com4j/com4j.jar"/>
+	<classpathentry kind="lib" path="C:/Users/dblock/Source/CodePlex/vmwaretasks/trunk/Vestris.VMWareTasks/1.3/Bin/vestris-vmwarecomlib.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

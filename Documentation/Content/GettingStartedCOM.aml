@@ -32,15 +32,14 @@
           These are thin wrappers on top of
           <codeEntityReference qualifyHint="true">N:Vestris.VMWareLib</codeEntityReference> and
           <codeEntityReference qualifyHint="true">N:Vestris.VMWareLib.Tools</codeEntityReference> respectively.
-          They expose the vast majority of functionality within the managed C# interface. The functions that
-          don't take timeouts carry identical names to the managed C# interface.
+          They expose the vast majority of functionality available in the managed C# interface.
           <alert class="tip">
-            The functions that require
-            a timeout parameter end with a <literal>2</literal>. For example, the COM interface exposes
-            <codeEntityReference qualifyHint="true">
+            The functions that don't take timeouts carry identical names to the managed C# ones.
+            The functions that require a timeout parameter end with a <literal>2</literal>. For example, the COM interface
+            exposes <codeEntityReference qualifyHint="true">
               M:Vestris.VMWareComLib.IVMWareVirtualHost.ConnectToVMWareWorkstation
             </codeEntityReference>
-            with no parameters and 
+            with no parameters and
             <codeEntityReference qualifyHint="true">
               M:Vestris.VMWareComLib.IVMWareVirtualHost.ConnectToVMWareWorkstation2(System.Int32)
             </codeEntityReference>
@@ -48,7 +47,7 @@
           </alert>
         </para>
         <para>
-          The following example creates, restores, powers on and removes a snapshot on a VMWare Workstation host.
+          The following VBScript example creates, restores, powers on and removes a snapshot on a VMWare Workstation host.
           <code language="vbs" source="..\Source\VMWareComLibScriptSamples\GettingStartedWorkstation.vbs" />
         </para>
       </content>

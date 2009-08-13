@@ -4,10 +4,71 @@
     <introduction>
       <para>This section explains how to get started with VMWareTasks library using Java.</para>
     </introduction>
-    <section address="usingvmwaretasksjava">
-      <title>Using the Library (Java)</title>
+    <section address="usingvmwaretaskscom">
+      <title>Registering the COM Library</title>
       <content>
         <para>
+          VMWareTasks COM interfaces are implemented in <localUri>VMWareComLib.dll</localUri> and <localUri>VMWareComTools.dll</localUri>.
+          These interfaces are exposed to Java via JNI using 
+          <externalLink>
+            <linkHref>https://com4j.dev.java.net</linkHref>
+            <linkText>Com4j</linkText>
+          </externalLink>. The COM DLLs require .NET Framework 2.0 and must be registered on the system with 
+          <localUri>%FrameworkDir%\v2.0.50727\RegAsm.exe</localUri>.
+          <code language="cmd">
+            <![CDATA[
+%FrameworkDir%\v2.0.50727\regasm.exe /codebase VMWareComLib.dll /tlb:VMWareComLib.tlb
+%FrameworkDir%\v2.0.50727\regasm.exe /codebase VMWareComTools.dll /tlb:VMWareComTools.tlb
+            ]]>
+          </code>
+        </para>
+      </content>
+    </section>
+    <section address="javapackages">
+      <title>Java Interop Packages</title>
+      <content>
+        <para>
+          VMWareTasks Com4j interfaces are packaged as <localUri>vestris-vmwarecomlib.jar</localUri> and
+          <localUri>vestris-vmwarecomtools.jar</localUri> along with their respective <localUri>-src.jar</localUri>
+          source code packages in the distribution's <localUri>JavaBin</localUri> folder. These JARs are generated
+          with Com4j's tlbimp tools. Add the JAR as a library to your Java project and copy <localUri>com4j.dll</localUri>
+          to the execution directory and import the library to get started.
+          <code language="Java">
+            import com.vestris.vmwarecomlib.*;
+          </code>
+        </para>
+      </content>
+    </section>
+    <section address="usingthecom4jinterface">
+      <title>Using the Com4j Interfaces</title>
+      <content>
+        <para>
+          The following example creates, restores, powers on and removes a snapshot on a VMWare Workstation host.
+          <code language="Java">
+            <![CDATA[
+IVMWareVirtualHost virtualHost = ClassFactory.createVMWareVirtualHost();
+// connect to a local VMWare Workstation virtual host
+virtualHost.connectToVMWareWorkstation();
+// open an existing virtual machine
+IVMWareVirtualMachine virtualMachine = virtualHost.open("c:\\vm\\vm.vmx");
+// power on this virtual machine
+virtualMachine.powerOn();
+// wait for VMWare Tools
+virtualMachine.waitForToolsInGuest();
+// login to the virtual machine
+virtualMachine.loginInGuest("Administrator", "admin123");
+// create a new snapshot
+virtualMachine.snapshots().createSnapshot("test", "a new test snapshot");
+// power off
+virtualMachine.powerOff();
+// find the newly created snapshot
+IVMWareSnapshot snapshot = virtualMachine.snapshots().getNamedSnapshot("test");
+// revert to the new snapshot
+snapshot.revertToSnapshot();
+// delete snapshot
+snapshot.removeSnapshot();
+            ]]>
+          </code>
         </para>
       </content>
     </section>

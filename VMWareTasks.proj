@@ -67,10 +67,13 @@
     <BinaryFiles Include="Source/VMWareLib/bin/$(Configuration)/Interop.VixCOM.dll" />
     <BinaryFiles Include="Source/VMWareComLib/bin/$(Configuration)/Vestris.VMWareComLib.dll.config" />
     <BinaryFiles Include="Source/VMWareComLib/bin/$(Configuration)/Vestris.VMWareComLib.dll" />
-    <BinaryFiles Include="Source/VMWareComLibJava/Bin/vestris-vmwarecomlib.jar" />
-    <BinaryFiles Include="Source/VMWareComLibJava/Bin/vestris-vmwarecomlib-src.zip" />
-    <BinaryFiles Include="Source/VMWareComToolsJava/Bin/vestris-vmwarecomtools.jar" />
-    <BinaryFiles Include="Source/VMWareComToolsJava/Bin/vestris-vmwarecomtools-src.zip" />
+  </ItemGroup>
+  <ItemGroup>
+    <JavaBinaryFiles Include="Tools/Com4j/com4j.dll" />
+    <JavaBinaryFiles Include="Source/VMWareComLibJava/Bin/vestris-vmwarecomlib.jar" />
+    <JavaBinaryFiles Include="Source/VMWareComLibJava/Bin/vestris-vmwarecomlib-src.zip" />
+    <JavaBinaryFiles Include="Source/VMWareComToolsJava/Bin/vestris-vmwarecomtools.jar" />
+    <JavaBinaryFiles Include="Source/VMWareComToolsJava/Bin/vestris-vmwarecomtools-src.zip" />
   </ItemGroup>
   <ItemGroup>
     <ArticleFiles Include="Article/**/*.html" />
@@ -84,6 +87,7 @@
     <Copy SourceFiles="@(SourceCodeProjects)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)\Source\%(RecursiveDir)" />
     <Copy SourceFiles="@(SourceCodeFiles)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)\Source\Source\%(RecursiveDir)" />
     <Copy SourceFiles="@(BinaryFiles)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)\Bin" />
+    <Copy SourceFiles="@(JavaBinaryFiles)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)\JavaBin" />
     <Copy SourceFiles="@(ArticleFiles)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)\Article\%(RecursiveDir)" />
     <Copy SourceFiles="@(DocumentationFiles)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)" />
     <CreateItem Include="$(ReleaseDir)/**/*">

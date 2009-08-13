@@ -20,10 +20,5 @@
 			<type>2</type>
 			<location>C:/Users/dblock/Source/CodePlex/vmwaretasks/trunk/Tools/Com4j</location>
 		</link>
-		<link>
-			<name>Vestris.VMWareTasks</name>
-			<type>2</type>
-			<location>C:/Users/dblock/Source/CodePlex/vmwaretasks/trunk/Vestris.VMWareTasks</location>
-		</link>
 	</linkedResources>
 </projectDescription>

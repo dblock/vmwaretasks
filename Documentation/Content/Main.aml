@@ -9,9 +9,10 @@
       </para>
       <para>
         The VMWare SDK, specifically VixCOM, offers a rich set of programmable interfaces that enable developers to drive virtual machines
-        programmatically with an asynchronous, job-based programming model. Unfortunately that turns out to be too comhplicated for 99.9%
-        of scenarios and most developers want to use a simple object-oriented interface for common VMWare virtual machine automation tasks.
-        The VMWareTasks library implements that interface and makes programming against virtual machines a no brainer.
+        programmatically with an asynchronous, job-based programming model. Unfortunately that turns out to be too complicated for most
+        scenarios where developers want to use a simple object-oriented interface for common VMWare virtual machine automation tasks.
+        The VMWareTasks is a commercial-grade library that implements this simple interface and makes programming against virtual 
+        machines a no-brainer.
       </para>
       <para>
         VMWareTasks contains a complete VixCOM wrapper
@@ -22,13 +23,17 @@
       </para>
       <para>
         VMWareTasks exposes a C# interface, a COM-enabled interface for script clients and a Java bridge for Java programs.
+        VMWareTasks is completely free and distributed under the
+        <link topicType_id="DAC3A6A0-C863-4E5B-8F65-79EFC6A4BA09" xlink:href="bfd78578-6e10-47e5-8b41-44426e0a1ac1">
+          MIT license
+        </link>.
       </para>
       <para>
         The VMWareTasks library is maintained on CodePlex at
         <externalLink>
           <linkHref>http://vmwaretasks.codeplex.com/</linkHref>
           <linkText>http://vmwaretasks.codeplex.com</linkText>
-        </externalLink>.
+        </externalLink>. Contributors are welcome.
       </para>
     </introduction>
     <relatedTopics>
