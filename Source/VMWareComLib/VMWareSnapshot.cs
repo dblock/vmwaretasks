@@ -3,6 +3,9 @@ using System.Runtime.InteropServices;
 
 namespace Vestris.VMWareComLib
 {
+    /// <summary>
+    /// The default implementation of the <see cref="Vestris.VMWareComLib.IVMWareSnapshot" /> COM interface.
+    /// </summary>
     [ComVisible(true)]
     [ComDefaultInterface(typeof(IVMWareSnapshot))]
     [Guid("0D890EF7-B433-41f7-95EC-A5AAA2E046A0")]

@@ -7,7 +7,7 @@ using Interop.VixCOM;
 namespace Vestris.VMWareLib
 {
     /// <summary>
-    /// A job completion callback, used with <see ref="Vestris.VMWareLib.VMWareJob" />.
+    /// A job completion callback, used with <see cref="Vestris.VMWareLib.VMWareJob" />.
     /// </summary>
     public class VMWareJobCallback : ICallback
     {
@@ -44,7 +44,7 @@ namespace Vestris.VMWareLib
 
         /// <summary>
         /// Wait for completion of the job with a timeout.
-        /// A <see ref="System.TimeoutException" /> occurs if the job hasn't completed within the timeout specified.
+        /// A <see cref="System.TimeoutException" /> occurs if the job hasn't completed within the timeout specified.
         /// </summary>
         /// <param name="timeoutInMilliseconds">Timeout in milliseconds.</param>
         public void WaitForCompletion(int timeoutInMilliseconds)

@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 namespace Vestris.VMWareComLib
 {
+    /// <summary>
+    /// The default implementation of the <see cref="Vestris.VMWareComLib.IVMWareVirtualHost" /> COM interface.
+    /// </summary>
     [ComVisible(true)]
     [Guid("23333B5F-D53F-40c6-8B1F-96D11004CA91")]
     [ProgId("VMWareComLib.VMWareVirtualHost")]

@@ -3,6 +3,9 @@ using System.Runtime.InteropServices;
 
 namespace Vestris.VMWareComLib
 {
+    /// <summary>
+    /// A COM interface to <see cref="Vestris.VMWareLib.VMWareVirtualMachine" />.
+    /// </summary>
     [ComVisible(true)]
     [Guid("9CE66DE2-9BDA-430f-92BC-B9171D5F2A26")]
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]

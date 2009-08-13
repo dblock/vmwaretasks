@@ -3,6 +3,9 @@ using System.Runtime.InteropServices;
 
 namespace Vestris.VMWareComLib
 {
+    /// <summary>
+    /// A COM interface to <see cref="Vestris.VMWareLib.VMWareRootSnapshotCollection" />.
+    /// </summary>
     [ComVisible(true)]
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("9F3BF070-992F-4188-ACAE-9D588689475C")]

@@ -8,7 +8,7 @@
     <ProjectGuid>{27E9AB63-A19F-4C85-AEB7-D2AAF5C721E4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Vestris.VMWareComTools</RootNamespace>
+    <RootNamespace>Vestris.VMWareComLib.Tools</RootNamespace>
     <AssemblyName>Vestris.VMWareComTools</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -52,12 +52,17 @@
     <Compile Include="IShellOutput.cs" />
     <Compile Include="IWindowsShell.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShellOutput.cs" />
     <Compile Include="WindowsShell.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VMWareComLib\VMWareComLib.csproj">
       <Project>{F21814A9-1F76-4AB1-98D1-8AEB88258879}</Project>
       <Name>VMWareComLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VMWareTools\VMWareTools.csproj">
+      <Project>{A8924671-F2CB-4B39-960F-A73A9188135F}</Project>
+      <Name>VMWareTools</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

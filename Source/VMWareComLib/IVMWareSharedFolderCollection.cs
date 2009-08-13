@@ -3,6 +3,9 @@ using System.Runtime.InteropServices;
 
 namespace Vestris.VMWareComLib
 {
+    /// <summary>
+    /// A COM interface to <see cref="Vestris.VMWareLib.VMWareSharedFolderCollection" />.
+    /// </summary>
     [ComVisible(true)]
     [InterfaceType(ComInterfaceType.InterfaceIsDual)]
     [Guid("D43E20F9-F151-4b44-BD5B-13AFA7FB27D5")]

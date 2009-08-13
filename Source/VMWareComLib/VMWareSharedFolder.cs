@@ -3,6 +3,9 @@ using System.Runtime.InteropServices;
 
 namespace Vestris.VMWareComLib
 {
+    /// <summary>
+    /// The default implementation of the <see cref="Vestris.VMWareComLib.IVMWareSharedFolder" /> COM interface.
+    /// </summary>
     [ComVisible(true)]
     [ComDefaultInterface(typeof(IVMWareSharedFolder))]
     [ProgId("VMWareComLib.VMWareSharedFolder")]

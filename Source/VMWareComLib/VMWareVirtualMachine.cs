@@ -5,6 +5,9 @@ using System.Runtime.CompilerServices;
 
 namespace Vestris.VMWareComLib
 {
+    /// <summary>
+    /// The default implementation of the <see cref="Vestris.VMWareComLib.IVMWareVirtualMachine" /> COM interface.
+    /// </summary>
     [ComVisible(true)]
     [ProgId("VMWareComLib.VMWareVirtualMachine")]
     [ComDefaultInterface(typeof(IVMWareVirtualMachine))]

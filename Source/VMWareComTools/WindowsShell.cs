@@ -4,46 +4,17 @@ using System.Text;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace Vestris.VMWareComLib.Tools
+namespace Vestris.VMWareComLib.Tools.Windows
 {
+    /// <summary>
+    /// Default implementation of the <see cref="Vestris.VMWareComLib.Tools.Windows.IShell" /> COM interface.
+    /// </summary>
     [ComVisible(true)]
     [Guid("CF4D25D6-611F-4de2-8C18-69F4E25E5FF0")]
-    [ComDefaultInterface(typeof(IWindowsShell))]
+    [ComDefaultInterface(typeof(IShell))]
     [ProgId("VMWareComTools.WindowsShell")]
-    public class WindowsShell : IWindowsShell
+    public class Shell : IShell
     {
-        [ComVisible(true)]
-        [Guid("34165343-568C-4ad4-83AA-A9E9A873DFFD")]
-        [ComDefaultInterface(typeof(IShellOutput))]
-        [ProgId("VMWareComTools.WindowsShell.ShellOutput")]
-        public class ShellOutput : IShellOutput
-        {
-            private string _stdout;
-            private string _stderr;
-
-            public ShellOutput(string stdout, string stderr)
-            {
-                _stdout = stdout;
-                _stderr = stderr;
-            }
-
-            public string StdOut 
-            { 
-                get
-                {
-                    return _stdout;
-                }
-            }
-
-            public string StdErr
-            {
-                get
-                {
-                    return _stderr;
-                }
-            }
-        }
-
         private GuestOS _guestos = new GuestOS();
 
         public VMWareComLib.IVMWareVirtualMachine VirtualMachine

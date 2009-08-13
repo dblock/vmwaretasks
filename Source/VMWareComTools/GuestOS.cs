@@ -6,6 +6,9 @@ using System.Runtime.InteropServices;
 
 namespace Vestris.VMWareComLib.Tools
 {
+    /// <summary>
+    /// Default implementation of the <see cref="Vestris.VMWareComLib.Tools.IGuestOS" /> COM interface.
+    /// </summary>
     [ComVisible(true)]
     [Guid("B344E97A-57E1-41d9-BFE0-28213BA5A419")]
     [ComDefaultInterface(typeof(IGuestOS))]

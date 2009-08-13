@@ -6,7 +6,7 @@ namespace Vestris.VMWareLib
 {
     /// <summary>
     /// A VMWare exception. Every VMWare operational failure is translated into 
-    /// a <see ref="Vestris.VMWareLib.VMWareException" />.
+    /// a <see cref="Vestris.VMWareLib.VMWareException" />.
     /// </summary>
     public class VMWareException : Exception
     {
