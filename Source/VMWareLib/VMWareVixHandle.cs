@@ -34,7 +34,7 @@ namespace Vestris.VMWareLib
         /// Pointer to the IVixHandle2 interface.
         /// </summary>
         /// <remarks>
-        /// This type was introduced in VixCOM 1.6.3 and will return null with older versions of VixCOM.
+        /// This type was introduced in VixCOM 1.7.0 and will return null with older versions of VixCOM.
         /// </remarks>
         protected IVixHandle2 _vixhandle2
         {
@@ -100,7 +100,7 @@ namespace Vestris.VMWareLib
         #region IDisposable Members
 
         /// <summary>
-        /// Close the handle with VixCOM 1.6.3 or newer.
+        /// Close the handle with VixCOM 1.7.0 or newer.
         /// </summary>
         public virtual void Dispose()
         {
