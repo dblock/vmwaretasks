@@ -14,49 +14,58 @@ namespace Vestris.VMWareLibUnitTests
     [TestFixture]
     public class VMWareVirtualMachineLongTests
     {
+        [SetUp]
+        public void SetUp()
+        {
+            if (!VMWareTest.Instance.Config.RunLongTests)
+                Assert.Ignore("Skipping, long tests disabled.");
+        }
+
         [Test]
         public void TestRecordingBeginEnd()
         {
-            if (!VMWareTest.RunWorkstationTests)
+            if (! VMWareTest.Instance.Config.RunWorkstationTests)
                 Assert.Ignore("Skipping, Workstation tests disabled.");
 
-            VMWareVirtualMachine virtualMachine = TestWorkstation.Instance.PoweredVirtualMachine;
-            Assert.IsFalse(virtualMachine.IsRecording);
-            string snapshotName = Guid.NewGuid().ToString();
-            Console.WriteLine("Begin recording ...");
-            VMWareSnapshot snapshot = virtualMachine.BeginRecording(snapshotName, Guid.NewGuid().ToString());
-            Assert.IsNotNull(snapshot);
-            Assert.IsTrue(virtualMachine.IsRecording);
-            Assert.IsFalse(virtualMachine.IsReplaying);
-            virtualMachine.WaitForToolsInGuest();
-            Console.WriteLine("Snapshot: {0}", snapshot.DisplayName);
-            VMWareVirtualMachine.Process cmdProcess = virtualMachine.RunProgramInGuest("cmd.exe", "/C dir");
-            Assert.IsNotNull(cmdProcess);
-            Console.WriteLine("Process: {0}", cmdProcess.Id);
-            Console.WriteLine("End recording ...");
-            virtualMachine.EndRecording();
-            Assert.IsFalse(virtualMachine.IsRecording);
-            Assert.IsFalse(virtualMachine.IsReplaying);
-            Console.WriteLine("Begin replay ...");
-            snapshot.BeginReplay(Constants.VIX_VMPOWEROP_LAUNCH_GUI, VMWareInterop.Timeouts.ReplayTimeout);
-            Assert.IsTrue(virtualMachine.IsReplaying);
-            Thread.Sleep(10000);
-            snapshot.EndReplay();
-            Assert.IsFalse(virtualMachine.IsReplaying);
-            Console.WriteLine("Removing snapshot ...");
-            snapshot.RemoveSnapshot();
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
+            {
+                Assert.IsFalse(virtualMachine.IsRecording);
+                string snapshotName = Guid.NewGuid().ToString();
+                ConsoleOutput.WriteLine("Begin recording ...");
+                VMWareSnapshot snapshot = virtualMachine.BeginRecording(snapshotName, Guid.NewGuid().ToString());
+                Assert.IsNotNull(snapshot);
+                Assert.IsTrue(virtualMachine.IsRecording);
+                Assert.IsFalse(virtualMachine.IsReplaying);
+                virtualMachine.WaitForToolsInGuest();
+                ConsoleOutput.WriteLine("Snapshot: {0}", snapshot.DisplayName);
+                VMWareVirtualMachine.Process cmdProcess = virtualMachine.RunProgramInGuest("cmd.exe", "/C dir");
+                Assert.IsNotNull(cmdProcess);
+                ConsoleOutput.WriteLine("Process: {0}", cmdProcess.Id);
+                ConsoleOutput.WriteLine("End recording ...");
+                virtualMachine.EndRecording();
+                Assert.IsFalse(virtualMachine.IsRecording);
+                Assert.IsFalse(virtualMachine.IsReplaying);
+                ConsoleOutput.WriteLine("Begin replay ...");
+                snapshot.BeginReplay(Constants.VIX_VMPOWEROP_LAUNCH_GUI, VMWareInterop.Timeouts.ReplayTimeout);
+                Assert.IsTrue(virtualMachine.IsReplaying);
+                Thread.Sleep(10000);
+                snapshot.EndReplay();
+                Assert.IsFalse(virtualMachine.IsReplaying);
+                ConsoleOutput.WriteLine("Removing snapshot ...");
+                snapshot.RemoveSnapshot();
+            }
         }
 
         [Test]
         public void TestReset()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
             {
                 // hardware reset
-                Console.WriteLine("Reset ...");
+                ConsoleOutput.WriteLine("Reset ...");
                 virtualMachine.Reset();
                 Assert.AreEqual(true, virtualMachine.IsRunning);
-                Console.WriteLine("Wait ...");
+                ConsoleOutput.WriteLine("Wait ...");
                 virtualMachine.WaitForToolsInGuest();
             }
         }
@@ -64,15 +73,15 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestSuspend()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
             {
-                Console.WriteLine("Suspend ...");
+                ConsoleOutput.WriteLine("Suspend ...");
                 virtualMachine.Suspend();
                 Assert.AreEqual(false, virtualMachine.IsPaused);
                 Assert.AreEqual(true, virtualMachine.IsSuspended);
-                Console.WriteLine("Power ...");
+                ConsoleOutput.WriteLine("Power ...");
                 virtualMachine.PowerOn();
-                Console.WriteLine("Wait ...");
+                ConsoleOutput.WriteLine("Wait ...");
                 virtualMachine.WaitForToolsInGuest();
             }
         }

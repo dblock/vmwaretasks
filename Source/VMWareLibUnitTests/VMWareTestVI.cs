@@ -10,6 +10,12 @@ namespace Vestris.VMWareLibUnitTests
     {
         private VMWareVirtualHost _host = null;
         private VMWareVirtualMachine _virtualMachine = null;
+        private VMWareVirtualMachineConfig _config = null;
+
+        public TestVI(VMWareVirtualMachineConfig config)
+        {
+            _config = config;
+        }
 
         public VMWareVirtualHost VirtualHost
         {
@@ -18,16 +24,20 @@ namespace Vestris.VMWareLibUnitTests
                 if (_host == null)
                 {
                     VMWareVirtualHost virtualHost = new VMWareVirtualHost();
-                    Console.WriteLine("Connecting to: {0} ...", ConfigurationManager.AppSettings["testVIHost"]);
-                    virtualHost.ConnectToVMWareVIServer(
-                        ConfigurationManager.AppSettings["testVIHost"],
-                        ConfigurationManager.AppSettings["testVIHostUsername"],
-                        ConfigurationManager.AppSettings["testVIHostPassword"]);
-                    Console.WriteLine("Connection established.");
+                    ConsoleOutput.WriteLine("Connecting to: {0} ...", _config.Host);
+                    virtualHost.ConnectToVMWareVIServer(_config.Host, _config.HostUsername, _config.HostPassword);
+                    ConsoleOutput.WriteLine("Connection established.");
                     _host = virtualHost;
                 }
                 return _host;
             }
+        }
+
+        public VMWareVirtualHost Reconnect()
+        {
+            _virtualMachine = null;
+            _host = null;
+            return VirtualHost;
         }
 
         public VMWareVirtualMachine VirtualMachine
@@ -36,9 +46,8 @@ namespace Vestris.VMWareLibUnitTests
             {
                 if (_virtualMachine == null)
                 {
-                    string testVIFilename = ConfigurationManager.AppSettings["testVIFilename"];
-                    Console.WriteLine("Opening: {0}", testVIFilename);
-                    _virtualMachine = VirtualHost.Open(testVIFilename);
+                    ConsoleOutput.WriteLine("Opening: {0}", _config.File);
+                    _virtualMachine = VirtualHost.Open(_config.File);
                 }
                 return _virtualMachine;
             }
@@ -50,12 +59,12 @@ namespace Vestris.VMWareLibUnitTests
             {
                 if (! VirtualMachine.IsRunning)
                 {
-                    Console.WriteLine("Powering on: {0}", ConfigurationManager.AppSettings["testVIFilename"]);
+                    ConsoleOutput.WriteLine("Powering on: {0}", _config.File);
                     VirtualMachine.PowerOn();
-                    Console.WriteLine("Waiting for tools ...");
+                    ConsoleOutput.WriteLine("Waiting for tools ...");
                     VirtualMachine.WaitForToolsInGuest();
                 }
-                Console.WriteLine("Logging in ...");
+                ConsoleOutput.WriteLine("Logging in ...");
                 VirtualMachine.LoginInGuest(Username, Password);
                 return _virtualMachine;
             }
@@ -65,7 +74,7 @@ namespace Vestris.VMWareLibUnitTests
         {
             get
             {
-                return ConfigurationManager.AppSettings["testVIUsername"];
+                return _config.GuestUsername;
             }
         }
 
@@ -73,10 +82,8 @@ namespace Vestris.VMWareLibUnitTests
         {
             get
             {
-                return ConfigurationManager.AppSettings["testVIPassword"];
+                return _config.GuestPassword;
             }
         }
-
-        public static TestVI Instance = new TestVI();
     }
 }

@@ -10,6 +10,19 @@ namespace Vestris.VMWareLibUnitTests
     {
         private VMWareVirtualHost _host = null;
         private VMWareVirtualMachine _virtualMachine = null;
+        private VMWareVirtualMachineConfig _config = null;
+
+        public TestWorkstation(VMWareVirtualMachineConfig config)
+        {
+            _config = config;
+        }
+
+        public VMWareVirtualHost Reconnect()
+        {
+            _virtualMachine = null;
+            _host = null;
+            return VirtualHost;
+        }
 
         public VMWareVirtualHost VirtualHost
         {
@@ -18,10 +31,10 @@ namespace Vestris.VMWareLibUnitTests
                 if (_host == null)
                 {
                     VMWareVirtualHost virtualHost = new VMWareVirtualHost();
-                    Console.WriteLine("Connecting to local host ...");
+                    ConsoleOutput.WriteLine("Connecting to local host ...");
                     // connect to a local VM
                     virtualHost.ConnectToVMWareWorkstation();
-                    Console.WriteLine("Connection established.");
+                    ConsoleOutput.WriteLine("Connection established.");
                     _host = virtualHost;
                 }
                 return _host;
@@ -34,9 +47,8 @@ namespace Vestris.VMWareLibUnitTests
             {
                 if (_virtualMachine == null)
                 {
-                    Console.WriteLine("Opening: {0}", ConfigurationManager.AppSettings["testWorkstationFilename"]);
-                    string testWorkstationFilename = ConfigurationManager.AppSettings["testWorkstationFilename"];
-                    _virtualMachine = VirtualHost.Open(testWorkstationFilename);
+                    ConsoleOutput.WriteLine("Opening: {0}", _config.File);
+                    _virtualMachine = VirtualHost.Open(_config.File);
                 }
                 return _virtualMachine;
             }
@@ -48,12 +60,12 @@ namespace Vestris.VMWareLibUnitTests
             {
                 if (! VirtualMachine.IsRunning)
                 {
-                    Console.WriteLine("Powering on: {0}", ConfigurationManager.AppSettings["testWorkstationFilename"]);
+                    ConsoleOutput.WriteLine("Powering on: {0}", _config.File);
                     VirtualMachine.PowerOn();
-                    Console.WriteLine("Waiting for tools ...");
+                    ConsoleOutput.WriteLine("Waiting for tools ...");
                     VirtualMachine.WaitForToolsInGuest();
                 }
-                Console.WriteLine("Logging in ...");
+                ConsoleOutput.WriteLine("Logging in ...");
                 VirtualMachine.LoginInGuest(Username, Password);
                 return _virtualMachine;
             }
@@ -63,7 +75,7 @@ namespace Vestris.VMWareLibUnitTests
         {
             get
             {
-                return ConfigurationManager.AppSettings["testWorkstationUsername"];
+                return _config.GuestUsername;
             }
         }
 
@@ -71,10 +83,8 @@ namespace Vestris.VMWareLibUnitTests
         {
             get
             {
-                return ConfigurationManager.AppSettings["testWorkstationPassword"];
+                return _config.GuestPassword;
             }
         }
-
-        public static TestWorkstation Instance = new TestWorkstation();
     }
 }

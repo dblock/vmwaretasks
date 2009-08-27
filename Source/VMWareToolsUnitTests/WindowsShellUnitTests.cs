@@ -16,7 +16,7 @@ namespace Vestris.VMWareToolsUnitTests.Windows
         [Test]
         public void TestRunCommandStdOutInGuest()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
             {
                 Shell guestShell = new Shell(virtualMachine);
                 string guid = Guid.NewGuid().ToString();
@@ -31,7 +31,7 @@ namespace Vestris.VMWareToolsUnitTests.Windows
         [Test]
         public void TestRunCommandStdOutStdErrInGuest()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
             {
                 Shell guestShell = new Shell(virtualMachine);
                 string guid = Guid.NewGuid().ToString();
@@ -49,7 +49,7 @@ namespace Vestris.VMWareToolsUnitTests.Windows
         [Test]
         public void TestGetEnvironmentVariables()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
             {
                 Shell guestShell = new Shell(virtualMachine);
                 Dictionary<string, string> guestEnvironmentVariables = guestShell.GetEnvironmentVariables();

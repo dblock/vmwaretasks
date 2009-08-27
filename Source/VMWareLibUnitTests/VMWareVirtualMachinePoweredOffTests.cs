@@ -17,7 +17,10 @@ namespace Vestris.VMWareLibUnitTests
         [SetUp]
         public void SetUp()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.VirtualMachines)
+            if (!VMWareTest.Instance.Config.RunPoweredOffTests)
+                Assert.Ignore("Skipping, powered off tests disabled.");
+
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.VirtualMachines)
             {
                 if (virtualMachine.IsRunning)
                 {
@@ -29,64 +32,72 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         protected void TestUpgradeVirtualHardware()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.VirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.VirtualMachines)
             {
                 // upgrading virtual hardware should always succeed
-                Console.WriteLine("Upgrading virtual hardware ...");
+                ConsoleOutput.WriteLine("Upgrading virtual hardware ...");
                 virtualMachine.UpgradeVirtualHardware();
             }
         }
 
         [Test]
         public void TestCloneVirtualMachine()
-        {
-            if (!VMWareTest.RunWorkstationTests)
+        {           
+            if (!VMWareTest.Instance.Config.RunWorkstationTests)
                 Assert.Ignore("Skipping test, Workstation tests disabled.");
 
-            VMWareVirtualMachine virtualMachine = TestWorkstation.Instance.VirtualMachine;
-            string vmxPathName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-            Console.WriteLine("Creating linked clone: {0}", vmxPathName);
-            Directory.CreateDirectory(vmxPathName);
-            string vmxFileName = Path.Combine(vmxPathName, "Clone.vmx");
-            virtualMachine.Clone(VMWareVirtualMachineCloneType.Linked, vmxFileName);
-            Assert.IsTrue(File.Exists(vmxFileName));
-            Directory.Delete(vmxPathName, true);
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.VirtualMachines)
+            {
+                string vmxPathName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+                ConsoleOutput.WriteLine("Creating linked clone: {0}", vmxPathName);
+                Directory.CreateDirectory(vmxPathName);
+                string vmxFileName = Path.Combine(vmxPathName, "Clone.vmx");
+                virtualMachine.Clone(VMWareVirtualMachineCloneType.Linked, vmxFileName);
+                Assert.IsTrue(File.Exists(vmxFileName));
+                Directory.Delete(vmxPathName, true);
+            }
         }
 
         [Test]
         public void TestDeleteVirtualMachine()
         {
-            if (!VMWareTest.RunWorkstationTests)
+            if (!VMWareTest.Instance.Config.RunWorkstationTests)
                 Assert.Ignore("Skipping, test requires server admin privileges for ESX, Workstation tests disabled.");
 
-            VMWareVirtualMachine virtualMachine = TestWorkstation.Instance.VirtualMachine;
-            string vmxPathName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-            Console.WriteLine("Creating linked clone: {0}", vmxPathName);
-            Directory.CreateDirectory(vmxPathName);
-            string vmxFileName = Path.Combine(vmxPathName, "Clone.vmx");
-            virtualMachine.Clone(VMWareVirtualMachineCloneType.Linked, vmxFileName);
-            Assert.IsTrue(File.Exists(vmxFileName));
+            foreach (IVMWareTestProvider testProvider in VMWareTest.Instance.Providers)
+            {
+                VMWareVirtualMachine virtualMachine = testProvider.VirtualMachine;
+                string vmxPathName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+                ConsoleOutput.WriteLine("Creating linked clone: {0}", vmxPathName);
+                Directory.CreateDirectory(vmxPathName);
+                string vmxFileName = Path.Combine(vmxPathName, "Clone.vmx");
+                virtualMachine.Clone(VMWareVirtualMachineCloneType.Linked, vmxFileName);
+                Assert.IsTrue(File.Exists(vmxFileName));
 
-            VMWareVirtualMachine virtualMachineClone = TestWorkstation.Instance.VirtualHost.Open(vmxFileName);
-            virtualMachineClone.Delete(Constants.VIX_VMDELETE_DISK_FILES);
-            Assert.IsFalse(File.Exists(vmxFileName));
-            Assert.IsFalse(Directory.Exists(vmxPathName));
+                VMWareVirtualHost virtualHost = testProvider.VirtualHost;
+                VMWareVirtualMachine virtualMachineClone = virtualHost.Open(vmxFileName);
+                virtualMachineClone.Delete(Constants.VIX_VMDELETE_DISK_FILES);
+                Assert.IsFalse(File.Exists(vmxFileName));
+                Assert.IsFalse(Directory.Exists(vmxPathName));
+            }
         }
 
         [Test]
         public void TestCloneVirtualMachineSnapshot()
         {
-            if (!VMWareTest.RunWorkstationTests)
+            if (!VMWareTest.Instance.Config.RunWorkstationTests)
                 Assert.Ignore("Skipping, test requires server admin privileges for ESX, Workstation tests disabled.");
 
-            VMWareVirtualMachine virtualMachine = TestWorkstation.Instance.VirtualMachine;
-            string vmxPathName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-            Console.WriteLine("Creating linked clone of root snapshot: {0}", vmxPathName);
-            Directory.CreateDirectory(vmxPathName);
-            string vmxFileName = Path.Combine(vmxPathName, "Clone.vmx");
-            virtualMachine.Snapshots.GetCurrentSnapshot().Clone(VMWareVirtualMachineCloneType.Linked, vmxFileName);
-            Assert.IsTrue(File.Exists(vmxFileName));
-            Directory.Delete(vmxPathName, true);
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.VirtualMachines)
+            {
+                string vmxPathName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+                ConsoleOutput.WriteLine("Creating linked clone of root snapshot: {0}", vmxPathName);
+                Directory.CreateDirectory(vmxPathName);
+                string vmxFileName = Path.Combine(vmxPathName, "Clone.vmx");
+                virtualMachine.Snapshots.GetCurrentSnapshot().Clone(VMWareVirtualMachineCloneType.Linked, vmxFileName);
+                Assert.IsTrue(File.Exists(vmxFileName));
+                Directory.Delete(vmxPathName, true);
+            }
         }
     }
 }

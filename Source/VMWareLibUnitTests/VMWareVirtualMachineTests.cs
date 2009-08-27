@@ -17,7 +17,7 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestTasks()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
             {
                 // copy a batch file to the remote machine, execute it and collect results
                 string localTempFilename = Path.GetTempFileName();
@@ -31,7 +31,7 @@ namespace Vestris.VMWareLibUnitTests
                 Assert.AreEqual(0, cmdProcess.ExitCode);
                 virtualMachine.CopyFileFromGuestToHost(remoteTempFilename, localTempFilename);
                 string remoteDirectoryListing = File.ReadAllText(localTempFilename);
-                Console.WriteLine(remoteDirectoryListing);
+                ConsoleOutput.WriteLine(remoteDirectoryListing);
                 Assert.IsTrue(remoteDirectoryListing.Contains(Path.GetFileName(remoteTempFilename)));
                 Assert.IsTrue(remoteDirectoryListing.Contains(Path.GetFileName(remoteBatFilename)));
                 // delete the temp files
@@ -45,7 +45,7 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestListDirectoryInGuestInvalidDirectory()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
             {
                 try
                 {
@@ -62,7 +62,7 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestListDirectoryInGuestEmptyDirectory()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
             {
                 // create an empty directory
                 string directory = string.Format(@"C:\{0}", Guid.NewGuid());
@@ -83,7 +83,7 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestListDirectoryInGuest()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
             {
                 string system32drivers = @"C:\WINDOWS\system32\drivers";
                 List<string> listOfDrivers = virtualMachine.ListDirectoryInGuest(system32drivers, false);
@@ -98,11 +98,11 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestGetSetGuestVariables()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
             {
                 string ip = virtualMachine.GuestVariables["ip"];
                 Assert.IsFalse(string.IsNullOrEmpty(ip));
-                Console.WriteLine("IP: {0}", ip);
+                ConsoleOutput.WriteLine("IP: {0}", ip);
                 string guid = Guid.NewGuid().ToString();
                 Assert.IsTrue(string.IsNullOrEmpty(virtualMachine.GuestVariables[guid]));
                 virtualMachine.GuestVariables[guid] = guid;
@@ -116,7 +116,7 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         protected void TestGetSetGuestEnvironmentVariables()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
             {
                 string guid = Guid.NewGuid().ToString();
                 Assert.IsTrue(string.IsNullOrEmpty(virtualMachine.GuestEnvironmentVariables[guid]));
@@ -128,10 +128,10 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestGetSetRuntimeConfigVariables()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
             {
                 string displayName = virtualMachine.RuntimeConfigVariables["displayname"];
-                Console.WriteLine("Display name: {0}", displayName);
+                ConsoleOutput.WriteLine("Display name: {0}", displayName);
                 Assert.IsFalse(string.IsNullOrEmpty(displayName));
             }
         }
@@ -139,14 +139,14 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestGetAddRemoveSharedFolders()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
             {
                 try
                 {
-                    Console.WriteLine("Enabling shared folders ...");
+                    ConsoleOutput.WriteLine("Enabling shared folders ...");
                     virtualMachine.SharedFolders.Enabled = true;
                     int count = virtualMachine.SharedFolders.Count;
-                    Console.WriteLine("Shared folders: {0}", count);
+                    ConsoleOutput.WriteLine("Shared folders: {0}", count);
                     // add a shared folder
                     VMWareSharedFolder currentDirectory = new VMWareSharedFolder(
                         Guid.NewGuid().ToString(), Environment.CurrentDirectory);
@@ -154,7 +154,7 @@ namespace Vestris.VMWareLibUnitTests
                     Assert.AreEqual(count + 1, virtualMachine.SharedFolders.Count);
                     foreach (VMWareSharedFolder sharedFolder in virtualMachine.SharedFolders)
                     {
-                        Console.WriteLine("Shared folder: {0} ({1})",
+                        ConsoleOutput.WriteLine("Shared folder: {0} ({1})",
                             sharedFolder.ShareName, sharedFolder.HostPath);
                     }
                     // remove the shared folder
@@ -178,10 +178,10 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestCaptureScreenImage()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
             {
                 Image image = virtualMachine.CaptureScreenImage();
-                Console.WriteLine("Image: {0}x{1}", image.Width, image.Height);
+                ConsoleOutput.WriteLine("Image: {0}x{1}", image.Width, image.Height);
                 Assert.IsTrue(image.Width > 0);
                 Assert.IsTrue(image.Height > 0);
             }
@@ -190,7 +190,7 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestCreateDeleteDirectory()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
             {
                 string directoryName = string.Format(@"c:\{0}", Guid.NewGuid());
                 Assert.IsTrue(!virtualMachine.DirectoryExistsInGuest(directoryName));
@@ -207,11 +207,11 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestCreateDeleteTempFile()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
             {
                 string fileName = virtualMachine.CreateTempFileInGuest();
                 Assert.IsFalse(string.IsNullOrEmpty(fileName));
-                Console.WriteLine("Temp filename: {0}", fileName);
+                ConsoleOutput.WriteLine("Temp filename: {0}", fileName);
                 Assert.IsTrue(!virtualMachine.DirectoryExistsInGuest(fileName));
                 Assert.IsTrue(virtualMachine.FileExistsInGuest(fileName));
                 virtualMachine.DeleteFileFromGuest(fileName);
@@ -223,17 +223,17 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestListAndKillProcesses()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
             {
                 VMWareVirtualMachine.Process notepadProcess = virtualMachine.DetachProgramInGuest("notepad.exe");
-                Console.WriteLine("Notepad.exe: {0}", notepadProcess.Id);
+                ConsoleOutput.WriteLine("Notepad.exe: {0}", notepadProcess.Id);
                 Dictionary<long, VMWareVirtualMachine.Process> guestProcesses = virtualMachine.GuestProcesses;
                 Assert.IsTrue(guestProcesses.ContainsKey(notepadProcess.Id));
                 foreach (KeyValuePair<long, VMWareVirtualMachine.Process> process in guestProcesses)
                 {
                     Assert.IsTrue(process.Value.Id >= 0);
                     Assert.IsFalse(string.IsNullOrEmpty(process.Value.Name));
-                    Console.WriteLine("{0}: {1} [{2}] ({3})", process.Value.Id, process.Value.Name, process.Value.Command, process.Value.Owner);
+                    ConsoleOutput.WriteLine("{0}: {1} [{2}] ({3})", process.Value.Id, process.Value.Name, process.Value.Command, process.Value.Owner);
                 }
                 notepadProcess.KillProcessInGuest();
                 Thread.Sleep(3000); // doc says: depending on the behavior of the guest operating system, there may be a short delay after the job completes before the process truly disappears
@@ -245,7 +245,7 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestPowerOnPoweredHost()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
             {
                 virtualMachine.PowerOn();
                 virtualMachine.WaitForToolsInGuest();
@@ -258,20 +258,22 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestPauseUnpause()
         {
-            if (!VMWareTest.RunWorkstationTests)
+            if (!VMWareTest.Instance.Config.RunWorkstationTests)
                 Assert.Ignore("Skipping, Workstation tests disabled.");
 
-            VMWareVirtualMachine virtualMachine = TestWorkstation.Instance.PoweredVirtualMachine;
-            virtualMachine.Pause();
-            Assert.AreEqual(true, virtualMachine.IsPaused);
-            virtualMachine.Unpause();
-            Assert.AreEqual(false, virtualMachine.IsPaused);
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
+            {
+                virtualMachine.Pause();
+                Assert.AreEqual(true, virtualMachine.IsPaused);
+                virtualMachine.Unpause();
+                Assert.AreEqual(false, virtualMachine.IsPaused);
+            }
         }
 
         [Test]
         protected void TestRunScriptInGuest()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
             {
                 StringBuilder script = new StringBuilder();
                 script.AppendLine("print \"Hello World\";");
@@ -284,7 +286,7 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestOpenUrlInGuest()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
             {
                 virtualMachine.OpenUrlInGuest("http://vmwaretasks.codeplex.com/");
             }
@@ -293,11 +295,11 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestGetFolderInfoInGuest()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
             {
                 string tmpPath = virtualMachine.GuestEnvironmentVariables["tmp"];
                 VMWareVirtualMachine.GuestFileInfo tmpPathInfo = virtualMachine.GetFileInfoInGuest(tmpPath);
-                Console.WriteLine("{0}: {1}, {2} byte(s)",
+                ConsoleOutput.WriteLine("{0}: {1}, {2} byte(s)",
                     tmpPathInfo.GuestPathName,
                     tmpPathInfo.LastModified,
                     tmpPathInfo.FileSize);
@@ -312,7 +314,7 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestGetFileInfoInGuest()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
             {
                 string hostTmpFilename = Path.GetTempFileName();
                 File.WriteAllText(hostTmpFilename, Guid.NewGuid().ToString());
@@ -321,7 +323,7 @@ namespace Vestris.VMWareLibUnitTests
                 DateTime dtBeforeCopy = DateTime.Now;
                 virtualMachine.CopyFileFromHostToGuest(hostTmpFilename, guestTmpFilename);
                 VMWareVirtualMachine.GuestFileInfo tmpPathInfo = virtualMachine.GetFileInfoInGuest(guestTmpFilename);
-                Console.WriteLine("{0}: {1}, {2} byte(s)",
+                ConsoleOutput.WriteLine("{0}: {1}, {2} byte(s)",
                     tmpPathInfo.GuestPathName,
                     tmpPathInfo.LastModified,
                     tmpPathInfo.FileSize);
@@ -338,7 +340,7 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         protected void TestInstallTools()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
             {
                 virtualMachine.InstallTools();
             }

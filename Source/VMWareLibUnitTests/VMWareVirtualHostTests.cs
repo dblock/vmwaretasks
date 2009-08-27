@@ -14,7 +14,7 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestWorkstationIDisposable()
         {
-            if (!VMWareTest.RunWorkstationTests)
+            if (! VMWareTest.Instance.Config.RunWorkstationTests)
                 Assert.Ignore("Skipping, Workstation tests disabled.");
 
             using (VMWareVirtualHost virtualHost = new VMWareVirtualHost())
@@ -27,7 +27,7 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestWorkstationSynchronousConnect()
         {
-            if (!VMWareTest.RunWorkstationTests)
+            if (! VMWareTest.Instance.Config.RunWorkstationTests)
                 Assert.Ignore("Skipping, Workstation tests disabled.");
 
             VixLib vix = new VixLib();
@@ -36,7 +36,6 @@ namespace Vestris.VMWareLibUnitTests
                 Constants.VIX_SERVICEPROVIDER_VMWARE_WORKSTATION,
                 null, 0, null, null, 0, null, null);
             ulong rc = job.WaitWithoutResults();
-            Console.WriteLine("rc: {0}", rc);
             Assert.IsFalse(vix.ErrorIndicatesFailure(rc));
             Assert.IsTrue(vix.ErrorIndicatesSuccess(rc));
         }
@@ -44,7 +43,7 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestWorkstationConnectDisconnect()
         {
-            if (!VMWareTest.RunWorkstationTests)
+            if (!VMWareTest.Instance.Config.RunWorkstationTests)
                 Assert.Ignore("Skipping, Workstation tests disabled.");
 
             VMWareVirtualHost virtualHost = new VMWareVirtualHost();
@@ -61,7 +60,7 @@ namespace Vestris.VMWareLibUnitTests
         [Test, ExpectedException(typeof(InvalidOperationException))]
         public void TestWorkstationConnectDisconnectTwice()
         {
-            if (!VMWareTest.RunWorkstationTests)
+            if (!VMWareTest.Instance.Config.RunWorkstationTests)
                 Assert.Ignore("Skipping, Workstation tests disabled.");
 
             VMWareVirtualHost virtualHost = new VMWareVirtualHost();
@@ -73,11 +72,11 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void ShowRunningVirtualMachines()
         {
-            foreach (VMWareVirtualHost virtualHost in VMWareTest.VirtualHosts)
+            foreach (VMWareVirtualHost virtualHost in VMWareTest.Instance.VirtualHosts)
             {
                 foreach (VMWareVirtualMachine virtualMachine in virtualHost.RunningVirtualMachines)
                 {
-                    Console.WriteLine("{0}: running={1}, memory={2}, CPUs={3}",
+                    ConsoleOutput.WriteLine("{0}: running={1}, memory={2}, CPUs={3}",
                         virtualMachine.PathName, virtualMachine.IsRunning,
                         virtualMachine.MemorySize, virtualMachine.CPUCount);
                 }
@@ -87,14 +86,17 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void ShowVIRegisteredVirtualMachines()
         {
-            if (!VMWareTest.RunVITests)
+            if (!VMWareTest.Instance.Config.RunVITests)
                 Assert.Ignore("Skipping, VI tests disabled.");
 
-            foreach (VMWareVirtualMachine virtualMachine in TestVI.Instance.VirtualHost.RegisteredVirtualMachines)
+            foreach (VMWareVirtualHost virtualHost in VMWareTest.Instance.VirtualHosts)
             {
-                Console.WriteLine("{0}: running={1}, memory={2}, CPUs={3}",
-                    virtualMachine.PathName, virtualMachine.IsRunning,
-                    virtualMachine.MemorySize, virtualMachine.CPUCount);
+                foreach (VMWareVirtualMachine virtualMachine in virtualHost.RegisteredVirtualMachines)
+                {
+                    ConsoleOutput.WriteLine("{0}: running={1}, memory={2}, CPUs={3}",
+                        virtualMachine.PathName, virtualMachine.IsRunning,
+                        virtualMachine.MemorySize, virtualMachine.CPUCount);
+                }
             }
         }
 

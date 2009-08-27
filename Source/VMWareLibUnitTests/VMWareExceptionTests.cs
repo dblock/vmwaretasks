@@ -11,9 +11,9 @@ namespace Vestris.VMWareLibUnitTests
         [SetUp]
         public void SetUp()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.PoweredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
             {
-                Console.WriteLine("Powered VM: {0}", virtualMachine.RuntimeConfigVariables["name"]);
+                ConsoleOutput.WriteLine("Powered VM: {0}", virtualMachine.RuntimeConfigVariables["name"]);
             }
         }
 

@@ -3,91 +3,91 @@ using System.Collections.Generic;
 using System.Text;
 using Vestris.VMWareLib;
 using System.Configuration;
+using NUnit.Framework;
 
 namespace Vestris.VMWareLibUnitTests
 {
     public interface IVMWareTestProvider
     {
         VMWareVirtualHost VirtualHost { get; }
+        VMWareVirtualHost Reconnect();
         VMWareVirtualMachine VirtualMachine { get; }
         VMWareVirtualMachine PoweredVirtualMachine { get; }
         string Username { get; }
         string Password { get; }
     }
 
-    public abstract class VMWareTest
+    public class VMWareTest
     {
-        public static bool RunVITests
+        private VMWareTestsConfig _config = null;
+        public static VMWareTest Instance = new VMWareTest();
+
+        public VMWareTest()
         {
-            get
-            {
-                return bool.Parse(ConfigurationManager.AppSettings["testVI"]);
-            }
+            _config = (VMWareTestsConfig) ConfigurationManager.GetSection("TestsConfig");
+            Assert.IsNotNull(_config);
         }
 
-        public static bool RunWorkstationTests
+        public VMWareTestsConfig Config
         {
             get
             {
-                return bool.Parse(ConfigurationManager.AppSettings["testWorkstation"]);
-            }
-        }
-
-        /// <summary>
-        /// A set of generic virtual machines to run tests on.
-        /// </summary>
-        public static IEnumerable<VMWareVirtualMachine> VirtualMachines
-        {
-            get
-            {
-                if (RunVITests)
-                    yield return TestVI.Instance.VirtualMachine;
-                if (RunWorkstationTests)
-                    yield return TestWorkstation.Instance.VirtualMachine;
+                return _config;
             }
         }
 
         /// <summary>
         /// A set of generic virtual machines to run tests on.
         /// </summary>
-        public static IEnumerable<VMWareVirtualMachine> PoweredVirtualMachines
+        public IEnumerable<VMWareVirtualMachine> VirtualMachines
         {
             get
             {
-                if (RunVITests)
-                    yield return TestVI.Instance.PoweredVirtualMachine;
+                foreach (IVMWareTestProvider provider in Providers)
+                    yield return provider.VirtualMachine;
+            }
+        }
 
-                if (RunWorkstationTests)
-                    yield return TestWorkstation.Instance.PoweredVirtualMachine;
+        /// <summary>
+        /// A set of generic virtual machines to run tests on.
+        /// </summary>
+        public IEnumerable<VMWareVirtualMachine> PoweredVirtualMachines
+        {
+            get
+            {
+                foreach (IVMWareTestProvider provider in Providers)
+                    yield return provider.PoweredVirtualMachine;
             }
         }
 
         /// <summary>
         /// A set of generic virtual hosts.
         /// </summary>
-        public static IEnumerable<VMWareVirtualHost> VirtualHosts
+        public IEnumerable<VMWareVirtualHost> VirtualHosts
         {
             get
             {
-                if (RunVITests)
-                    yield return TestVI.Instance.VirtualHost;
-                if (RunWorkstationTests)
-                    yield return TestWorkstation.Instance.VirtualHost;
+                foreach (IVMWareTestProvider provider in Providers)
+                    yield return provider.VirtualHost;
             }
         }
 
         /// <summary>
-        /// A set of test providers.
+        /// A set of generic virtual hosts.
         /// </summary>
-        public static IEnumerable<IVMWareTestProvider> Providers
+        public IEnumerable<IVMWareTestProvider> Providers
         {
             get
             {
-                if (RunVITests)
-                    yield return TestVI.Instance;
-                if (RunWorkstationTests)
-                    yield return TestWorkstation.Instance;
+                foreach (VMWareVirtualMachineConfig virtualMachineConfig in _config.VirtualMachines)
+                {
+                    if (_config.RunVITests && virtualMachineConfig.Type == VMWareVirtualMachineType.ESX)
+                        yield return virtualMachineConfig.Provider;
+
+                    if (_config.RunWorkstationTests && virtualMachineConfig.Type == VMWareVirtualMachineType.Workstation)
+                        yield return virtualMachineConfig.Provider;
+                }
             }
         }
-    }   
+    }
 }
