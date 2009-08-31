@@ -4,7 +4,7 @@
     <Configuration>Debug</Configuration>
   </PropertyGroup>
   <PropertyGroup>
-    <ReleaseDir>$(MSBuildProjectDirectory)\Vestris.VMWareTasks</ReleaseDir>
+    <ReleaseDir>Vestris.VMWareTasks</ReleaseDir>
   </PropertyGroup>
   <Target Name="all">
     <CallTarget Targets="version" />
