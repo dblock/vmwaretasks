@@ -13,6 +13,12 @@
             using Vestris.VMWareLib;
           </code>
         </para>
+        <alert class="important">
+          <para>
+            Because VMWare VixCOM is a native 32-bit application, ensure that the platform target for your 
+            program is <literal>x86</literal> and not <literal>Any CPU</literal>.
+          </para>
+        </alert>
         <para>
           You can now connect to a local VMWare Workstation, local or remote VMWare Server or a remote
           ESX server and perform VMWare client and server tasks.
