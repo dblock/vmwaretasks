@@ -107,10 +107,10 @@ namespace VMWareCrash
                 {
                     //new ConnectionInfo(@"c:\Users\dblock\Virtual Machines\Windows XP Pro SP2\winXPPro.vmx"),
                     //new ConnectionInfo(@"c:\Users\dblock\Documents\Virtual Machines\WinXP Pro SP3\WinXP Pro SP3.vmx"),
-                    new ConnectionInfo("https://linc.nycapt35k.com/sdk", "vmuser", "admin123", "[dbprotect-1] ddoub-mauve/ddoub-mauve.vmx"),
+                    new ConnectionInfo("https://crockett.nycapt35k.com/sdk", "consoleuser", "admin123", "[console-doogie] nkrasnov2k8/nkrasnov2k8.vmx"),
+                    // new ConnectionInfo("https://linc.nycapt35k.com/sdk", "vmuser", "admin123", "[dbprotect-1] ddoub-mauve/ddoub-mauve.vmx"),
                     // new ConnectionInfo("https://linc.nycapt35k.com/sdk", "vmuser", "admin123", "[dbprotect-1] ddoub-purple/ddoub-purple.vmx"),
-                    // new ConnectionInfo("https://crockett.nycapt35k.com/sdk", "consoleuser", "admin123", "[console-doogie] nkrasnov2k8/nkrasnov2k8.vmx"),
-                    new ConnectionInfo("https://tubbs.nycapt35k.com/sdk", "vmuser", "admin123", "[adpro-1] snowtest-w2k8/snowtest-w2k8.vmx"),
+                    // new ConnectionInfo("https://tubbs.nycapt35k.com/sdk", "vmuser", "admin123", "[adpro-1] snowtest-w2k8/snowtest-w2k8.vmx"),
                 };
 
                 // spawn threads
