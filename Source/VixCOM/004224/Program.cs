@@ -6,7 +6,7 @@ using VixCOM;
 
 namespace VMWareCrash
 {
-    
+
     class Program
     {
         private static VixCOM.VixLib vix = new VixLib();
@@ -54,51 +54,21 @@ namespace VMWareCrash
                     Console.WriteLine("Opened {0}", vmx);
                     IVM2 vm = (IVM2)((object[])openResults)[0];
                     ((IVixHandle2)openJob).Close();
-                    // create two snapshots
-                    for (int i = 0; i < 2; i++)
+                    // create a snapshot
+                    string snapshotName = Guid.NewGuid().ToString();
+                    VMWareJobCallback callback = new VMWareJobCallback();
+                    IJob createSnapshotJob = vm.CreateSnapshot(snapshotName, snapshotName, 0, null, callback);
+                    object[] createSnapshotProperties = { Constants.VIX_PROPERTY_JOB_RESULT_HANDLE };
+                    object createSnapshotResults = null;
+                    rc = createSnapshotJob.Wait(createSnapshotProperties, ref createSnapshotResults);
+                    if (vix.ErrorIndicatesFailure(rc))
                     {
-                        // create a snapshot
-                        string snapshotName = Guid.NewGuid().ToString();
-                        VMWareJobCallback callback = new VMWareJobCallback();
-                        IJob createSnapshotJob = vm.CreateSnapshot(snapshotName, snapshotName, 0, null, callback);
-                        object[] createSnapshotProperties = { Constants.VIX_PROPERTY_JOB_RESULT_HANDLE };
-                        object createSnapshotResults = null;
-                        rc = createSnapshotJob.Wait(createSnapshotProperties, ref createSnapshotResults);
-                        if (vix.ErrorIndicatesFailure(rc))
-                        {
-                            ((IVixHandle2)createSnapshotJob).Close();
-                            throw new Exception(vix.GetErrorText(rc, "en-US"));
-                        }
-                        ISnapshot createdSnapshot = (ISnapshot)((object[])createSnapshotResults)[0];
                         ((IVixHandle2)createSnapshotJob).Close();
-                        ((IVixHandle2)createdSnapshot).Close();
+                        throw new Exception(vix.GetErrorText(rc, "en-US"));
                     }
-                    // collect all snapshots
-                    Console.WriteLine("Fetching all snapshots");
-                    int snapshotCount = 0;
-                    rc = vm.GetNumRootSnapshots(out snapshotCount);
-                    if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
-                    Console.WriteLine("Snapshots: {0}", snapshotCount);
-                    // get all snapshots
-                    for (int snapshotIndex = 0; snapshotIndex < snapshotCount; snapshotIndex++)
-                    {
-                        ISnapshot snapshotAtIndex = null;
-                        rc = vm.GetRootSnapshot(snapshotIndex, out snapshotAtIndex);
-                        if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
-                        ((IVixHandle2)snapshotAtIndex).Close();
-                    }
-                    // get root snapshot
-                    Console.WriteLine("Fetching root snapshot");
-                    ISnapshot snapshot = null;
-                    rc = vm.GetRootSnapshot(0, out snapshot);
-                    if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
-                    Console.WriteLine("Reverting to snapshot");
-                    // revert to the snapshot
-                    IJob revertJob = vm.RevertToSnapshot(snapshot, Constants.VIX_VMPOWEROP_NORMAL, null, null);
-                    rc = revertJob.WaitWithoutResults();
-                    ((IVixHandle2)snapshot).Close();
-                    ((IVixHandle2)revertJob).Close();
-                    if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
+                    ISnapshot createdSnapshot = (ISnapshot)((object[])createSnapshotResults)[0];
+                    ((IVixHandle2)createSnapshotJob).Close();
+                    ((IVixHandle2)createdSnapshot).Close();
                 }
 
                 // disconnect
