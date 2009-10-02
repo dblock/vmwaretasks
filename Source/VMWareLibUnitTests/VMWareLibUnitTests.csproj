@@ -64,6 +64,7 @@
     <Compile Include="VMWareTestVI.cs" />
     <Compile Include="VMWareTestWorkstation.cs" />
     <Compile Include="VMWareTimeoutsTests.cs" />
+    <Compile Include="VMWareUnitTest.cs" />
     <Compile Include="VMWareVirtualHostTests.cs" />
     <Compile Include="VMWareVirtualMachineConfig.cs" />
     <Compile Include="VMWareVirtualMachineLongTests.cs" />

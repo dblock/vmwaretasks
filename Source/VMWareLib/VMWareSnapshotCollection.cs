@@ -10,7 +10,7 @@ namespace Vestris.VMWareLib
     /// <summary>
     /// A collection of snapshots at any snapshot level.
     /// </summary>
-    public class VMWareSnapshotCollection : IEnumerable<VMWareSnapshot>
+    public class VMWareSnapshotCollection : IEnumerable<VMWareSnapshot>, IDisposable
     {
         /// <summary>
         /// Virtual machine handle.
@@ -56,7 +56,7 @@ namespace Vestris.VMWareLib
         public VMWareSnapshot FindSnapshot(string pathToSnapshot)
         {
             string[] paths = pathToSnapshot.Split("\\".ToCharArray(), 2);
-            
+
             foreach (VMWareSnapshot snapshot in this)
             {
                 // last snapshot in the path
@@ -104,7 +104,7 @@ namespace Vestris.VMWareLib
         public IEnumerable<VMWareSnapshot> FindSnapshotsByName(string name)
         {
             List<VMWareSnapshot> snapshots = new List<VMWareSnapshot>();
-            
+
             foreach (VMWareSnapshot snapshot in this)
             {
                 if (snapshot.DisplayName == name)
@@ -199,12 +199,42 @@ namespace Vestris.VMWareLib
         /// <param name="snapshot">Snapshot to remove.</param>
         public void Remove(VMWareSnapshot snapshot)
         {
-            _snapshots.Remove(snapshot);
-            foreach (VMWareSnapshot childSnapshot in snapshot.ChildSnapshots)
+            if (_snapshots != null)
             {
-                childSnapshot.Parent = _parent;
-                _snapshots.Add(childSnapshot);
+                _snapshots.Remove(snapshot);
+
+                foreach (VMWareSnapshot childSnapshot in snapshot.ChildSnapshots)
+                {
+                    childSnapshot.Parent = _parent;
+                    _snapshots.Add(childSnapshot);
+                }
             }
+        }
+
+        /// <summary>
+        /// Remove all elements from the snapshot collection.
+        /// </summary>
+        public void RemoveAll()
+        {
+            if (_snapshots != null)
+            {
+                foreach (VMWareSnapshot snapshot in _snapshots)
+                {
+                    snapshot.Dispose();
+                }
+
+                _snapshots = null;
+            }
+        }
+
+        /// <summary>
+        /// Dispose the collection.
+        /// </summary>
+        public void Dispose()
+        {
+            RemoveAll();
+            _parent = null;
+            _vm = null;
         }
     }
 }

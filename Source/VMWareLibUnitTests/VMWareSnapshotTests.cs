@@ -7,7 +7,7 @@ using System.Configuration;
 namespace Vestris.VMWareLibUnitTests
 {
     [TestFixture]
-    public class VMWareSnapshotTests
+    public class VMWareSnapshotTests : VMWareUnitTest
     {
         private List<string> GetSnapshotPaths(IEnumerable<VMWareSnapshot> snapshots, int level)
         {
@@ -47,8 +47,10 @@ namespace Vestris.VMWareLibUnitTests
                 string name = Guid.NewGuid().ToString();
                 ConsoleOutput.WriteLine("Snapshot name: {0}", name);
                 // take a snapshot at the current state
-                virtualMachine.Snapshots.CreateSnapshot(name, Guid.NewGuid().ToString());
-                ConsoleOutput.WriteLine("Created snapshot: {0}", name);
+                using (VMWareSnapshot snapshot = virtualMachine.Snapshots.CreateSnapshot(name, Guid.NewGuid().ToString()))
+                {
+                    ConsoleOutput.WriteLine("Created snapshot: {0}", name);
+                }
                 // check whether the snapshot was created
                 Assert.IsNotNull(virtualMachine.Snapshots.GetNamedSnapshot(name));
                 // delete the snapshot via VM interface
@@ -68,15 +70,20 @@ namespace Vestris.VMWareLibUnitTests
                 string name = Guid.NewGuid().ToString();
                 ConsoleOutput.WriteLine("Creating snapshot: {0}", name);
                 // take a snapshot at the current state
-                virtualMachine.Snapshots.CreateSnapshot(name, Guid.NewGuid().ToString());
+                using (VMWareSnapshot snapshot = virtualMachine.Snapshots.CreateSnapshot(name, Guid.NewGuid().ToString()))
+                {
+
+                }
                 // revert to the newly created snapshot
                 ConsoleOutput.WriteLine("Locating snapshot: {0}", name);
-                VMWareSnapshot snapshot = virtualMachine.Snapshots.GetNamedSnapshot(name);
-                Assert.IsNotNull(snapshot);
-                ConsoleOutput.WriteLine("Reverting snapshot: {0}", name);
-                snapshot.RevertToSnapshot();
-                ConsoleOutput.WriteLine("Removing snapshot: {0}", name);
-                snapshot.RemoveSnapshot();
+                using (VMWareSnapshot snapshot = virtualMachine.Snapshots.GetNamedSnapshot(name))
+                {
+                    Assert.IsNotNull(snapshot);
+                    ConsoleOutput.WriteLine("Reverting snapshot: {0}", name);
+                    snapshot.RevertToSnapshot();
+                    ConsoleOutput.WriteLine("Removing snapshot: {0}", name);
+                    snapshot.RemoveSnapshot();
+                }
             }
         }
 
@@ -90,9 +97,15 @@ namespace Vestris.VMWareLibUnitTests
                 string name = Guid.NewGuid().ToString();
                 // take a snapshot at the current state
                 ConsoleOutput.WriteLine("Creating snapshot 1: {0}", name);
-                virtualMachine.Snapshots.CreateSnapshot(name, Guid.NewGuid().ToString());
+                using (VMWareSnapshot snapshot = virtualMachine.Snapshots.CreateSnapshot(name, Guid.NewGuid().ToString()))
+                {
+                    // needs to be disposed
+                }
                 ConsoleOutput.WriteLine("Creating snapshot 2: {0}", name);
-                virtualMachine.Snapshots.CreateSnapshot(name, Guid.NewGuid().ToString());
+                using (VMWareSnapshot snapshot = virtualMachine.Snapshots.CreateSnapshot(name, Guid.NewGuid().ToString()))
+                {
+                    // needs to be disposed
+                }
                 int count = 0;
                 IEnumerable<VMWareSnapshot> snapshots = virtualMachine.Snapshots.FindSnapshotsByName(name);
                 foreach (VMWareSnapshot snapshot in snapshots)
@@ -114,11 +127,22 @@ namespace Vestris.VMWareLibUnitTests
                 string name = Guid.NewGuid().ToString();
                 // take two snapshots at the current state
                 ConsoleOutput.WriteLine("Creating snapshot 1: {0}", name);
-                virtualMachine.Snapshots.CreateSnapshot(name, Guid.NewGuid().ToString());
+                using (VMWareSnapshot snapshot = virtualMachine.Snapshots.CreateSnapshot(
+                    name, Guid.NewGuid().ToString()))
+                {
+                    Console.WriteLine("Created snapshot: {0}", snapshot.DisplayName);
+                }
+
                 ConsoleOutput.WriteLine("Creating snapshot 2: {0}", name);
-                virtualMachine.Snapshots.CreateSnapshot(name, Guid.NewGuid().ToString());
+                using (VMWareSnapshot snapshot = virtualMachine.Snapshots.CreateSnapshot(
+                    name, Guid.NewGuid().ToString()))
+                {
+                    Console.WriteLine("Created snapshot: {0}", snapshot.DisplayName);
+                }
+
                 ConsoleOutput.WriteLine("Locating snapshot ...");
                 Assert.IsNotNull(virtualMachine.Snapshots.FindSnapshotByName(name));
+                ConsoleOutput.WriteLine("Locating snapshots ...");
                 IEnumerable<VMWareSnapshot> snapshots = virtualMachine.Snapshots.FindSnapshotsByName(name);
                 int count = 0;
                 foreach (VMWareSnapshot snapshot in snapshots)
@@ -127,9 +151,23 @@ namespace Vestris.VMWareLibUnitTests
                     Assert.IsNotNull(virtualMachine.Snapshots.FindSnapshotByName(name));
                     ConsoleOutput.WriteLine("Removing {0}: {1}", snapshot.Path, snapshot.Description);
                     snapshot.RemoveSnapshot();
+                    snapshot.Close();
                 }
                 Assert.AreEqual(2, count);
                 Assert.IsNull(virtualMachine.Snapshots.FindSnapshotByName(name));
+            }
+        }
+
+        [Test]
+        public void TestRevertToRoot()
+        {
+            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.VirtualMachines)
+            {
+                foreach (VMWareSnapshot snapshot in virtualMachine.Snapshots)
+                {
+                    snapshot.RevertToSnapshot();
+                    break;
+                }
             }
         }
     }

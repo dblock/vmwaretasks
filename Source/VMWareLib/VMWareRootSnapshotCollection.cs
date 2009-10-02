@@ -48,6 +48,7 @@ namespace Vestris.VMWareLib
                         VMWareInterop.Check(_vm.GetRootSnapshot(i, out snapshot));
                         snapshots.Add(new VMWareSnapshot(_vm, snapshot, null));
                     }
+
                     _snapshots = snapshots;
                 }
 
@@ -95,7 +96,7 @@ namespace Vestris.VMWareLib
         public void RemoveSnapshot(VMWareSnapshot item)
         {
             item.RemoveSnapshot();
-            _snapshots = null;
+            RemoveAll();
         }
 
         /// <summary>
@@ -112,9 +113,9 @@ namespace Vestris.VMWareLib
         /// </summary>
         /// <param name="name">Snapshot name.</param>
         /// <param name="description">Snapshot description.</param>
-        public void CreateSnapshot(string name, string description)
+        public VMWareSnapshot CreateSnapshot(string name, string description)
         {
-            CreateSnapshot(name, description, 0, VMWareInterop.Timeouts.CreateSnapshotTimeout);
+            return CreateSnapshot(name, description, 0, VMWareInterop.Timeouts.CreateSnapshotTimeout);
         }
 
         /// <summary>
@@ -128,14 +129,21 @@ namespace Vestris.VMWareLib
         /// </list>
         /// </param>
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
-        public void CreateSnapshot(string name, string description, int flags, int timeoutInSeconds)
+        public VMWareSnapshot CreateSnapshot(string name, string description, int flags, int timeoutInSeconds)
         {
             VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_vm.CreateSnapshot(name, description, flags, null, callback), callback))
+
+            using (VMWareJob job = new VMWareJob(_vm.CreateSnapshot(
+                name, description, flags, null, callback), callback))
             {
-                job.Wait(timeoutInSeconds);
+                ISnapshot snapshot = (ISnapshot) job.Wait<ISnapshot>(
+                    Constants.VIX_PROPERTY_JOB_RESULT_HANDLE, 
+                    timeoutInSeconds);
+                
+                RemoveAll();
+
+                return new VMWareSnapshot(_vm, snapshot, null);
             }
-            _snapshots = null;
         }
     }
 }

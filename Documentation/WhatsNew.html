@@ -23,6 +23,19 @@
 </head>
 <body>
     <h3>
+        1.4 (TBD)</h3>
+    <ul>
+        <li>Interface changes.
+            <ul>
+                <li>VMWareSnapshotCollection, VMWareRootSnapshotCollection and VMWareSnapshot are now
+                    IDisposable.</li>
+                <li>VMWareSharedFolderCollection is now IDisposable.</li>
+                <li>VMWareRootSnapshotCollection.CreateSnapshot now returns a VMWareSnapshot that needs
+                    to be disposed of.</li>
+            </ul>
+        </li>
+    </ul>
+    <h3>
         1.3 (27-Aug-2009)</h3>
     <ul>
         <li>Features.
@@ -33,21 +46,24 @@
                     JNI wrapper for VMWareComLib and VMWareComTools to Java clients.</li>
             </ul>
         </li>
-        <li>Misc Improvements.<ul>
+        <li>Misc Improvements.
+            <ul>
                 <li>All VMWareLib.Tools objects are now IDisposable and explicitly release reference
                     to the virtual machine.</li>
                 <li>All assemblies are strongly named and signed.</li>
                 <li>The source in the release package can now be built without any changes.</li>
             </ul>
-            <li>Bugs.<ul>
-                    <li>VMWareRootSnapshotCollection.CreateSnapshot doesn't pass flags to the COM API.</li>
-                </ul>
-            </li>
-            <li>Backwards incompatible interface changes.<ul>
-                    <li>VMWareVirtualHost.ConnectToVMWareServer takes an additional username and password.
-                        Pass blank values to connect to a local VMWare Server 1.x.</li>
-                </ul>
-            </li>
+        </li>
+        <li>Bugs.
+            <ul>
+                <li>VMWareRootSnapshotCollection.CreateSnapshot doesn't pass flags to the COM API.</li>
+            </ul>
+        </li>
+        <li>Backwards incompatible interface changes.
+            <ul>
+                <li>VMWareVirtualHost.ConnectToVMWareServer takes an additional username and password.
+                    Pass blank values to connect to a local VMWare Server 1.x.</li>
+            </ul>
         </li>
     </ul>
     <h3>

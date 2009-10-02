@@ -8,7 +8,7 @@ using Vestris.VMWareLib;
 namespace Vestris.VMWareLibUnitTests
 {
     [TestFixture]
-    public class VMWareMultiThreadedTests
+    public class VMWareMultiThreadedTests : VMWareUnitTest
     {
         const int _threadCount = 3;
 

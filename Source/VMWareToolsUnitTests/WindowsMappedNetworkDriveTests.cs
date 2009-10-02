@@ -9,7 +9,7 @@ using System.IO;
 namespace Vestris.VMWareToolsUnitTests
 {
     [TestFixture]
-    public class WindowsMappedNetworkDriveTests
+    public class WindowsMappedNetworkDriveTests : VMWareUnitTest
     {
         [Test]
         public void TestMapCDrive()

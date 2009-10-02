@@ -105,17 +105,22 @@ namespace Vestris.VMWareLib
         {
             // resolve child snapshots that will move one level up
             IEnumerable<VMWareSnapshot> childSnapshots = ChildSnapshots;
+            
             // remove the snapshot
             VMWareJobCallback callback = new VMWareJobCallback();
             using (VMWareJob job = new VMWareJob(_vm.RemoveSnapshot(_handle, 0, callback), callback))
             {
                 job.Wait(timeoutInSeconds);
             }
+
+            // remove from parent
             if (_parent != null)
             {
                 // child snapshots from this snapshot have now moved one level up
                 _parent.ChildSnapshots.Remove(this);
             }
+
+            Close();
         }
 
         /// <summary>
@@ -282,6 +287,20 @@ namespace Vestris.VMWareLib
             {
                 job.Wait(timeoutInSeconds);
             }
+        }
+
+        /// <summary>
+        /// Dispose the snapshot.
+        /// </summary>
+        public override void Dispose()
+        {
+            if (_childSnapshots != null)
+            {
+                _childSnapshots.Dispose();
+                _childSnapshots = null;
+            }
+
+            base.Dispose();            
         }
     }
 }

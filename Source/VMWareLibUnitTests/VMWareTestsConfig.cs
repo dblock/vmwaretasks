@@ -4,7 +4,7 @@ using System.Configuration;
 
 namespace Vestris.VMWareLibUnitTests
 {
-    public class VMWareTestsConfig : ConfigurationSection
+    public class VMWareTestsConfig : ConfigurationSection, IDisposable
     {
         public VMWareTestsConfig()
         {
@@ -79,6 +79,14 @@ namespace Vestris.VMWareLibUnitTests
             set
             {
                 this["runPoweredOffTests"] = value;
+            }
+        }
+
+        public void Dispose()
+        {
+            foreach (VMWareVirtualMachineConfig virtualMachineConfig in VirtualMachines)
+            {
+                virtualMachineConfig.Dispose();
             }
         }
     }

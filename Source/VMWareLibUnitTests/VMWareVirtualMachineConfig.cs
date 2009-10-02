@@ -16,7 +16,7 @@ namespace Vestris.VMWareLibUnitTests
     /// <summary>
     /// Virtual Machine configuration
     /// </summary>
-    public class VMWareVirtualMachineConfig : ConfigurationElement
+    public class VMWareVirtualMachineConfig : ConfigurationElement, IDisposable
     {
         private IVMWareTestProvider _provider = null;
 
@@ -190,6 +190,15 @@ namespace Vestris.VMWareLibUnitTests
 
                     return _provider;
                 }
+            }
+        }
+
+        public void Dispose()
+        {
+            if (_provider != null)
+            {
+                _provider.Dispose();
+                _provider = null;
             }
         }
     }

@@ -12,10 +12,9 @@ using Interop.VixCOM;
 namespace Vestris.VMWareLibUnitTests
 {
     [TestFixture]
-    public class VMWareVirtualMachinePoweredOffTests
+    public class VMWareVirtualMachinePoweredOffTests : VMWareUnitTest
     {
-        [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
             if (!VMWareTest.Instance.Config.RunPoweredOffTests)
                 Assert.Ignore("Skipping, powered off tests disabled.");

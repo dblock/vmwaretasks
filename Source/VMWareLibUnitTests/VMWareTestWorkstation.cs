@@ -86,5 +86,23 @@ namespace Vestris.VMWareLibUnitTests
                 return _config.GuestPassword;
             }
         }
+
+        public void Dispose()
+        {
+            if (_virtualMachine != null)
+            {
+                _virtualMachine.Dispose();
+                _virtualMachine = null;
+            }
+            
+            if (_host != null)
+            {
+                _host.Dispose();
+                _host = null;
+            }
+            
+            _config = null;
+        }
+
     }
 }

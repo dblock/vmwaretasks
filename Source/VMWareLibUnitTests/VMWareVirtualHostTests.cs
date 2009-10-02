@@ -9,7 +9,7 @@ using Interop.VixCOM;
 namespace Vestris.VMWareLibUnitTests
 {
     [TestFixture]
-    public class VMWareVirtualHostTests
+    public class VMWareVirtualHostTests : VMWareUnitTest
     {
         [Test]
         public void TestWorkstationIDisposable()

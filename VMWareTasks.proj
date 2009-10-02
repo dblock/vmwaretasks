@@ -15,7 +15,7 @@
     <CallTarget Targets="zip" />
   </Target>
   <Target Name="version">
-    <Version Major="1" Minor="3">
+    <Version Major="1" Minor="4">
       <Output TaskParameter="Major" PropertyName="Major" />
       <Output TaskParameter="Minor" PropertyName="Minor" />
       <Output TaskParameter="Build" PropertyName="Build" />

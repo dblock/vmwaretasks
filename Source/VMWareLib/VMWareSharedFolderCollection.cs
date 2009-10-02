@@ -12,7 +12,7 @@ namespace Vestris.VMWareLib
     /// enabled for the virtual machine.
     /// </summary>
     public class VMWareSharedFolderCollection :
-        ICollection<VMWareSharedFolder>, IEnumerable<VMWareSharedFolder>
+        ICollection<VMWareSharedFolder>, IEnumerable<VMWareSharedFolder>, IDisposable
     {
         private IVM _vm = null;
         private List<VMWareSharedFolder> _sharedFolders = null;
@@ -210,6 +210,15 @@ namespace Vestris.VMWareLib
             {
                 return SharedFolders[index];
             }
+        }
+
+        /// <summary>
+        /// Dispose the object.
+        /// </summary>
+        public void Dispose()
+        {
+            _sharedFolders = null;
+            _vm = null;
         }
     }
 }

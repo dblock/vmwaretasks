@@ -13,12 +13,6 @@
             using Vestris.VMWareLib;
           </code>
         </para>
-        <alert class="important">
-          <para>
-            Because VMWare VixCOM is a native 32-bit application, ensure that the platform target for your 
-            program is <literal>x86</literal> and not <literal>Any CPU</literal>.
-          </para>
-        </alert>
         <para>
           You can now connect to a local VMWare Workstation, local or remote VMWare Server or a remote
           ESX server and perform VMWare client and server tasks.
@@ -37,6 +31,27 @@
           The following example creates, restores, powers on and removes a snapshot on a remote VMWare ESX host.
           <code language="cs" source="..\Source\VMWareLibSamples\VMWareVirtualHostSamples.cs" region="Example: Getting Started (VI)" />
         </para>
+      </content>
+    </section>
+    <section address="csharpprogrammingconsiderations">
+      <title>Using the Library (C#) Programming Considerations</title>
+      <content>
+        <alert class="important">
+          <para>
+            Because VMWare VixCOM is a native 32-bit application, ensure that the platform target for your
+            program is <literal>x86</literal> and not <literal>Any CPU</literal>.
+          </para>
+        </alert>
+        <alert class="important">
+          <para>
+            Most VMWareTasks objects are <literal>IDisposable</literal> and should be wrapped in a
+            <literal>using</literal> construct or properly disposed of before calling
+            <codeEntityReference qualifyHint="true">M:Vestris.VMWareLib.VMWareVirtualHost.Disconnect</codeEntityReference>.
+            Failure to dispose of all objects, including snapshots and hosts may result in an access
+            violation when <application>VixCOM.dll</application> is unloaded. This is particularly true when
+            working with VMWare ESX 4.
+          </para>
+        </alert>
       </content>
     </section>
   </developerConceptualDocument>

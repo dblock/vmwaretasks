@@ -11,7 +11,7 @@ using System.Collections.Generic;
 namespace Vestris.VMWareToolsUnitTests.Windows
 {
     [TestFixture]
-    public class ShellUnitTests
+    public class ShellUnitTests : VMWareUnitTest
     {
         [Test]
         public void TestRunCommandStdOutInGuest()

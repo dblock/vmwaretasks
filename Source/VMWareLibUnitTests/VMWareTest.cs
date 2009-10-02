@@ -7,7 +7,7 @@ using NUnit.Framework;
 
 namespace Vestris.VMWareLibUnitTests
 {
-    public interface IVMWareTestProvider
+    public interface IVMWareTestProvider : IDisposable
     {
         VMWareVirtualHost VirtualHost { get; }
         VMWareVirtualHost Reconnect();
@@ -17,15 +17,32 @@ namespace Vestris.VMWareLibUnitTests
         string Password { get; }
     }
 
-    public class VMWareTest
+    public class VMWareTest : IDisposable
     {
         private VMWareTestsConfig _config = null;
-        public static VMWareTest Instance = new VMWareTest();
+        public static VMWareTest Instance = null;
 
         public VMWareTest()
         {
-            _config = (VMWareTestsConfig) ConfigurationManager.GetSection("TestsConfig");
+            _config = (VMWareTestsConfig)ConfigurationManager.GetSection("TestsConfig");
             Assert.IsNotNull(_config);
+        }
+
+        public static void SetUp()
+        {
+            if (Instance == null)
+            {
+                Instance = new VMWareTest();
+            }
+        }
+
+        public static void TearDown()
+        {
+            if (Instance != null)
+            {
+                Instance.Dispose();
+                Instance = null;
+            }
         }
 
         public VMWareTestsConfig Config
@@ -87,6 +104,15 @@ namespace Vestris.VMWareLibUnitTests
                     if (_config.RunWorkstationTests && virtualMachineConfig.Type == VMWareVirtualMachineType.Workstation)
                         yield return virtualMachineConfig.Provider;
                 }
+            }
+        }
+
+        public void Dispose()
+        {
+            if (_config != null)
+            {
+                _config.Dispose();
+                _config = null;
             }
         }
     }

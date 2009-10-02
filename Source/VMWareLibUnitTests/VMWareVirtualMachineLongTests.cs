@@ -12,10 +12,9 @@ using Interop.VixCOM;
 namespace Vestris.VMWareLibUnitTests
 {
     [TestFixture]
-    public class VMWareVirtualMachineLongTests
+    public class VMWareVirtualMachineLongTests : VMWareUnitTest
     {
-        [SetUp]
-        public void SetUp()
+        public override void SetUp()
         {
             if (!VMWareTest.Instance.Config.RunLongTests)
                 Assert.Ignore("Skipping, long tests disabled.");

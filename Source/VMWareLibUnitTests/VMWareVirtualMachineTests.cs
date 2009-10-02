@@ -12,7 +12,7 @@ using Interop.VixCOM;
 namespace Vestris.VMWareLibUnitTests
 {
     [TestFixture]
-    public class VMWareVirtualMachineTests
+    public class VMWareVirtualMachineTests : VMWareUnitTest
     {
         [Test]
         public void TestTasks()

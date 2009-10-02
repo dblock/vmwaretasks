@@ -10,7 +10,7 @@ using System.IO;
 namespace Vestris.VMWareToolsUnitTests
 {
     [TestFixture]
-    public class GuestOSReadFileUnitTests
+    public class GuestOSReadFileUnitTests : VMWareUnitTest
     {
         [Test]
         public void TestReadFile()

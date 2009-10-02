@@ -1441,5 +1441,24 @@ namespace Vestris.VMWareLib
                 job.Wait(timeoutInSeconds);
             }
         }
+
+        /// <summary>
+        /// Dispose the virtual machine object.
+        /// </summary>
+        public override void Dispose()
+        {
+            _guestVariables = null;
+            _runtimeConfigVariables = null;
+            _guestEnvironmentVariables = null;
+            
+            if (_snapshots != null)
+            {
+                _snapshots.Dispose();
+                _snapshots = null;
+            }
+
+            _sharedFolders = null;
+            base.Dispose();
+        }
     }
 }
