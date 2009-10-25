@@ -7,7 +7,7 @@ using VixCOM;
 namespace VMWareCrash
 {
     /// <summary>
-    /// A job completion callback, used with <see ref="Vestris.VMWareLib.VMWareJob" />.
+    /// A job completion callback, used with <see cref="Vestris.VMWareLib.VMWareJob" />.
     /// </summary>
     public class VMWareJobCallback : ICallback
     {
@@ -26,10 +26,19 @@ namespace VMWareCrash
         {
             switch (eventType)
             {
-                case VixCOM.Constants.VIX_EVENTTYPE_JOB_COMPLETED:
+                case Constants.VIX_EVENTTYPE_JOB_COMPLETED:
                     _jobCompleted.Set();
                     break;
             }
+
+            /*
+             * fix: close job object since we are done with this object
+             * 
+             * note: this does not invalidate the original job object that specified this as its callback function
+             * i.e. IJob createSnapshotJob = vm.CreateSnapshot(...); createSnapshotJob is still valid and can be used
+             * 
+             */
+            ((IVixHandle2)job).Close();
         }
 
         /// <summary>
@@ -44,7 +53,7 @@ namespace VMWareCrash
 
         /// <summary>
         /// Wait for completion of the job with a timeout.
-        /// A <see ref="System.TimeoutException" /> occurs if the job hasn't completed within the timeout specified.
+        /// A <see cref="System.TimeoutException" /> occurs if the job hasn't completed within the timeout specified.
         /// </summary>
         /// <param name="timeoutInMilliseconds">Timeout in milliseconds.</param>
         public void WaitForCompletion(int timeoutInMilliseconds)

@@ -28,6 +28,7 @@ namespace Vestris.VMWareLib
             {
                 case Constants.VIX_EVENTTYPE_JOB_COMPLETED:
                     _jobCompleted.Set();
+                    new VMWareVixHandle<IJob>(job).Close();
                     break;
             }
         }

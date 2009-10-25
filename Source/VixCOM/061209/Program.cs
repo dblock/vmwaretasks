@@ -1,78 +1,98 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using VixCOM;
 
 namespace VMWareCrash
 {
+
     class Program
     {
+        private static VixCOM.VixLib vix = new VixLib();
+
         /// <summary>
-        /// Connect to both VMWare VI and ESX demo, see http://communities.vmware.com/thread/186655.
+        /// AV demo
         /// </summary>
         /// <param name="args"></param>
         static void Main(string[] args)
         {
             try
             {
-                VixCOM.VixLib vix = new VixLib();
+                string uri = "https://tubbs.nycapt35k.com/sdk";
+                string vmx = "[adpro-1] snowtest-w2k8/snowtest-w2k8.vmx";
+                string username = "vmuser";
+                string password = "admin123";
+
+                // connect to a VI host
+                Console.WriteLine("Connecting to {0}", uri);
+                IJob connectJob = vix.Connect(Constants.VIX_API_VERSION, Constants.VIX_SERVICEPROVIDER_VMWARE_VI_SERVER,
+                    uri, 0, username, password, 0, null, null);
+                object[] connectProperties = { Constants.VIX_PROPERTY_JOB_RESULT_HANDLE };
+                object hosts = null;
+                ulong rc = connectJob.Wait(connectProperties, ref hosts);
+                if (vix.ErrorIndicatesFailure(rc))
+                {
+                    ((IVixHandle2)connectJob).Close();
+                    throw new Exception(vix.GetErrorText(rc, "en-US"));
+                }
+
+                IHost host = (IHost)((object[])hosts)[0];
 
                 {
-                    // connect to a VI host
-                    Console.WriteLine("Connecting to VI host");
-                    IJob connectJob = vix.Connect(Constants.VIX_API_VERSION, Constants.VIX_SERVICEPROVIDER_VMWARE_VI_SERVER,
-                        "https://linc.nycapt35k.com/sdk/", 0, "vmuser", "admin123", 0, null, null);
-                    object[] connectProperties = { Constants.VIX_PROPERTY_JOB_RESULT_HANDLE };
-                    object hosts = null;
-                    ulong rc = connectJob.Wait(connectProperties, ref hosts);
-                    if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
-                    IHost host = (IHost)((object[])hosts)[0];
-
                     // open a vm
-                    Console.WriteLine("Opening VM");
-                    IJob openJob = host.OpenVM("[dbprotect-1] ddoub-red/ddoub-red.vmx", null);
+                    Console.WriteLine("Opening {0}", vmx);
+                    IJob openJob = host.OpenVM(vmx, null);
                     object[] openProperties = { Constants.VIX_PROPERTY_JOB_RESULT_HANDLE };
                     object openResults = null;
                     rc = openJob.Wait(openProperties, ref openResults);
-                    if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
-                    IVM2 vm = (IVM2) ((object[]) openResults)[0];
-
-                    // number of snapshots
-                    int nSnapshots = 0;
-                    vm.GetNumRootSnapshots(out nSnapshots);
-                    Console.WriteLine("Root snapshots: {0}", nSnapshots);
-                    List<ISnapshot> snapshots = new List<ISnapshot>();
-                    for (int i = 0; i < nSnapshots; i++)
+                    if (vix.ErrorIndicatesFailure(rc))
                     {
-                        Console.WriteLine("Fetching snapshot: {0}", i);
-                        ISnapshot snapshot = null;
-                        rc = vm.GetRootSnapshot(i, out snapshot);
-                        snapshots.Add(snapshot);
-                        if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
+                        ((IVixHandle2)openJob).Close();
+                        throw new Exception(vix.GetErrorText(rc, "en-US"));
                     }
-
+                    Console.WriteLine("Opened {0}", vmx);
+                    IVM2 vm = (IVM2)((object[])openResults)[0];
+                    ((IVixHandle2)openJob).Close();
                     // create a snapshot
-                    Console.WriteLine("Creating snapshot");
-                    VMWareJobCallback jobDoneCallback = new VMWareJobCallback();
-                    IJob createSnapshotJob = vm.CreateSnapshot(
-                        Guid.NewGuid().ToString(),
-                        Guid.NewGuid().ToString(),
-                        0, null, jobDoneCallback);
-                    jobDoneCallback.WaitForCompletion(10000);
-                    rc = createSnapshotJob.WaitWithoutResults();
-                    if (vix.ErrorIndicatesFailure(rc)) throw new Exception(vix.GetErrorText(rc, "en-US"));
-                    snapshots = null;
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-
-                    // disconnect
-                    Console.WriteLine("Disconnecting");
-                    host.Disconnect();
+                    string snapshotName = Guid.NewGuid().ToString();
+                    Console.WriteLine("Creating snapshot {0}", snapshotName);
+                    VMWareJobCallback callback = new VMWareJobCallback();
+                    IJob createSnapshotJob = vm.CreateSnapshot(snapshotName, snapshotName, 0, null, callback);
+                    object[] createSnapshotProperties = { Constants.VIX_PROPERTY_JOB_RESULT_HANDLE };
+                    object createSnapshotResults = null;
+                    rc = createSnapshotJob.Wait(createSnapshotProperties, ref createSnapshotResults);
+                    if (vix.ErrorIndicatesFailure(rc))
+                    {
+                        ((IVixHandle2)createSnapshotJob).Close();
+                        throw new Exception(vix.GetErrorText(rc, "en-US"));
+                    }
+                    ISnapshot createdSnapshot = (ISnapshot)((object[])createSnapshotResults)[0];
+                    ((IVixHandle2)createSnapshotJob).Close();
+                    // delete snapshot
+                    IJob deleteSnapshotJob = vm.RemoveSnapshot(createdSnapshot, 0, callback);
+                    Console.WriteLine("Deleting snapshot {0}", snapshotName);
+                    rc = deleteSnapshotJob.WaitWithoutResults();
+                    if (vix.ErrorIndicatesFailure(rc))
+                    {
+                        ((IVixHandle2)deleteSnapshotJob).Close();
+                        throw new Exception(vix.GetErrorText(rc, "en-US"));
+                    }
+                    ((IVixHandle2)deleteSnapshotJob).Close();
+                    ((IVixHandle2)createdSnapshot).Close();
+                    ((IVixHandle2)vm).Close();
                 }
+
+                // disconnect
+                Console.WriteLine("Done.");
+                host.Disconnect();
+
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine("ERROR: {0}", ex.Message);
             }
         }
     }
