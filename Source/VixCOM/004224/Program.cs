@@ -56,6 +56,7 @@ namespace VMWareCrash
                     ((IVixHandle2)openJob).Close();
                     // create a snapshot
                     string snapshotName = Guid.NewGuid().ToString();
+                    Console.WriteLine("Creating snapshot {0}", snapshotName);
                     VMWareJobCallback callback = new VMWareJobCallback();
                     IJob createSnapshotJob = vm.CreateSnapshot(snapshotName, snapshotName, 0, null, callback);
                     object[] createSnapshotProperties = { Constants.VIX_PROPERTY_JOB_RESULT_HANDLE };
@@ -68,11 +69,22 @@ namespace VMWareCrash
                     }
                     ISnapshot createdSnapshot = (ISnapshot)((object[])createSnapshotResults)[0];
                     ((IVixHandle2)createSnapshotJob).Close();
+                    // delete snapshot
+                    IJob deleteSnapshotJob = vm.RemoveSnapshot(createdSnapshot, 0, callback);
+                    Console.WriteLine("Deleting snapshot {0}", snapshotName);
+                    rc = deleteSnapshotJob.WaitWithoutResults();
+                    if (vix.ErrorIndicatesFailure(rc))
+                    {
+                        ((IVixHandle2)deleteSnapshotJob).Close();
+                        throw new Exception(vix.GetErrorText(rc, "en-US"));
+                    }
+                    ((IVixHandle2)deleteSnapshotJob).Close();
                     ((IVixHandle2)createdSnapshot).Close();
+                    ((IVixHandle2)vm).Close();
                 }
 
                 // disconnect
-                Console.WriteLine("Disconnecting");
+                Console.WriteLine("Done.");
                 host.Disconnect();
 
                 GC.Collect();

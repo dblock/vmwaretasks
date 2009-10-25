@@ -30,6 +30,15 @@ namespace VMWareCrash
                     _jobCompleted.Set();
                     break;
             }
+
+            /*
+             * fix: close job object since we are done with this object
+             * 
+             * note: this does not invalidate the original job object that specified this as its callback function
+             * i.e. IJob createSnapshotJob = vm.CreateSnapshot(...); createSnapshotJob is still valid and can be used
+             * 
+             */
+            ((IVixHandle2)job).Close();
         }
 
         /// <summary>
