@@ -17,18 +17,31 @@ namespace Vestris.VMWareLib
 
         /// <summary>
         /// Handle a Vix event.
+        /// </summary>
+        /// <param name="job">An instance that implements IJob.</param>
+        /// <param name="eventType">Event type.</param>
+        /// <param name="moreEventInfo">Additional event info.</param>
+        public void OnVixEvent(IJob job, int eventType, IVixHandle moreEventInfo)
+        {
+            using(VMWareVixHandle<IJob> jobHandle = new VMWareVixHandle<IJob>(job))
+            {
+                OnVixEvent(jobHandle, eventType, moreEventInfo);
+            }
+        }
+
+        /// <summary>
+        /// Handle a Vix event.
         /// Currently handles the job completion event, call WaitForCompletion to block with a timeout.
         /// </summary>
-        /// <param name="job">an instance that implements IJob</param>
-        /// <param name="eventType">event type</param>
-        /// <param name="moreEventInfo">additional event info</param>
-        public void OnVixEvent(IJob job, int eventType, IVixHandle moreEventInfo)
+        /// <param name="job">An instance that implements IJob.</param>
+        /// <param name="eventType">Event type.</param>
+        /// <param name="moreEventInfo">Additional event info.</param>
+        private void OnVixEvent(VMWareVixHandle<IJob> job, int eventType, IVixHandle moreEventInfo)
         {
             switch (eventType)
             {
                 case Constants.VIX_EVENTTYPE_JOB_COMPLETED:
                     _jobCompleted.Set();
-                    new VMWareVixHandle<IJob>(job).Close();
                     break;
             }
         }
