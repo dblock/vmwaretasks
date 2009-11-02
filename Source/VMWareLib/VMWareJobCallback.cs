@@ -25,7 +25,10 @@ namespace Vestris.VMWareLib
         {
             using(VMWareVixHandle<IJob> jobHandle = new VMWareVixHandle<IJob>(job))
             {
-                OnVixEvent(jobHandle, eventType, moreEventInfo);
+                using (VMWareVixHandle<IVixHandle> moreEventInfoHandle = new VMWareVixHandle<IVixHandle>(moreEventInfo))
+                {
+                    OnVixEvent(jobHandle, eventType, moreEventInfo);
+                }
             }
         }
 
