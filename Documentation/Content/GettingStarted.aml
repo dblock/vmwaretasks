@@ -17,9 +17,11 @@
                 <linkText>http://www.vmware.com/download/sdk/vmauto.html</linkText>
               </externalLink>.
               Version 1.6.2 or 1.7.0 is required for VI support.
+              Version 1.8.0 s required for VMWare Player support.
             </listItem>
             <listItem>
-              Either VMWare Workstation 6.5.2, VMWare Server 2.0 or a Virtual Infrastructure environment (eg. ESX).
+              Either VMWare Workstation 6.5.2 or 7.0, VMWare Server 2.0, VMWare Player 3.0, a
+              Virtual Infrastructure environment (eg. ESXi) or VSphere 4.0.
             </listItem>
           </list>
         </para>

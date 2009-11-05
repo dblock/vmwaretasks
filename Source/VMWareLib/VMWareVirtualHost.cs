@@ -29,10 +29,25 @@ namespace Vestris.VMWareLib
             /// <summary>
             /// Virtual Infrastructure Server, eg. ESX.
             /// </summary>
-            VirtualInfrastructureServer = Constants.VIX_SERVICEPROVIDER_VMWARE_VI_SERVER
+            VirtualInfrastructureServer = Constants.VIX_SERVICEPROVIDER_VMWARE_VI_SERVER,
+            /// <summary>
+            /// VMWare Player.
+            /// </summary>
+            Player = Constants.VIX_SERVICEPROVIDER_VMWARE_PLAYER
         }
 
         private ServiceProviderType _serviceProviderType = ServiceProviderType.None;
+
+        /// <summary>
+        /// An IHost2 handle, where supported.
+        /// </summary>
+        protected IHost2 _host2
+        {
+            get
+            {
+                return _handle as IHost2;
+            }
+        }
 
         /// <summary>
         /// A VMWare virtual host.
@@ -51,6 +66,35 @@ namespace Vestris.VMWareLib
             {
                 return _serviceProviderType;
             }
+        }
+
+        /// <summary>
+        /// Connect to a WMWare Player.
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// using System;
+        /// using System.Collections.Generic;
+        /// using Vestris.VMWareLib;
+        /// 
+        /// VMWareVirtualHost virtualHost = new VMWareVirtualHost();
+        /// virtualHost.ConnectToVMWarePlayer();
+        /// VMWareVirtualMachine virtualMachine = virtualHost.Open("C:\Virtual Machines\xp\xp.vmx");
+        /// virtualMachine.PowerOn();
+        /// </code>
+        /// </example>
+        public void ConnectToVMWarePlayer()
+        {
+            ConnectToVMWarePlayer(VMWareInterop.Timeouts.ConnectTimeout);
+        }
+
+        /// <summary>
+        /// Connect to a WMWare Player.
+        /// </summary>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        public void ConnectToVMWarePlayer(int timeoutInSeconds)
+        {
+            Connect(ServiceProviderType.Player, null, 0, null, null, timeoutInSeconds);
         }
 
         /// <summary>
@@ -209,7 +253,7 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// Open a .vmx file.
+        /// Open a virtual machine.
         /// </summary>
         /// <param name="fileName">Virtual Machine file, local .vmx or [storage] .vmx.</param>
         /// <returns>An instance of a virtual machine.</returns>
@@ -219,7 +263,7 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// Open a .vmx file.
+        /// Open a virtual machine.
         /// </summary>
         /// <param name="fileName">Virtual Machine file, local .vmx or [storage] .vmx.</param>
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
