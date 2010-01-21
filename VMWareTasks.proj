@@ -81,7 +81,7 @@
     <Copy SourceFiles="@(JavaBinaryFiles)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)\JavaBin" />
     <Copy SourceFiles="@(ArticleFiles)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)\Article\%(RecursiveDir)" />
     <Copy SourceFiles="@(DocumentationFiles)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)" />
-    <TemplateFile Template="Documentation\WhatsNew.html" OutputFilename="..\$(ReleaseDir)\WhatsNew.html" Tokens="@(AssemblyInfoTokens)" />
+    <TemplateFile Template="Documentation\WhatsNew.html" OutputFilename="..\$(ReleaseDir)\$(Major).$(Minor)\WhatsNew.html" Tokens="@(AssemblyInfoTokens)" />
     <CreateItem Include="$(ReleaseDir)/**/*">
       <Output TaskParameter="Include" ItemName="PackageFiles" />
     </CreateItem>
