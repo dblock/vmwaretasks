@@ -23,12 +23,19 @@
 </head>
 <body>
     <h3>
-        1.5 (TBD)</h3>
+        1.5 (${Date})</h3>
     <ul>
         <li>Features
             <ul>
                 <li>Added support for VixCOM 1.8.1. VMWareTasks works against all 1.6.2, 1.7.0, 1.8.0
                     and 1.8.1 versions.</li>
+            </ul>
+        </li>
+        <li>Bugs
+            <ul>
+                <li><a href="http://vmwaretasks.codeplex.com/WorkItem/View.aspx?WorkItemId=5138">5138</a>:
+                    Tools.Windows.Shell.GetEnvironmentVariables fails with a "File not found" error
+                    on some x64 systems where "tmp" resolves to a non-existent path.</li>
             </ul>
         </li>
     </ul>

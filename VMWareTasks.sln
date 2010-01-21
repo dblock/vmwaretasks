@@ -4,6 +4,7 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{6BD93AF1-12C7-49C8-A7C5-C2833344B8CA}"
 	ProjectSection(SolutionItems) = preProject
 		build.cmd = build.cmd
+		Version.proj = Version.proj
 		VMWareTasks.proj = VMWareTasks.proj
 	EndProjectSection
 EndProject
@@ -113,8 +114,8 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{748E0786-A7ED-4B61-AFA6-B67A07E6CE24} = {D318F9F3-0299-4F6A-8CAC-C25725FC2F5D}
+		{3AC08947-61C7-46D7-B7EA-9CDE37351453} = {55DD74D6-6DFD-431D-AABC-07978089B0AA}
 		{30F8230C-657D-4D98-8602-994B8E1D562E} = {55DD74D6-6DFD-431D-AABC-07978089B0AA}
 		{B6B7DD17-C9BA-4166-971B-665736882322} = {55DD74D6-6DFD-431D-AABC-07978089B0AA}
-		{3AC08947-61C7-46D7-B7EA-9CDE37351453} = {55DD74D6-6DFD-431D-AABC-07978089B0AA}
 	EndGlobalSection
 EndGlobal

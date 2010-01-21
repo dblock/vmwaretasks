@@ -4,34 +4,26 @@
     <Configuration>Debug</Configuration>
   </PropertyGroup>
   <PropertyGroup>
+    <ProductName>VMWareTasks</ProductName>
+    <CompanyName>Vestris Inc.</CompanyName>
+    <Copyright>Copyright (c) 2008-2010 Daniel Doubrovkine, Vestris Inc.</Copyright>
+    <Trademark>All Rights Reserved</Trademark>
+    <MajorVersion>1</MajorVersion>
+    <MinorVersion>5</MinorVersion>
+  </PropertyGroup>
+  <Import Project="Version.proj"/>
+  <PropertyGroup>
     <ReleaseDir>Vestris.VMWareTasks</ReleaseDir>
   </PropertyGroup>
   <Target Name="all">
+    <CallTarget Targets="clean" />
     <CallTarget Targets="version" />
     <CallTarget Targets="vixcom" />
     <CallTarget Targets="build" />
     <CallTarget Targets="doc" />
     <CallTarget Targets="javas" />
     <CallTarget Targets="zip" />
-  </Target>
-  <Target Name="version">
-    <Version Major="1" Minor="5">
-      <Output TaskParameter="Major" PropertyName="Major" />
-      <Output TaskParameter="Minor" PropertyName="Minor" />
-      <Output TaskParameter="Build" PropertyName="Build" />
-      <Output TaskParameter="Revision" PropertyName="Revision" />
-    </Version>
-    <SvnVersion LocalPath=".">
-      <Output TaskParameter="Revision" PropertyName="Build" />
-    </SvnVersion>
-    <Message Text="Version: $(Major).$(Minor).$(Build).$(Revision)"/>
-    <MakeDir Directories="Source\Version" />
-    <AssemblyInfo CodeLanguage="CS" OutputFile="Source\Version\GlobalAssemblyInfo.cs" AssemblyConfiguration=""
-     AssemblyCompany="Vestris Inc." AssemblyProduct="VMWareTasks" AssemblyCopyright="Copyright (c) Daniel Doubrovkine, Vestris Inc. 2008"
-     AssemblyTrademark="" CLSCompliant="false" AssemblyDelaySign="false" AssemblyKeyName="" AssemblyCulture=""
-     AssemblyVersion="$(Major).$(Minor).$(Build).$(Revision)" AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)" 
-     AssemblyKeyFile="$(MSBuildProjectDirectory)\master.snk" />
-  </Target>
+  </Target>  
   <Target Name="clean">
     <MSBuild Projects="VMWareTasks.sln" Targets="Clean" />
     <DeleteTree Directories="Documentation\$(Configuration)" />
@@ -80,8 +72,7 @@
     <ArticleFiles Include="Article/**/*.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <DocumentationFiles Include="Documentation/$(Configuration)/VMWareTasks.chm" />
-    <DocumentationFiles Include="Documentation/WhatsNew.html" />
+    <DocumentationFiles Include="Documentation/$(Configuration)/VMWareTasks.chm" />    
   </ItemGroup>
   <Target Name="zip" DependsOnTargets="version">
     <Copy SourceFiles="@(SourceCodeProjects)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)\Source\%(RecursiveDir)" />
@@ -90,6 +81,7 @@
     <Copy SourceFiles="@(JavaBinaryFiles)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)\JavaBin" />
     <Copy SourceFiles="@(ArticleFiles)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)\Article\%(RecursiveDir)" />
     <Copy SourceFiles="@(DocumentationFiles)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)" />
+    <TemplateFile Template="Documentation\WhatsNew.html" OutputFilename="..\$(ReleaseDir)\WhatsNew.html" Tokens="@(AssemblyInfoTokens)" />
     <CreateItem Include="$(ReleaseDir)/**/*">
       <Output TaskParameter="Include" ItemName="PackageFiles" />
     </CreateItem>
