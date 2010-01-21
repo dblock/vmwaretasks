@@ -43,16 +43,14 @@ namespace Vestris.VMWareLib.Tools.Windows
         /// <returns>Standard output.</returns>
         public ShellOutput RunCommandInGuest(string guestCommandLine)
         {
-            string guestFilename = string.Format("VMWareTools.{0}", Guid.NewGuid());
             string guestStdOutFilename = _vm.CreateTempFileInGuest();
             string guestStdErrFilename = _vm.CreateTempFileInGuest();
+            string guestCommandBatch = _vm.CreateTempFileInGuest() + ".bat";
             string hostCommandBatch = Path.GetTempFileName();
             StringBuilder hostCommand = new StringBuilder();
             hostCommand.AppendLine("@echo off");
             hostCommand.AppendLine(guestCommandLine);
             File.WriteAllText(hostCommandBatch, hostCommand.ToString());
-            string guestTempPath = _vm.GuestEnvironmentVariables["tmp"];
-            string guestCommandBatch = Path.Combine(guestTempPath, guestFilename + ".bat");
             try
             {
                 _vm.CopyFileFromHostToGuest(hostCommandBatch, guestCommandBatch);
