@@ -66,6 +66,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VMWareComTools", "Source\VM
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{55DD74D6-6DFD-431D-AABC-07978089B0AA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VMWareLibMSBuildTasks", "Source\VMWareLibMSBuildTasks\VMWareLibMSBuildTasks.csproj", "{35517CB2-6EE3-43DB-B7F0-D55E39C41C10}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VMWareLibMSBuildTasksSamples", "VMWareLibMSBuildTasksSamples", "{DCDF3EE9-62A4-4DBD-868F-8BB96F11B569}"
+	ProjectSection(SolutionItems) = preProject
+		Source\VMWareLibMSBuildTasksSamples\VMWareESX.proj = Source\VMWareLibMSBuildTasksSamples\VMWareESX.proj
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -108,6 +115,10 @@ Global
 		{27E9AB63-A19F-4C85-AEB7-D2AAF5C721E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27E9AB63-A19F-4C85-AEB7-D2AAF5C721E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27E9AB63-A19F-4C85-AEB7-D2AAF5C721E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35517CB2-6EE3-43DB-B7F0-D55E39C41C10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35517CB2-6EE3-43DB-B7F0-D55E39C41C10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35517CB2-6EE3-43DB-B7F0-D55E39C41C10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35517CB2-6EE3-43DB-B7F0-D55E39C41C10}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -117,5 +128,6 @@ Global
 		{3AC08947-61C7-46D7-B7EA-9CDE37351453} = {55DD74D6-6DFD-431D-AABC-07978089B0AA}
 		{30F8230C-657D-4D98-8602-994B8E1D562E} = {55DD74D6-6DFD-431D-AABC-07978089B0AA}
 		{B6B7DD17-C9BA-4166-971B-665736882322} = {55DD74D6-6DFD-431D-AABC-07978089B0AA}
+		{DCDF3EE9-62A4-4DBD-868F-8BB96F11B569} = {55DD74D6-6DFD-431D-AABC-07978089B0AA}
 	EndGlobalSection
 EndGlobal
