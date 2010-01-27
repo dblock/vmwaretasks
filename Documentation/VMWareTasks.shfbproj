@@ -47,6 +47,8 @@
       <DocumentationSource sourceFile="..\Source\VMWareComTools\bin\$(Configuration)\Vestris.VMWareComTools.dll" xmlns="" />
       <DocumentationSource sourceFile="..\Source\VMWareComTools\bin\$(Configuration)\Vestris.VMWareComTools.xml" xmlns="" />
       <DocumentationSource sourceFile="..\Source\VMWareComTools\VMWareComToolsNamespace.xml" xmlns="" />
+      <DocumentationSource sourceFile="..\Source\VMWareLibMSBuildTasks\bin\$(Configuration)\Vestris.VMWareLib.MSBuildTasks.dll" xmlns="" />
+      <DocumentationSource sourceFile="..\Source\VMWareLibMSBuildTasks\bin\$(Configuration)\Vestris.VMWareLib.MSBuildTasks.xml" xmlns="" />
     </DocumentationSources>
     <KeepLogFile>False</KeepLogFile>
     <CopyrightText>$(Copyright)</CopyrightText>
@@ -67,6 +69,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
   </PropertyGroup>
   <ItemGroup>
+    <None Include="Content\GettingStartedMSBuild.aml" />
     <None Include="Content\GettingStartedJava.aml" />
     <None Include="Content\GettingStartedCOM.aml" />
     <None Include="Content\GettingStartedCSharp.aml" />

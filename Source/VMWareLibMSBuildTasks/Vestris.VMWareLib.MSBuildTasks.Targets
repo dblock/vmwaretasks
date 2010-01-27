@@ -5,4 +5,8 @@
     <VMWareLibMSBuildTasksLib>$(VMWareLibMSBuildTasksPath)\Vestris.VMWareLib.MSBuildTasks.dll</VMWareLibMSBuildTasksLib>
   </PropertyGroup>
   <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualHostConnect" />
+  <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachineOpen" />
+  <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachinePowerOn" />
+  <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachinePowerOff" />
+  <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachineShutdownGuest" />
 </Project>

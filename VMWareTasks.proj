@@ -50,6 +50,8 @@
     <SourceCodeFiles Include="Source/**/*.vbs" />
     <SourceCodeFiles Include="Source/License.txt" />
     <SourceCodeFiles Include="Source/**/*.java" />
+    <SourceCodeFiles Include="Source/**/*.Targets" />
+    <SourceCodeFiles Include="Source/**/*.proj" />
   </ItemGroup>
   <ItemGroup>
     <BinaryFiles Include="Source/VMWareLib/bin/$(Configuration)/Vestris.VMWareLib.dll.config" />
@@ -59,6 +61,9 @@
     <BinaryFiles Include="Source/VMWareLib/bin/$(Configuration)/Interop.VixCOM.dll" />
     <BinaryFiles Include="Source/VMWareComLib/bin/$(Configuration)/Vestris.VMWareComLib.dll.config" />
     <BinaryFiles Include="Source/VMWareComLib/bin/$(Configuration)/Vestris.VMWareComLib.dll" />
+    <BinaryFiles Include="Source/VMWareLibMSBuildTasks/bin/$(Configuration)/Vestris.VMWareLib.MSBuildTasks.dll.config" />
+    <BinaryFiles Include="Source/VMWareLibMSBuildTasks/bin/$(Configuration)/Vestris.VMWareLib.MSBuildTasks.dll" />
+    <BinaryFiles Include="Source/VMWareLibMSBuildTasks/bin/$(Configuration)/Vestris.VMWareLib.MSBuildTasks.Targets" />
   </ItemGroup>
   <ItemGroup>
     <JavaBinaryFiles Include="Tools/Com4j/com4j.dll" />

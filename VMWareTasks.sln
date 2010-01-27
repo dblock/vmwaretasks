@@ -40,6 +40,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Content", "Content", "{748E
 		Documentation\Content\GettingStartedCOM.aml = Documentation\Content\GettingStartedCOM.aml
 		Documentation\Content\GettingStartedCSharp.aml = Documentation\Content\GettingStartedCSharp.aml
 		Documentation\Content\GettingStartedJava.aml = Documentation\Content\GettingStartedJava.aml
+		Documentation\Content\GettingStartedMSBuild.aml = Documentation\Content\GettingStartedMSBuild.aml
 		Documentation\Content\License.aml = Documentation\Content\License.aml
 		Documentation\Content\Main.aml = Documentation\Content\Main.aml
 	EndProjectSection
@@ -70,7 +71,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VMWareLibMSBuildTasks", "So
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VMWareLibMSBuildTasksSamples", "VMWareLibMSBuildTasksSamples", "{DCDF3EE9-62A4-4DBD-868F-8BB96F11B569}"
 	ProjectSection(SolutionItems) = preProject
-		Source\VMWareLibMSBuildTasksSamples\VMWareESX.proj = Source\VMWareLibMSBuildTasksSamples\VMWareESX.proj
+		Source\VMWareLibMSBuildTasksSamples\ESX.properties = Source\VMWareLibMSBuildTasksSamples\ESX.properties
+		Source\VMWareLibMSBuildTasksSamples\Power.proj = Source\VMWareLibMSBuildTasksSamples\Power.proj
+		Source\VMWareLibMSBuildTasksSamples\Workstation.properties = Source\VMWareLibMSBuildTasksSamples\Workstation.properties
 	EndProjectSection
 EndProject
 Global

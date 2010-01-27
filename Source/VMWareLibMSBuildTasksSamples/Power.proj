@@ -1,0 +1,38 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+         DefaultTargets="All">
+  <Import Project="Workstation.properties" />
+  <PropertyGroup>
+    <VMWareLibMSBuildTasksPath>.</VMWareLibMSBuildTasksPath>
+  </PropertyGroup>
+  <Import Project="..\VMWareLibMSBuildTasks\bin\Debug\Vestris.VMWareLib.MSBuildTasks.Targets" />
+  <Target Name="All">
+    <CallTarget Targets="Connect" />
+    <CallTarget Targets="Open" />
+    <CallTarget Targets="PowerOn" />
+    <CallTarget Targets="ShutdownGuest" />
+    <CallTarget Targets="PowerOff" />
+  </Target>
+  <Target Name="Connect">
+    <VirtualHostConnect ConnectionType="$(ConnectionType)" Host="$(Host)" Username="$(HostUsername)" Password="$(HostPassword)" />
+  </Target>
+  <Target Name="Open">
+    <VirtualMachineOpen ConnectionType="$(ConnectionType)" Host="$(Host)" Username="$(HostUsername)" Password="$(HostPassword)" 
+     Filename="$(VmFilename)" />
+  </Target>
+  <Target Name="PowerOn">
+    <VirtualMachinePowerOn ConnectionType="$(ConnectionType)" Host="$(Host)" Username="$(HostUsername)" Password="$(HostPassword)"
+     Filename="$(VmFilename)" WaitForTools="true" />
+  </Target>
+  <Target Name="ShutdownGuest">
+    <VirtualMachinePowerOn ConnectionType="$(ConnectionType)" Host="$(Host)" Username="$(HostUsername)" Password="$(HostPassword)"
+     Filename="$(VmFilename)" WaitForTools="true" />
+    <VirtualMachineShutdownGuest ConnectionType="$(ConnectionType)" Host="$(Host)" Username="$(HostUsername)" Password="$(HostPassword)"
+     Filename="$(VmFilename)" />
+  </Target>
+  <Target Name="PowerOff">
+    <VirtualMachinePowerOn ConnectionType="$(ConnectionType)" Host="$(Host)" Username="$(HostUsername)" Password="$(HostPassword)"
+     Filename="$(VmFilename)" WaitForTools="true" />
+    <VirtualMachinePowerOff ConnectionType="$(ConnectionType)" Host="$(Host)" Username="$(HostUsername)" Password="$(HostPassword)"
+     Filename="$(VmFilename)" />
+  </Target>
+</Project>

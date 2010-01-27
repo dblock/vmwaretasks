@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="d4a4f707-a17d-48c4-8c40-8bcbcd846bf2" revisionNumber="1">
+  <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <introduction>
+      <para>
+        This section explains how to get started with VMWareTasks library using MSBuild.
+      </para>
+    </introduction>
+    <section address="usingvmwaretasksmsbuild">
+      <title>Importing MSBuild Tasks</title>
+      <content>
+        <para>
+          Import the <localUri>Vestris.VMWareLib.MSBuildTasks.Targets</localUri> file in your MSBuild project.
+          Optionally set the <newTerm>VMWareLibMSBuildTasksPath</newTerm> property to the location of 
+          <localUri>Vestris.VMWareLib.MSBuildTasks.dll</localUri>.
+          <code language="msbuild">
+            <![CDATA[
+<PropertyGroup>
+  <VMWareLibMSBuildTasksPath>.</VMWareLibMSBuildTasksPath>
+</PropertyGroup>
+<Import Project="Vestris.VMWareLib.MSBuildTasks.Targets" />
+            ]]>
+          </code>
+        </para>
+      </content>
+    </section>
+    <section address="usingthecominterface">
+      <title>Using the MSBuild Tasks</title>
+      <content>
+        <para>
+          Unlike C# or COM tasks, MSBuild tasks are not cumulative. You cannot call a <newTerm>Connect</newTerm>
+          method followed by an <newTerm>Open</newTerm> method. Each task implements the complete series of calls required to
+          accomplish this task. For example, a <newTerm>PowerOn</newTerm> task connects to the virtual machine, opens a .vmx
+          file and powers it on.
+        </para>
+        <para>
+          <code language="msbuild">
+<![CDATA[
+    <VirtualMachinePowerOn ConnectionType="Workstation" Filename="c:\vms\vm1\vm1.vmx" WaitForTools="true" />
+]]>
+          </code>
+        </para>
+      </content>
+    </section>
+    <relatedTopics>
+      <codeEntityReference qualifyHint="true">N:Vestris.VMWareLib.MSBuildTasks</codeEntityReference>
+    </relatedTopics>
+  </developerConceptualDocument>
+</topic>

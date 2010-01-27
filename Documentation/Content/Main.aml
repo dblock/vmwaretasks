@@ -22,8 +22,8 @@
         known VixCOM API limitations.
       </para>
       <para>
-        VMWareTasks exposes a C# interface, a COM-enabled interface for script clients and a Java bridge for Java programs.
-        VMWareTasks is completely free and distributed under the
+        VMWareTasks exposes a C# interface, a COM-enabled interface for script clients, a Java bridge for Java programs
+        and a set of MSBuild tasks. VMWareTasks is completely free and distributed under the
         <link topicType_id="DAC3A6A0-C863-4E5B-8F65-79EFC6A4BA09" xlink:href="bfd78578-6e10-47e5-8b41-44426e0a1ac1">
           MIT license
         </link>.
@@ -45,6 +45,7 @@
       <codeEntityReference qualifyHint="true">N:Vestris.VMWareComLib</codeEntityReference>
       <codeEntityReference qualifyHint="true">N:Vestris.VMWareComLib.Tools</codeEntityReference>
       <codeEntityReference qualifyHint="true">N:Vestris.VMWareComLib.Tools.Windows</codeEntityReference>
+      <codeEntityReference qualifyHint="true">N:Vestris.VMWareLib.MSBuildTasks</codeEntityReference>
     </relatedTopics>
   </developerConceptualDocument>
 </topic>
