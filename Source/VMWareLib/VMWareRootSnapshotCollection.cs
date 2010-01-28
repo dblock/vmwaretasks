@@ -95,7 +95,18 @@ namespace Vestris.VMWareLib
         /// <returns>True if the snapshot was deleted.</returns>
         public void RemoveSnapshot(VMWareSnapshot item)
         {
-            item.RemoveSnapshot();
+            RemoveSnapshot(item, VMWareInterop.Timeouts.RemoveSnapshotTimeout);
+        }
+
+        /// <summary>
+        /// Delete/remove a snapshot.
+        /// </summary>
+        /// <param name="item">Snapshot to delete.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        /// <returns>True if the snapshot was deleted.</returns>
+        public void RemoveSnapshot(VMWareSnapshot item, int timeoutInSeconds)
+        {
+            item.RemoveSnapshot(timeoutInSeconds);
             RemoveAll();
         }
 
@@ -106,6 +117,16 @@ namespace Vestris.VMWareLib
         public void RemoveSnapshot(string name)
         {
             RemoveSnapshot(GetNamedSnapshot(name));
+        }
+
+        /// <summary>
+        /// Delete a snapshot.
+        /// </summary>
+        /// <param name="name">Name of the snapshot to delete.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        public void RemoveSnapshot(string name, int timeoutInSeconds)
+        {
+            RemoveSnapshot(GetNamedSnapshot(name), timeoutInSeconds);
         }
 
         /// <summary>
