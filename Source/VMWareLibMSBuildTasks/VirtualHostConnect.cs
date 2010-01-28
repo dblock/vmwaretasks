@@ -13,8 +13,8 @@ namespace Vestris.VMWareLib.MSBuildTasks
         private VMWareVirtualHost.ServiceProviderType _type = VMWareVirtualHost.ServiceProviderType.None;
         private int _connectTimeout = VMWareInterop.Timeouts.ConnectTimeout;
         private string _host = null;
-        private string _username = null;
-        private string _password = null;
+        private string _hostUsername = null;
+        private string _hostPassword = null;
 
         /// <summary>
         /// Connected host type.
@@ -66,30 +66,30 @@ namespace Vestris.VMWareLib.MSBuildTasks
         /// <summary>
         /// Host username.
         /// </summary>
-        public string Username
+        public string HostUsername
         {
             get
             {
-                return _username;
+                return _hostUsername;
             }
             set
             {
-                _username = value;
+                _hostUsername = value;
             }
         }
 
         /// <summary>
         /// Host password.
         /// </summary>
-        public string Password
+        public string HostPassword
         {
             get
             {
-                return _password;
+                return _hostPassword;
             }
             set
             {
-                _password = value;
+                _hostPassword = value;
             }
         }
 
@@ -109,12 +109,12 @@ namespace Vestris.VMWareLib.MSBuildTasks
                 case VMWareVirtualHost.ServiceProviderType.Server:
                     Log.LogMessage(string.Format("Connecting to VMWare Server '{0}'",
                         string.IsNullOrEmpty(_host) ? "localhost" : _host));
-                    host.ConnectToVMWareServer(_host, _username, _password, _connectTimeout);
+                    host.ConnectToVMWareServer(_host, _hostUsername, _hostPassword, _connectTimeout);
                     break;
                 case VMWareVirtualHost.ServiceProviderType.VirtualInfrastructureServer:
                     Log.LogMessage(string.Format("Connecting to VMWare VI server '{0}'",
                         _host));
-                    host.ConnectToVMWareVIServer(_host, _username, _password, _connectTimeout);
+                    host.ConnectToVMWareVIServer(_host, _hostUsername, _hostPassword, _connectTimeout);
                     break;
                 case VMWareVirtualHost.ServiceProviderType.Workstation:
                     Log.LogMessage("Connecting to VMWare Workstation");

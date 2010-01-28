@@ -9,4 +9,14 @@
   <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachinePowerOn" />
   <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachinePowerOff" />
   <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachineShutdownGuest" />
+  <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachineLoginGuest" />
+  <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachineCopyFileFromGuestToHost" />
+  <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachineCopyFileFromHostToGuest" />
+  <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachineCreateDirectoryInGuest" />
+  <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachineDeleteDirectoryFromGuest" />
+  <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachineDeleteFileFromGuest" />
+  <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachineCreateTempFileInGuest" />
+  <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachineCreateSnapshot" />
+  <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachineRevertToSnapshot" />
+  <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachineRemoveSnapshot" />
 </Project>

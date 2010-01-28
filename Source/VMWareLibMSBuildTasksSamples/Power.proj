@@ -13,26 +13,26 @@
     <CallTarget Targets="PowerOff" />
   </Target>
   <Target Name="Connect">
-    <VirtualHostConnect ConnectionType="$(ConnectionType)" Host="$(Host)" Username="$(HostUsername)" Password="$(HostPassword)" />
+    <VirtualHostConnect ConnectionType="$(ConnectionType)" Host="$(Host)" HostUsername="$(HostUsername)" HostPassword="$(HostPassword)" />
   </Target>
   <Target Name="Open">
-    <VirtualMachineOpen ConnectionType="$(ConnectionType)" Host="$(Host)" Username="$(HostUsername)" Password="$(HostPassword)" 
+    <VirtualMachineOpen ConnectionType="$(ConnectionType)" Host="$(Host)" HostUsername="$(HostUsername)" HostPassword="$(HostPassword)" 
      Filename="$(VmFilename)" />
   </Target>
   <Target Name="PowerOn">
-    <VirtualMachinePowerOn ConnectionType="$(ConnectionType)" Host="$(Host)" Username="$(HostUsername)" Password="$(HostPassword)"
+    <VirtualMachinePowerOn ConnectionType="$(ConnectionType)" Host="$(Host)" HostUsername="$(HostUsername)" HostPassword="$(HostPassword)"
      Filename="$(VmFilename)" WaitForTools="true" />
   </Target>
   <Target Name="ShutdownGuest">
-    <VirtualMachinePowerOn ConnectionType="$(ConnectionType)" Host="$(Host)" Username="$(HostUsername)" Password="$(HostPassword)"
+    <VirtualMachinePowerOn ConnectionType="$(ConnectionType)" Host="$(Host)" HostUsername="$(HostUsername)" HostPassword="$(HostPassword)"
      Filename="$(VmFilename)" WaitForTools="true" />
-    <VirtualMachineShutdownGuest ConnectionType="$(ConnectionType)" Host="$(Host)" Username="$(HostUsername)" Password="$(HostPassword)"
+    <VirtualMachineShutdownGuest ConnectionType="$(ConnectionType)" Host="$(Host)" HostUsername="$(HostUsername)" HostPassword="$(HostPassword)"
      Filename="$(VmFilename)" />
   </Target>
   <Target Name="PowerOff">
-    <VirtualMachinePowerOn ConnectionType="$(ConnectionType)" Host="$(Host)" Username="$(HostUsername)" Password="$(HostPassword)"
+    <VirtualMachinePowerOn ConnectionType="$(ConnectionType)" Host="$(Host)" HostUsername="$(HostUsername)" HostPassword="$(HostPassword)"
      Filename="$(VmFilename)" WaitForTools="true" />
-    <VirtualMachinePowerOff ConnectionType="$(ConnectionType)" Host="$(Host)" Username="$(HostUsername)" Password="$(HostPassword)"
+    <VirtualMachinePowerOff ConnectionType="$(ConnectionType)" Host="$(Host)" HostUsername="$(HostUsername)" HostPassword="$(HostPassword)"
      Filename="$(VmFilename)" />
   </Target>
 </Project>

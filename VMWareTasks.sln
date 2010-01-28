@@ -72,7 +72,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VMWareLibMSBuildTasksSamples", "VMWareLibMSBuildTasksSamples", "{DCDF3EE9-62A4-4DBD-868F-8BB96F11B569}"
 	ProjectSection(SolutionItems) = preProject
 		Source\VMWareLibMSBuildTasksSamples\ESX.properties = Source\VMWareLibMSBuildTasksSamples\ESX.properties
+		Source\VMWareLibMSBuildTasksSamples\Guest.proj = Source\VMWareLibMSBuildTasksSamples\Guest.proj
 		Source\VMWareLibMSBuildTasksSamples\Power.proj = Source\VMWareLibMSBuildTasksSamples\Power.proj
+		Source\VMWareLibMSBuildTasksSamples\Snapshot.proj = Source\VMWareLibMSBuildTasksSamples\Snapshot.proj
 		Source\VMWareLibMSBuildTasksSamples\Workstation.properties = Source\VMWareLibMSBuildTasksSamples\Workstation.properties
 	EndProjectSection
 EndProject

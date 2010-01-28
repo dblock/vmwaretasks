@@ -58,19 +58,25 @@ namespace Vestris.VMWareLib.MSBuildTasks
             }
         }
 
+        protected void PowerOnVirtualMachine(VMWareVirtualMachine virtualMachine)
+        {
+            Log.LogMessage(string.Format("Powering on {0}", Filename));
+            virtualMachine.PowerOn(PowerOnTimeout);
+
+            if (WaitForTools)
+            {
+                Log.LogMessage(string.Format("Waiting for {0}", Filename));
+                virtualMachine.WaitForToolsInGuest(WaitForToolsTimeout);
+            }
+        }
+
         public override bool Execute()
         {
             using (VMWareVirtualHost host = GetConnectedHost())
             {
                 using (VMWareVirtualMachine virtualMachine = OpenVirtualMachine(host))
                 {
-                    Log.LogMessage(string.Format("Powering on {0}", Filename));
-                    virtualMachine.PowerOn(PowerOnTimeout);
-
-                    if (WaitForTools)
-                    {
-                        virtualMachine.WaitForToolsInGuest(WaitForToolsTimeout);
-                    }
+                    PowerOnVirtualMachine(virtualMachine);
                 }
             }
 

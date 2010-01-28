@@ -1,0 +1,16 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+         DefaultTargets="All">
+  <Import Project="Workstation.properties" />
+  <PropertyGroup>
+    <VMWareLibMSBuildTasksPath>.</VMWareLibMSBuildTasksPath>
+  </PropertyGroup>
+  <Import Project="..\VMWareLibMSBuildTasks\bin\Debug\Vestris.VMWareLib.MSBuildTasks.Targets" />
+  <Target Name="All">
+    <VirtualMachineCreateSnapshot ConnectionType="$(ConnectionType)" Host="$(Host)" HostUsername="$(HostUsername)" HostPassword="$(HostPassword)"
+     Filename="$(VmFilename)" SnapshotName="MSBuildTest" SnapshotDescription="Demo MSBuild created snapshot." />
+    <VirtualMachineRevertToSnapshot ConnectionType="$(ConnectionType)" Host="$(Host)" HostUsername="$(HostUsername)" HostPassword="$(HostPassword)"
+     Filename="$(VmFilename)" SnapshotName="MSBuildTest" />
+    <VirtualMachineRemoveSnapshot ConnectionType="$(ConnectionType)" Host="$(Host)" HostUsername="$(HostUsername)" HostPassword="$(HostPassword)"
+     Filename="$(VmFilename)" SnapshotName="MSBuildTest" />
+  </Target>
+</Project>
