@@ -38,9 +38,10 @@
     <MSBuild Projects="VMWareTasks.sln" />
   </Target>
   <ItemGroup>
-    <SourceCodeProjects Include="*.sln" />
-    <SourceCodeProjects Include="*.proj" />
-    <SourceCodeProjects Include="*.cmd" />
+    <SourceCodeProjects Include="VMWareTasks.sln" />
+    <SourceCodeProjects Include="Version.proj" />
+    <SourceCodeProjects Include="VMWareTasks.proj" />
+    <SourceCodeProjects Include="build.cmd" />
   </ItemGroup>
   <ItemGroup>
     <SourceCodeFiles Include="Source/**/*.cs" />
@@ -79,6 +80,9 @@
   <ItemGroup>
     <DocumentationFiles Include="Documentation/$(Configuration)/VMWareTasks.chm" />    
   </ItemGroup>
+  <ItemGroup>
+    <LicenseFiles Include="Source/License.txt" />    
+  </ItemGroup>
   <Target Name="zip" DependsOnTargets="version">
     <Copy SourceFiles="@(SourceCodeProjects)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)\Source\%(RecursiveDir)" />
     <Copy SourceFiles="@(SourceCodeFiles)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)\Source\Source\%(RecursiveDir)" />
@@ -86,6 +90,7 @@
     <Copy SourceFiles="@(JavaBinaryFiles)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)\JavaBin" />
     <Copy SourceFiles="@(ArticleFiles)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)\Article\%(RecursiveDir)" />
     <Copy SourceFiles="@(DocumentationFiles)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)" />
+    <Copy SourceFiles="@(LicenseFiles)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)" />
     <TemplateFile Template="Documentation\WhatsNew.html" OutputFilename="..\$(ReleaseDir)\$(Major).$(Minor)\WhatsNew.html" Tokens="@(AssemblyInfoTokens)" />
     <CreateItem Include="$(ReleaseDir)/**/*">
       <Output TaskParameter="Include" ItemName="PackageFiles" />

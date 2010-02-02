@@ -10,6 +10,7 @@
     <CallTarget Targets="CopyFile" />
     <CallTarget Targets="Directory" />
     <CallTarget Targets="TempFile" />
+    <CallTarget Targets="RunProgram" />
   </Target>
   <Target Name="LoginGuest">
     <VirtualMachineLoginGuest ConnectionType="$(ConnectionType)" Host="$(Host)" HostUsername="$(HostUsername)" HostPassword="$(HostPassword)"
@@ -35,8 +36,35 @@
      Filename="$(VmFilename)" GuestUsername="$(GuestUsername)" GuestPassword="$(GuestPassword)">
       <Output TaskParameter="GuestPathName" ItemName="CreatedTempFilename" />
     </VirtualMachineCreateTempFileInGuest>
-    <Message Text="Created @(CreatedTempFilename)" />
+    <VirtualMachineFileExistsInGuest ConnectionType="$(ConnectionType)" Host="$(Host)" HostUsername="$(HostUsername)" HostPassword="$(HostPassword)"
+     Filename="$(VmFilename)" GuestUsername="$(GuestUsername)" GuestPassword="$(GuestPassword)" GuestPathName="@(CreatedTempFilename)">
+      <Output TaskParameter="FileExists" ItemName="CreatedTempFileExists" />
+    </VirtualMachineFileExistsInGuest>
+    <Message Text="Created @(CreatedTempFilename) exists: @(CreatedTempFileExists)" />
+    <VirtualMachineGetFileInfoInGuest ConnectionType="$(ConnectionType)" Host="$(Host)" HostUsername="$(HostUsername)" HostPassword="$(HostPassword)"
+     Filename="$(VmFilename)" GuestUsername="$(GuestUsername)" GuestPassword="$(GuestPassword)" GuestPathName="@(CreatedTempFilename)">
+      <Output TaskParameter="FileSize" ItemName="CreatedTempFileSize" />
+      <Output TaskParameter="LastModified" ItemName="CreatedTempFileLastModified" />
+      <Output TaskParameter="IsDirectory" ItemName="CreatedTempFileIsDirectory" />
+      <Output TaskParameter="IsSymLink" ItemName="CreatedTempFileIsSymLink" />
+    </VirtualMachineGetFileInfoInGuest>
+    <Message Text="Created @(CreatedTempFilename): @(CreatedTempFileSize) bytes, modified @(CreatedTempFileLastModified) [@(CreatedTempFileIsDirectory)/@(CreatedTempFileIsSymLink)]" />
     <VirtualMachineDeleteFileFromGuest ConnectionType="$(ConnectionType)" Host="$(Host)" HostUsername="$(HostUsername)" HostPassword="$(HostPassword)"
      Filename="$(VmFilename)" GuestUsername="$(GuestUsername)" GuestPassword="$(GuestPassword)" GuestPathName="@(CreatedTempFilename)" />
+  </Target>
+  <Target Name="RunProgram">
+    <VirtualMachineRunProgramInGuest ConnectionType="$(ConnectionType)" Host="$(Host)" HostUsername="$(HostUsername)" HostPassword="$(HostPassword)"
+     Filename="$(VmFilename)" GuestUsername="$(GuestUsername)" GuestPassword="$(GuestPassword)"
+     GuestProgramName="command.com" CommandLineArgs="/C dir">
+      <Output TaskParameter="ProcessId" ItemName="ProcessId" />
+      <Output TaskParameter="ProcessCommand" ItemName="ProcessCommand" />
+      <Output TaskParameter="ProcessName" ItemName="ProcessName" />
+      <Output TaskParameter="ProcessOwner" ItemName="ProcessOwner" />
+      <Output TaskParameter="ProcessStartDateTime" ItemName="ProcessStartDateTime" />
+      <Output TaskParameter="IsProcessBeingDebugged" ItemName="IsProcessBeingDebugged" />
+      <Output TaskParameter="ProcessExitCode" ItemName="ProcessExitCode" />
+    </VirtualMachineRunProgramInGuest>
+    <Message Text="@(ProcessId): command=@(ProcessCommand), name=@(ProcessName), owner=@(ProcessOwner)" />
+    <Message Text=" started @(ProcessStartDateTime), debugged=@(IsProcessBeingDebugged), exitcode=@(ProcessExitCode)" />
   </Target>
 </Project>

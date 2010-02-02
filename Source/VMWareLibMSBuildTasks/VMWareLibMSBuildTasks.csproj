@@ -56,6 +56,8 @@
     <Compile Include="VirtualMachineCreateTempFileInGuest.cs" />
     <Compile Include="VirtualMachineDeleteDirectoryFromGuest.cs" />
     <Compile Include="VirtualMachineDeleteFileFromGuest.cs" />
+    <Compile Include="VirtualMachineFileExistsInGuest.cs" />
+    <Compile Include="VirtualMachineGetFileInfoInGuest.cs" />
     <Compile Include="VirtualMachineRemoveSnapshot.cs" />
     <Compile Include="VirtualMachineLoginGuest.cs" />
     <Compile Include="VirtualMachineOpen.cs" />
@@ -64,6 +66,7 @@
     <Compile Include="VirtualMachinePowerOff.cs" />
     <Compile Include="VirtualMachinePowerOn.cs" />
     <Compile Include="VirtualMachineRevertToSnapshot.cs" />
+    <Compile Include="VirtualMachineRunProgramInGuest.cs" />
     <Compile Include="VirtualMachineShutdownGuest.cs" />
   </ItemGroup>
   <ItemGroup>

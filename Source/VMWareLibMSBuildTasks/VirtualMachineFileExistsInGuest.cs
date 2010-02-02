@@ -7,32 +7,32 @@ using Interop.VixCOM;
 namespace Vestris.VMWareLib.MSBuildTasks
 {
     /// <summary>
-    /// Create a temporary file in the guest operating system.
+    /// Check whether a file exists in a guest operating system.
     /// </summary>
-    public class VirtualMachineCreateTempFileInGuest : VirtualMachineLoginGuest
+    public class VirtualMachineFileExistsInGuest : VirtualMachineLoginGuest
     {
-        private int _createTempFileTimeout = VMWareInterop.Timeouts.CreateTempFileTimeout;
+        private int _fileExistsTimeout = VMWareInterop.Timeouts.FileExistsTimeout;
         private string _guestPathName;
+        private bool _fileExists = false;
 
         /// <summary>
         /// Timeout in seconds.
         /// </summary>
-        public int CreateTempFileTimeout
+        public int FileExistsTimeout
         {
             get
             {
-                return _createTempFileTimeout;
+                return _fileExistsTimeout;
             }
             set
             {
-                _createTempFileTimeout = value;
+                _fileExistsTimeout = value;
             }
         }
 
         /// <summary>
-        /// Temporary file path on the guest operating system.
+        /// File path on the guest operating system.
         /// </summary>
-        [Output]
         public string GuestPathName
         {
             get
@@ -45,6 +45,18 @@ namespace Vestris.VMWareLib.MSBuildTasks
             }
         }
 
+        /// <summary>
+        /// True if file exists.
+        /// </summary>
+        [Output]
+        public bool FileExists
+        {
+            get
+            {
+                return _fileExists;
+            }
+        }
+
         public override bool Execute()
         {
             using (VMWareVirtualHost host = GetConnectedHost())
@@ -52,8 +64,8 @@ namespace Vestris.VMWareLib.MSBuildTasks
                 using (VMWareVirtualMachine virtualMachine = OpenVirtualMachine(host))
                 {
                     LoginGuest(virtualMachine);
-                    _guestPathName = virtualMachine.CreateTempFileInGuest(_createTempFileTimeout);
-                    Log.LogMessage(string.Format("Created temporary file '{0}' in guest os", _guestPathName));
+                    Log.LogMessage(string.Format("Checking file '{0}' in guest os", _guestPathName));
+                    _fileExists = virtualMachine.FileExistsInGuest(_guestPathName, _fileExistsTimeout);
                 }
             }
 

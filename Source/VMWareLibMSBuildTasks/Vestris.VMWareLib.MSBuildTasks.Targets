@@ -16,6 +16,9 @@
   <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachineDeleteDirectoryFromGuest" />
   <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachineDeleteFileFromGuest" />
   <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachineCreateTempFileInGuest" />
+  <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachineFileExistsInGuest" />
+  <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachineRunProgramInGuest" />
+  <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachineGetFileInfoInGuest" />
   <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachineCreateSnapshot" />
   <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachineRevertToSnapshot" />
   <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachineRemoveSnapshot" />
