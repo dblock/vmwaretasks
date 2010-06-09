@@ -28,6 +28,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Version", "Source\Version\V
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{D318F9F3-0299-4F6A-8CAC-C25725FC2F5D}"
 	ProjectSection(SolutionItems) = preProject
+		Source\License.txt = Source\License.txt
 		Documentation\VMWareTasks.content = Documentation\VMWareTasks.content
 		Documentation\VMWareTasks.shfbproj = Documentation\VMWareTasks.shfbproj
 		Documentation\WhatsNew.html = Documentation\WhatsNew.html
@@ -36,6 +37,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Content", "Content", "{748E0786-A7ED-4B61-AFA6-B67A07E6CE24}"
 	ProjectSection(SolutionItems) = preProject
 		Documentation\Content\AboutHelp.aml = Documentation\Content\AboutHelp.aml
+		Documentation\Content\Contributing.aml = Documentation\Content\Contributing.aml
 		Documentation\Content\GettingStarted.aml = Documentation\Content\GettingStarted.aml
 		Documentation\Content\GettingStartedCOM.aml = Documentation\Content\GettingStartedCOM.aml
 		Documentation\Content\GettingStartedCSharp.aml = Documentation\Content\GettingStartedCSharp.aml

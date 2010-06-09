@@ -23,7 +23,7 @@
       </para>
       <para>
         VMWareTasks exposes a C# interface, a COM-enabled interface for script clients, a Java bridge for Java programs
-        and a set of MSBuild tasks. VMWareTasks is completely free and distributed under the
+        and a set of MSBuild tasks. VMWareTasks is open-source, completely free and distributed under the
         <link topicType_id="DAC3A6A0-C863-4E5B-8F65-79EFC6A4BA09" xlink:href="bfd78578-6e10-47e5-8b41-44426e0a1ac1">
           MIT license
         </link>.
@@ -33,12 +33,12 @@
         <externalLink>
           <linkHref>http://vmwaretasks.codeplex.com/</linkHref>
           <linkText>http://vmwaretasks.codeplex.com</linkText>
-        </externalLink>. Contributors are welcome.
+        </externalLink>. See <link xlink:href="676df1d8-3828-44fe-aef3-068760d33f7a" />.
       </para>
     </introduction>
     <relatedTopics>
       <link topicType_id="DAC3A6A0-C863-4E5B-8F65-79EFC6A4BA09" xlink:href="a6f46303-b703-4ff3-9572-55d8131eb883" />
-      <link tipicType_id="DAC3A6A0-C863-4E5B-8F65-79EFC6A4BA09" xlink:href="8471e09f-12dd-42b3-af74-c67134cc3816" />
+      <link topicType_id="DAC3A6A0-C863-4E5B-8F65-79EFC6A4BA09" xlink:href="8471e09f-12dd-42b3-af74-c67134cc3816" />
       <codeEntityReference qualifyHint="true">N:Vestris.VMWareLib</codeEntityReference>
       <codeEntityReference qualifyHint="true">N:Vestris.VMWareLib.Tools</codeEntityReference>
       <codeEntityReference qualifyHint="true">N:Vestris.VMWareLib.Tools.Windows</codeEntityReference>

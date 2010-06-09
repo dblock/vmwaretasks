@@ -19,12 +19,18 @@
           <linkText>http://vmwaretasks.codeplex.com</linkText>
         </externalLink>.
       </para>
+      <alert type="note">
+        <para>
+          Contrary to any appearances, VMWareTasks is a community free and open-source project that is not sponsored, 
+          endorsed or supported by the VMWare Corporation.
+        </para>
+      </alert>
     </introduction>
     <section address="gettinghelp">
       <title>Getting Help</title>
       <content>
         <para>
-          Feel free to ask library-specific questions in the
+          Please post library-specific questions in the
           <externalLink>
             <linkHref>http://vmwaretasks.codeplex.com/Thread/List.aspx</linkHref>
             <linkText>discussions section of vmwaretasks.codeplex.com</linkText>
