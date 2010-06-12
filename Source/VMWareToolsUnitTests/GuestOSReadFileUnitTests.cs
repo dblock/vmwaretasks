@@ -15,7 +15,7 @@ namespace Vestris.VMWareToolsUnitTests
         [Test]
         public void TestReadFile()
         {
-            foreach (VMWareVirtualMachine vm in VMWareTest.Instance.PoweredVirtualMachines)
+            foreach (VMWareVirtualMachine vm in _test.PoweredVirtualMachines)
             {
                 // create a temp file
                 StringBuilder sb = new StringBuilder();

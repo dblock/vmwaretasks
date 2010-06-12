@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Interop.VixCOM;
 
 namespace Vestris.VMWareLib
 {
@@ -28,7 +29,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         /// <param name="code">VMWare VixCOM.Constants error code.</param>
         public VMWareException(ulong code)
-            : this(code, VMWareInterop.Instance.GetErrorText(code, "en-US"))
+            : this(code, new VixLib().GetErrorText(code, "en-US"))
         {
         }
 

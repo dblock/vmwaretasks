@@ -243,7 +243,7 @@ namespace Vestris.VMWareLib
         {
             int serviceProvider = (int)serviceProviderType;
             VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(VMWareInterop.Instance.Connect(
+            using (VMWareJob job = new VMWareJob(new VixLib().Connect(
                 Constants.VIX_API_VERSION, serviceProvider, hostName, hostPort,
                 username, password, 0, null, callback), callback))
             {

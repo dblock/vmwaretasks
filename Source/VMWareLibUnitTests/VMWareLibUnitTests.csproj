@@ -57,6 +57,7 @@
     <Compile Include="VMWareExceptionTests.cs" />
     <Compile Include="VMWareInteropTests.cs" />
     <Compile Include="VMWareJobTests.cs" />
+    <Compile Include="VMWareLibSTATest.cs" />
     <Compile Include="VMWareMultiThreadedTests.cs" />
     <Compile Include="VMWareSnapshotTests.cs" />
     <Compile Include="VMWareTest.cs" />

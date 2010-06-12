@@ -16,17 +16,17 @@ namespace Vestris.VMWareLibUnitTests
     {
         public override void SetUp()
         {
-            if (!VMWareTest.Instance.Config.RunLongTests)
+            if (!_test.Config.RunLongTests)
                 Assert.Ignore("Skipping, long tests disabled.");
         }
 
         [Test]
         public void TestRecordingBeginEnd()
         {
-            if (! VMWareTest.Instance.Config.RunWorkstationTests)
+            if (! _test.Config.RunWorkstationTests)
                 Assert.Ignore("Skipping, Workstation tests disabled.");
 
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in _test.PoweredVirtualMachines)
             {
                 Assert.IsFalse(virtualMachine.IsRecording);
                 string snapshotName = Guid.NewGuid().ToString();
@@ -58,7 +58,7 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestReset()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in _test.PoweredVirtualMachines)
             {
                 // hardware reset
                 ConsoleOutput.WriteLine("Reset ...");
@@ -72,7 +72,7 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestSuspend()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in _test.PoweredVirtualMachines)
             {
                 ConsoleOutput.WriteLine("Suspend ...");
                 virtualMachine.Suspend();

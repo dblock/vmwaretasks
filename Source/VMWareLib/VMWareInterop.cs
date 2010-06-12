@@ -10,11 +10,6 @@ namespace Vestris.VMWareLib
     public abstract class VMWareInterop
     {
         /// <summary>
-        /// VixCOM instance handler.
-        /// </summary>
-        public static VixLib Instance = new VixLib();
-
-        /// <summary>
         /// Default timeouts for VMWare operations.
         /// </summary>
         public static VMWareTimeouts Timeouts = new VMWareTimeouts();
@@ -25,7 +20,7 @@ namespace Vestris.VMWareLib
         /// <param name="errCode">Error code.</param>
         public static void Check(ulong errCode)
         {
-            if (Instance.ErrorIndicatesFailure(errCode))
+            if (new VixLib().ErrorIndicatesFailure(errCode))
             {
                 throw new VMWareException(errCode);
             }

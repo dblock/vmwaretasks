@@ -20,7 +20,8 @@ namespace Vestris.VMWareLibUnitTests
     public class VMWareTest : IDisposable
     {
         private VMWareTestsConfig _config = null;
-        public static VMWareTest Instance = null;
+
+        public VMWareTest Instance = null;
 
         public VMWareTest()
         {
@@ -28,7 +29,7 @@ namespace Vestris.VMWareLibUnitTests
             Assert.IsNotNull(_config);
         }
 
-        public static void SetUp()
+        public void SetUp()
         {
             if (Instance == null)
             {
@@ -36,7 +37,7 @@ namespace Vestris.VMWareLibUnitTests
             }
         }
 
-        public static void TearDown()
+        public void TearDown()
         {
             if (Instance != null)
             {

@@ -12,7 +12,7 @@ namespace Vestris.VMWareLibUnitTests
         {
             base.SetUp();
 
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.PoweredVirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in _test.PoweredVirtualMachines)
             {
                 ConsoleOutput.WriteLine("Powered VM: {0}", virtualMachine.RuntimeConfigVariables["name"]);
             }

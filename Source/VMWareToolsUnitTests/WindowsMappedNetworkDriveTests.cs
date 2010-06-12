@@ -14,7 +14,7 @@ namespace Vestris.VMWareToolsUnitTests
         [Test]
         public void TestMapCDrive()
         {
-            foreach (IVMWareTestProvider provider in VMWareTest.Instance.Providers)
+            foreach (IVMWareTestProvider provider in _test.Providers)
             {
                 MappedNetworkDriveInfo mappedNetworkDriveInfo = new MappedNetworkDriveInfo();
                 mappedNetworkDriveInfo.RemotePath = @"C:\";

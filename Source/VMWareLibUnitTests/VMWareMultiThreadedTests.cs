@@ -15,7 +15,7 @@ namespace Vestris.VMWareLibUnitTests
         private void RunThreadTest(ParameterizedThreadStart threadStart)
         {
             List<Thread> threads = new List<Thread>();
-            foreach (IVMWareTestProvider provider in VMWareTest.Instance.Providers)
+            foreach (IVMWareTestProvider provider in _test.Providers)
             {
                 ConsoleOutput.WriteLine("Starting thread {0} ...", threads.Count + 1);
                 Thread thread = new Thread(threadStart);

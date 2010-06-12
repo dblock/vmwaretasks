@@ -7,16 +7,18 @@ namespace Vestris.VMWareLibUnitTests
 {
     public class VMWareUnitTest
     {
+        protected VMWareTest _test = new VMWareTest();
+
         [SetUp]
         public virtual void SetUp()
         {
-            VMWareTest.SetUp();
+            _test.SetUp();
         }
 
         [TearDown]
         public virtual void TearDown()
         {
-            VMWareTest.TearDown();
+            _test.TearDown();
         }
     }
 }

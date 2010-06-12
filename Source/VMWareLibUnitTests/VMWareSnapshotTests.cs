@@ -24,7 +24,7 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestEnumerateSnapshots()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.VirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in _test.VirtualMachines)
             {
                 List<string> snapshotPaths = GetSnapshotPaths(virtualMachine.Snapshots, 0);
                 foreach (string snapshotPath in snapshotPaths)
@@ -40,7 +40,7 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestCreateRemoveSnapshot()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.VirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in _test.VirtualMachines)
             {
                 // this is the root snapshot
                 Assert.IsTrue(virtualMachine.Snapshots.Count >= 0);
@@ -63,7 +63,7 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestCreateRevertRemoveSnapshot()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.VirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in _test.VirtualMachines)
             {
                 // this is the root snapshot
                 Assert.IsTrue(virtualMachine.Snapshots.Count >= 0);
@@ -90,7 +90,7 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestCreateSnapshotSameName()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.VirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in _test.VirtualMachines)
             {
                 // this is the root snapshot
                 Assert.IsTrue(virtualMachine.Snapshots.Count >= 0);
@@ -121,7 +121,7 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestFindByName()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.VirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in _test.VirtualMachines)
             {
                 // this is the root snapshot
                 string name = Guid.NewGuid().ToString();
@@ -161,12 +161,34 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestRevertToRoot()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.VirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in _test.VirtualMachines)
             {
                 foreach (VMWareSnapshot snapshot in virtualMachine.Snapshots)
                 {
                     snapshot.RevertToSnapshot();
                     break;
+                }
+            }
+        }
+
+        [Test]
+        public void TestRevertToLiveSnapshot()
+        {
+            using (VMWareVirtualHost virtualHost = new VMWareVirtualHost())
+            {
+                virtualHost.ConnectToVMWareWorkstation();
+                Console.WriteLine(virtualHost.ConnectionType);
+                using (VMWareVirtualMachine virtualMachine = virtualHost.Open(
+                    @"C:\Users\dblock\Documents\Virtual Machines\Windows 98 SE\Windows 98.vmx"))
+                {
+                    Console.WriteLine(virtualMachine.PathName);
+                    VMWareSnapshot snapshot = virtualMachine.Snapshots.GetNamedSnapshot("Live");
+                    // snapshot.RevertToSnapshot();
+                    // snapshot.RevertToSnapshot(Interop.VixCOM.Constants.VIX_VMPOWEROP_LAUNCH_GUI,
+                    //    VMWareInterop.Timeouts.RevertToSnapshotTimeout);
+                    snapshot.RevertToSnapshot(Interop.VixCOM.Constants.VIX_VMPOWEROP_SUPPRESS_SNAPSHOT_POWERON,
+                        VMWareInterop.Timeouts.RevertToSnapshotTimeout);
+                    // virtualMachine.PowerOn();
                 }
             }
         }

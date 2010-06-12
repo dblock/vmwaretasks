@@ -16,10 +16,10 @@ namespace Vestris.VMWareLibUnitTests
     {
         public override void SetUp()
         {
-            if (!VMWareTest.Instance.Config.RunPoweredOffTests)
+            if (! _test.Config.RunPoweredOffTests)
                 Assert.Ignore("Skipping, powered off tests disabled.");
 
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.VirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in _test.VirtualMachines)
             {
                 if (virtualMachine.IsRunning)
                 {
@@ -31,7 +31,7 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         protected void TestUpgradeVirtualHardware()
         {
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.VirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in _test.VirtualMachines)
             {
                 // upgrading virtual hardware should always succeed
                 ConsoleOutput.WriteLine("Upgrading virtual hardware ...");
@@ -42,10 +42,10 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestCloneVirtualMachine()
         {           
-            if (!VMWareTest.Instance.Config.RunWorkstationTests)
+            if (!_test.Config.RunWorkstationTests)
                 Assert.Ignore("Skipping test, Workstation tests disabled.");
 
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.VirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in _test.VirtualMachines)
             {
                 string vmxPathName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
                 ConsoleOutput.WriteLine("Creating linked clone: {0}", vmxPathName);
@@ -60,10 +60,10 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestDeleteVirtualMachine()
         {
-            if (!VMWareTest.Instance.Config.RunWorkstationTests)
+            if (!_test.Config.RunWorkstationTests)
                 Assert.Ignore("Skipping, test requires server admin privileges for ESX, Workstation tests disabled.");
 
-            foreach (IVMWareTestProvider testProvider in VMWareTest.Instance.Providers)
+            foreach (IVMWareTestProvider testProvider in _test.Providers)
             {
                 VMWareVirtualMachine virtualMachine = testProvider.VirtualMachine;
                 string vmxPathName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
@@ -84,10 +84,10 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void TestCloneVirtualMachineSnapshot()
         {
-            if (!VMWareTest.Instance.Config.RunWorkstationTests)
+            if (!_test.Config.RunWorkstationTests)
                 Assert.Ignore("Skipping, test requires server admin privileges for ESX, Workstation tests disabled.");
 
-            foreach (VMWareVirtualMachine virtualMachine in VMWareTest.Instance.VirtualMachines)
+            foreach (VMWareVirtualMachine virtualMachine in _test.VirtualMachines)
             {
                 string vmxPathName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
                 ConsoleOutput.WriteLine("Creating linked clone of root snapshot: {0}", vmxPathName);
