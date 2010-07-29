@@ -693,6 +693,19 @@ namespace Vestris.VMWareLib
         /// </summary>
         /// <param name="guestProgramName">Guest program to run.</param>
         /// <param name="commandLineArgs">Additional command line arguments.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        /// <returns>Process information.</returns>
+        public Process RunProgramInGuest(string guestProgramName, string commandLineArgs, int timeoutInSeconds)
+        {
+            return RunProgramInGuest(guestProgramName, commandLineArgs, 0, 
+                timeoutInSeconds);
+        }
+
+        /// <summary>
+        /// Run a program in the guest operating system.
+        /// </summary>
+        /// <param name="guestProgramName">Guest program to run.</param>
+        /// <param name="commandLineArgs">Additional command line arguments.</param>
         /// <param name="options">Additional options, one of VIX_RUNPROGRAM_RETURN_IMMEDIATELY or VIX_RUNPROGRAM_ACTIVATE_WINDOW.</param>
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         /// <returns>Process information.</returns>
