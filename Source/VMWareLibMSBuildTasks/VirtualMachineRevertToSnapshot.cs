@@ -11,7 +11,6 @@ namespace Vestris.VMWareLib.MSBuildTasks
     {
         private int _revertToSnapshotTimeout = VMWareInterop.Timeouts.RevertToSnapshotTimeout;
         private string _snapshotName;
-        private string _snapshotDescription;
 
         /// <summary>
         /// Timeout in seconds.
@@ -43,6 +42,10 @@ namespace Vestris.VMWareLib.MSBuildTasks
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override bool Execute()
         {
             using (VMWareVirtualHost host = GetConnectedHost())

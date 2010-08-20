@@ -95,6 +95,10 @@ namespace Vestris.VMWareLib.MSBuildTasks
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override bool Execute()
         {
             using (VMWareVirtualHost host = GetConnectedHost())

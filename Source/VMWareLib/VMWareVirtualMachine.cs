@@ -810,6 +810,7 @@ namespace Vestris.VMWareLib
         /// Open a browser window on the specified URL in the guest operating system.
         /// </summary>
         /// <param name="url">The url to be opened.</param>
+        [Obsolete]
         public void OpenUrlInGuest(string url)
         {
             OpenUrlInGuest(url, VMWareInterop.Timeouts.OpenUrlTimeout);
@@ -820,6 +821,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         /// <param name="url">The url to be opened.</param>
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        [Obsolete]
         public void OpenUrlInGuest(string url, int timeoutInSeconds)
         {
             VMWareJobCallback callback = new VMWareJobCallback();

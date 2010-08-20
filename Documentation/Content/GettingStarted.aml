@@ -20,8 +20,8 @@
               Version 1.8.0 or newer is required for VMWare Player support.
             </listItem>
             <listItem>
-              Either VMWare Workstation 6.5.2 or 7.0, VMWare Server 2.0, VMWare Player 3.0, a
-              Virtual Infrastructure environment (eg. ESXi) or VSphere 4.0.
+              Either VMWare Workstation 6.5.2, 7.0 or 7.1, VMWare Server 2.0, VMWare Player 3.0 or 3.1, a
+              Virtual Infrastructure environment (eg. ESXi) or VSphere 4.0 or 4.1.
             </listItem>
           </list>
         </para>

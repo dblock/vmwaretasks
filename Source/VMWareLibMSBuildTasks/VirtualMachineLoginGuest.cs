@@ -75,6 +75,10 @@ namespace Vestris.VMWareLib.MSBuildTasks
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="virtualMachine"></param>
         protected void LoginGuest(VMWareVirtualMachine virtualMachine)
         {
             PowerOnVirtualMachine(virtualMachine);
@@ -84,6 +88,10 @@ namespace Vestris.VMWareLib.MSBuildTasks
                 _loginTimeout);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override bool Execute()
         {
             using (VMWareVirtualHost host = GetConnectedHost())

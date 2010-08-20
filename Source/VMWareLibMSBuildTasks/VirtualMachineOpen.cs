@@ -52,6 +52,10 @@ namespace Vestris.VMWareLib.MSBuildTasks
             return virtualHost.Open(_filename, OpenVMTimeout);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override bool Execute()
         {
             using (VMWareVirtualHost host = GetConnectedHost())

@@ -58,6 +58,10 @@ namespace Vestris.VMWareLib.MSBuildTasks
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="virtualMachine"></param>
         protected void PowerOnVirtualMachine(VMWareVirtualMachine virtualMachine)
         {
             Log.LogMessage(string.Format("Powering on {0}", Filename));
@@ -70,6 +74,10 @@ namespace Vestris.VMWareLib.MSBuildTasks
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override bool Execute()
         {
             using (VMWareVirtualHost host = GetConnectedHost())
