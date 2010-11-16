@@ -8,16 +8,26 @@ if "%~1"=="" (
 pushd "%~dp0"
 setlocal ENABLEEXTENSIONS ENABLEDELAYEDEXPANSION
 
-set VisualStudioCmd=%ProgramFiles%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat
+set ProgramFilesDir=%ProgramFiles%
+if NOT "%ProgramFiles(x86)%"=="" set ProgramFilesDir=%ProgramFiles(x86)%
 
-if EXIST "%VisualStudioCmd%" ( 
- call "%VisualStudioCmd%"
+set VisualStudioCmd=%ProgramFilesDir%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat
+if EXIST "%VisualStudioCmd%" call "%VisualStudioCmd%"
+
+for /D %%n in ( "%ProgramFilesDir%\NUnit*" ) do (
+ set NUnitDir=%%~n
 )
+
+if EXIST "%NUnitDir%\bin" set NUnitBinDir=%NUnitDir%\bin
+if EXIST "%NUnitDir%\bin\net-2.0" set NUnitBinDir=%NUnitDir%\bin\net-2.0
+
+if NOT EXIST "%NUnitBinDir%" echo Missing NUnit, expected in %NUnitDir%
+if NOT EXIST "%NUnitBinDir%" exit /b -1
 
 set FrameworkVersion=v3.5
 set FrameworkDir=%SystemRoot%\Microsoft.NET\Framework
 
-PATH=%FrameworkDir%\%FrameworkVersion%;%PATH%
+PATH=%FrameworkDir%\%FrameworkVersion%;%NUnitDir%;%PATH%
 msbuild.exe VMWareTasks.proj /t:%*
 popd
 endlocal

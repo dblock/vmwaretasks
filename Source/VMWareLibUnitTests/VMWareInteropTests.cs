@@ -15,14 +15,14 @@ namespace Vestris.VMWareLibUnitTests
         }
 
         [Test]
-        [ExpectedException(ExceptionType = typeof(VMWareException), ExpectedMessage = "Unknown error")]
+        [ExpectedException(ExpectedException = typeof(VMWareException), ExpectedMessage = "Unknown error")]
         public void TestThrowUnknownErrorException()
         {
             VMWareInterop.Check(1);
         }
 
         [Test]
-        [ExpectedException(ExceptionType = typeof(VMWareException), ExpectedMessage = "This login type is not supported")]
+        [ExpectedException(ExpectedException = typeof(VMWareException), ExpectedMessage = "This login type is not supported")]
         public void TestThrowLoginTypeNotSupportedException()
         {
             VMWareInterop.Check(3032);
