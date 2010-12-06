@@ -13,7 +13,7 @@
   </PropertyGroup>
   <Import Project="Version.proj"/>
   <PropertyGroup>
-    <ReleaseDir>Vestris.VMWareTasks</ReleaseDir>
+    <ReleaseDir>target\$(Configuration)\VMWareTasks</ReleaseDir>
   </PropertyGroup>
   <Target Name="all">
     <CallTarget Targets="clean" />
@@ -27,10 +27,9 @@
   <Target Name="clean">
     <MSBuild Projects="VMWareTasks.sln" Targets="Clean" />
     <DeleteTree Directories="Documentation\$(Configuration)" />
-    <DeleteTree Directories="$(ReleaseDir)" Recursive="true" />
+    <DeleteTree Directories="target" Recursive="true" />
     <DeleteTree Directories="Source\VMWareComLibJava;Source\VMWareComToolsJava" />
     <DeleteTree Directories="Source\Interop.VixCOM" />
-    <Delete Files="Vestris.VMWareTasks.zip" />
     <Delete Files="Source\Version\GlobalAssemblyInfo.cs" />
     <DeleteTree Directories="Source\**\bin;Source\**\obj" Recursive="true" />
   </Target>
@@ -84,18 +83,18 @@
     <LicenseFiles Include="Source/License.txt" />    
   </ItemGroup>
   <Target Name="zip" DependsOnTargets="version">
-    <Copy SourceFiles="@(SourceCodeProjects)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)\Source\%(RecursiveDir)" />
-    <Copy SourceFiles="@(SourceCodeFiles)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)\Source\Source\%(RecursiveDir)" />
-    <Copy SourceFiles="@(BinaryFiles)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)\Bin" />
-    <Copy SourceFiles="@(JavaBinaryFiles)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)\JavaBin" />
-    <Copy SourceFiles="@(ArticleFiles)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)\Article\%(RecursiveDir)" />
-    <Copy SourceFiles="@(DocumentationFiles)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)" />
-    <Copy SourceFiles="@(LicenseFiles)" DestinationFolder="$(ReleaseDir)\$(Major).$(Minor)" />
-    <TemplateFile Template="Documentation\WhatsNew.html" OutputFilename="..\$(ReleaseDir)\$(Major).$(Minor)\WhatsNew.html" Tokens="@(AssemblyInfoTokens)" />
-    <CreateItem Include="$(ReleaseDir)/**/*">
+    <Copy SourceFiles="@(SourceCodeProjects)" DestinationFolder="$(ReleaseDir)\Source\%(RecursiveDir)" />
+    <Copy SourceFiles="@(SourceCodeFiles)" DestinationFolder="$(ReleaseDir)\Source\Source\%(RecursiveDir)" />
+    <Copy SourceFiles="@(BinaryFiles)" DestinationFolder="$(ReleaseDir)\Bin" />
+    <Copy SourceFiles="@(JavaBinaryFiles)" DestinationFolder="$(ReleaseDir)\JavaBin" />
+    <Copy SourceFiles="@(ArticleFiles)" DestinationFolder="$(ReleaseDir)\Article\%(RecursiveDir)" />
+    <Copy SourceFiles="@(DocumentationFiles)" DestinationFolder="$(ReleaseDir)" />
+    <Copy SourceFiles="@(LicenseFiles)" DestinationFolder="$(ReleaseDir)" />
+    <TemplateFile Template="Documentation\WhatsNew.html" OutputFilename="..\$(ReleaseDir)\WhatsNew.html" Tokens="@(AssemblyInfoTokens)" />
+    <CreateItem Include="$(ReleaseDir)\**\*" Exclude="target\$(Configuration)\*.zip">
       <Output TaskParameter="Include" ItemName="PackageFiles" />
     </CreateItem>
-    <Zip ZipFileName="Vestris.VMWareTasks.zip" Files="@(PackageFiles)" />
+    <Zip WorkingDirectory="$(ReleaseDir)" ZipFileName="target\$(Configuration)\VMWareTasks-$(Major).$(Minor).zip" Files="@(PackageFiles)" />
   </Target>
   <Target Name="doc" DependsOnTargets="version">
     <Error Condition="'$(DXROOT)'==''" Text="Missing Sandcastle, DXROOT environment variable not set, install from http://www.codeplex.com/Sandcastle" />
@@ -128,7 +127,7 @@
     <Exec Command="regasm.exe /codebase %(ComInterface.InputDir)\%(ComInterface.DllName) /tlb:%(ComInterface.FileName).tlb" />
     <!-- export to com4j and compile generated java code -->
     <Exec Command="java -jar Tools\Com4j\tlbimp.jar -p %(ComInterface.PackageName) -o %(ComInterface.OutputDir) %(ComInterface.InputDir)\%(ComInterface.FileName).tlb" />
-    <MakeDir Directories="$(ReleaseDir)\$(Major).$(Minor)\Bin" />
+    <MakeDir Directories="$(ReleaseDir)\Bin" />
     <Exec WorkingDirectory="%(ComInterface.OutputDir)" Command="&quot;$(JAVA_HOME)\bin\javac.exe&quot; %(ComInterface.PackageDir)\*.java -cp &quot;$(MSBuildProjectDirectory)\Tools\Com4j\com4j.jar&quot;" />
     <!-- make compiled and source jars -->
     <MakeDir Directories="%(ComInterface.OutputDir)\bin" />
