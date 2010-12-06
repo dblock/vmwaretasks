@@ -9,7 +9,7 @@
     <Copyright>Copyright (c) 2008-2010 Daniel Doubrovkine, Vestris Inc.</Copyright>
     <Trademark>All Rights Reserved</Trademark>
     <MajorVersion>1</MajorVersion>
-    <MinorVersion>5</MinorVersion>
+    <MinorVersion>6</MinorVersion>
   </PropertyGroup>
   <Import Project="Version.proj"/>
   <PropertyGroup>
