@@ -227,7 +227,7 @@ namespace Vestris.VMWareLibUnitTests
             {
                 VMWareVirtualMachine.Process notepadProcess = virtualMachine.DetachProgramInGuest("notepad.exe");
                 ConsoleOutput.WriteLine("Notepad.exe: {0}", notepadProcess.Id);
-                Dictionary<long, VMWareVirtualMachine.Process> guestProcesses = virtualMachine.GuestProcesses;
+                VMWareProcessCollection guestProcesses = virtualMachine.GuestProcesses;
                 Assert.IsTrue(guestProcesses.ContainsKey(notepadProcess.Id));
                 foreach (KeyValuePair<long, VMWareVirtualMachine.Process> process in guestProcesses)
                 {
@@ -237,7 +237,7 @@ namespace Vestris.VMWareLibUnitTests
                 }
                 notepadProcess.KillProcessInGuest();
                 Thread.Sleep(3000); // doc says: depending on the behavior of the guest operating system, there may be a short delay after the job completes before the process truly disappears
-                Dictionary<long, VMWareVirtualMachine.Process> guestProcesses2 = virtualMachine.GuestProcesses;
+                VMWareProcessCollection guestProcesses2 = virtualMachine.GuestProcesses;
                 Assert.IsFalse(guestProcesses2.ContainsKey(notepadProcess.Id));
             }
         }
@@ -343,6 +343,28 @@ namespace Vestris.VMWareLibUnitTests
             foreach (VMWareVirtualMachine virtualMachine in _test.PoweredVirtualMachines)
             {
                 virtualMachine.InstallTools();
+            }
+        }
+
+        [Test]
+        public void TestLogInInteractivelyAfterWaitingForVMwareUserProcess()
+        {
+            foreach (VMWareVirtualMachine virtualMachine in _test.PoweredVirtualMachines)
+            {
+                VMWareVirtualMachineConfig config = _test.GetConfiguration(virtualMachine);
+
+                Assert.IsNotNull(config);
+
+                virtualMachine.WaitForVMWareUserProcessInGuest(
+                    config.GuestUsername, 
+                    config.GuestPassword, 
+                    VMWareInterop.Timeouts.WaitForToolsTimeout);
+
+                virtualMachine.LoginInGuest(
+                    config.GuestUsername, 
+                    config.GuestPassword,
+                    Constants.VIX_LOGIN_IN_GUEST_REQUIRE_INTERACTIVE_ENVIRONMENT,
+                    VMWareInterop.Timeouts.LoginTimeout);
             }
         }
     }

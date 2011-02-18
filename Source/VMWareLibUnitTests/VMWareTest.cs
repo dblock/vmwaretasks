@@ -108,6 +108,19 @@ namespace Vestris.VMWareLibUnitTests
             }
         }
 
+        public VMWareVirtualMachineConfig GetConfiguration(VMWareVirtualMachine virtualMachine)
+        {
+            foreach (VMWareVirtualMachineConfig virtualMachineConfig in _config.VirtualMachines)
+            {
+                if (virtualMachineConfig.File == virtualMachine.PathName)
+                {
+                    return virtualMachineConfig;
+                }
+            }
+
+            return null;
+        }
+
         public void Dispose()
         {
             if (_config != null)

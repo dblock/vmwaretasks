@@ -169,6 +169,22 @@ namespace Vestris.VMWareLibUnitTests
             }
         }
 
+        /// <summary>
+        /// The name of the snapshot to revert.
+        /// </summary>
+        [ConfigurationProperty("snapshot")]
+        public string Snapshot
+        {
+            get
+            {
+                return (string)this["snapshot"];
+            }
+            set
+            {
+                this["snapshot"] = value;
+            }
+        }
+
         public IVMWareTestProvider Provider
         {
             get

@@ -22,4 +22,5 @@
   <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachineCreateSnapshot" />
   <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachineRevertToSnapshot" />
   <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachineRemoveSnapshot" />
+  <UsingTask AssemblyFile="$(VMWareLibMSBuildTasksLib)" TaskName="Vestris.VMWareLib.MSBuildTasks.VirtualMachineWaitForVMwareUserProcess" />
 </Project>

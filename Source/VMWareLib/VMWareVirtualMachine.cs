@@ -436,6 +436,74 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
+        /// This function waits for the vmwareuser process to exist in the guest.
+        /// </summary>
+        /// <param name="username">The name of a user account on the guest operating system.</param>
+        /// <param name="password">The password of the account identified by userName.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        public void WaitForVMWareUserProcessInGuest(string username, string password, int timeoutInSeconds)
+        {
+            //http://communities.vmware.com/message/1154264
+            bool loggedIn = false;
+
+            try
+            {
+                LoginInGuest(username, password, timeoutInSeconds);
+
+                loggedIn = true;
+
+                DateTime dtStart = DateTime.Now;
+
+                while (true)
+                {
+                    VMWareProcessCollection guestProcesses = this.GuestProcesses;
+
+                    Process vmwareUserExeProcess = guestProcesses.FindProcess("vmwareuser.exe", StringComparison.OrdinalIgnoreCase);
+                    if (vmwareUserExeProcess != null)
+                    {
+                        break;
+                    }
+
+                    vmwareUserExeProcess = guestProcesses.FindProcess("vmware-user", StringComparison.OrdinalIgnoreCase);
+                    if (vmwareUserExeProcess != null)
+                    {
+                        break;
+                    }
+
+                    TimeSpan ts = DateTime.Now.Subtract(dtStart);
+                    if (ts.TotalSeconds >= timeoutInSeconds)
+                    {
+                        throw new VMWareException(Constants.VIX_E_TIMEOUT_WAITING_FOR_TOOLS, "vmwareuser");
+                    }
+                }
+            }
+            finally
+            {
+                if (loggedIn)
+                {
+                    try
+                    {
+                        LogoutFromGuest(timeoutInSeconds);
+                    }
+                    catch
+                    {
+                        //ignore this exception so that it does not swallow any previous exceptions
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// This function waits for the vmwareuser process to exist in the guest.
+        /// </summary>
+        /// <param name="username">The name of a user account on the guest operating system.</param>
+        /// <param name="password">The password of the account identified by userName.</param>
+        public void WaitForVMWareUserProcessInGuest(string username, string password)
+        {
+            WaitForVMWareUserProcessInGuest(username, password, VMWareInterop.Timeouts.WaitForToolsTimeout);
+        }
+
+        /// <summary>
         /// Copies a file or directory from the local system (where the Vix client is running) to the guest operating system.
         /// </summary>
         /// <param name="hostPathName">File location on the host operating system.</param>
@@ -1208,13 +1276,13 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// Running processes in the guest operating system, organized by process id.
+        /// Running processes in the guest operating system.
         /// </summary>
-        public Dictionary<long, Process> GuestProcesses
+        public VMWareProcessCollection GuestProcesses
         {
             get
             {
-                Dictionary<long, Process> processes = new Dictionary<long, Process>();
+                VMWareProcessCollection processes = new VMWareProcessCollection();
                 VMWareJobCallback callback = new VMWareJobCallback();
                 using (VMWareJob job = new VMWareJob(_handle.ListProcessesInGuest(
                     0, callback), callback))

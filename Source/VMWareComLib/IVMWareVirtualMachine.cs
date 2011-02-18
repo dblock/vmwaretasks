@@ -51,6 +51,8 @@ namespace Vestris.VMWareComLib
         string[] ListDirectoryInGuest2(string pathName, bool recurse, int timeoutInSeconds);
         void LoginInGuest(string username, string password);
         void LoginInGuest2(string username, string password, int options, int timeoutInSeconds);
+        void WaitForVMWareUserProcessInGuest(string username, string password);
+        void WaitForVMWareUserProcessInGuest(string username, string password, int timeoutInSeconds);
         void LogoutFromGuest();
         void LogoutFromGuest2(int timeoutInSeconds);
         int MemorySize { get; }

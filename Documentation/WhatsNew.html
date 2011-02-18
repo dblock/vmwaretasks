@@ -27,7 +27,12 @@
     <ul>
         <li>Features
             <ul>
-                <li></li>
+                <li><a href="http://vmwaretasks.codeplex.com/workitem/8352">#8352</a>: Refactored GuestProcesses to
+                    return a ProcessCollection class that inherits from the Dictionary. Added a FindProcess method 
+                    to ProcessCollection. Added a WaitForVMWareUserProcessInGuest function that waits for the vmware 
+                    user process to exist.  Added WaitForVMwareUserProcess msbuild task.  Added WaitForVMwareUserProcess
+                    methods to IVMWareVirtualMachine COM interface.  Added snapshot support and GetConfiguration method 
+                    to VMWareTest in VMWareLibUnitTests.</li>
             </ul>
         </li>
         <li>Interface Changes

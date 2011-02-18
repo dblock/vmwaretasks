@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Vestris.VMWareLib;
 using System.Configuration;
+using Interop.VixCOM;
 
 namespace Vestris.VMWareLibUnitTests
 {
@@ -58,15 +59,24 @@ namespace Vestris.VMWareLibUnitTests
         {
             get
             {
+                if (!string.IsNullOrEmpty(_config.Snapshot))
+                {
+                    ConsoleOutput.WriteLine(string.Format("Reverting to snapshot {0}", _config.Snapshot));
+                    VirtualMachine.Snapshots.FindSnapshotByName(_config.Snapshot).RevertToSnapshot(Constants.VIX_VMPOWEROP_SUPPRESS_SNAPSHOT_POWERON);
+                }
+
                 if (! VirtualMachine.IsRunning)
                 {
                     ConsoleOutput.WriteLine("Powering on: {0}", _config.File);
                     VirtualMachine.PowerOn();
+
                     ConsoleOutput.WriteLine("Waiting for tools ...");
                     VirtualMachine.WaitForToolsInGuest();
                 }
+
                 ConsoleOutput.WriteLine("Logging in ...");
                 VirtualMachine.LoginInGuest(Username, Password);
+
                 return _virtualMachine;
             }
         }

@@ -297,6 +297,16 @@ namespace Vestris.VMWareComLib
             _vm.LoginInGuest(username, password, options, timeoutInSeconds);
         }
 
+        public void WaitForVMWareUserProcessInGuest(string username, string password)
+        {
+            _vm.WaitForVMWareUserProcessInGuest(username, password);
+        }
+
+        public void WaitForVMWareUserProcessInGuest(string username, string password, int timeoutInSeconds)
+        {
+            _vm.WaitForVMWareUserProcessInGuest(username, password, timeoutInSeconds);
+        }
+
         public void CopyFileFromHostToGuest(string hostPathName, string guestPathName)
         {
             _vm.CopyFileFromGuestToHost(hostPathName, guestPathName);
