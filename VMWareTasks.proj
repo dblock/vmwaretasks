@@ -14,6 +14,7 @@
   <Import Project="Version.proj"/>
   <PropertyGroup>
     <ReleaseDir>target\$(Configuration)\VMWareTasks</ReleaseDir>
+    <MSBuild_4_0_ExeFilePath>%SystemRoot%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe</MSBuild_4_0_ExeFilePath>
   </PropertyGroup>
   <Target Name="all">
     <CallTarget Targets="clean" />
@@ -100,7 +101,7 @@
     <Error Condition="'$(DXROOT)'==''" Text="Missing Sandcastle, DXROOT environment variable not set, install from http://www.codeplex.com/Sandcastle" />
     <Error Condition="'$(SHFBROOT)'==''" Text="Missing Sandcastle Builder, SHFBROOT environment variable not set, install from http://www.codeplex.com/SHFB" />
     <Delete Files="Documentation\$(Configuration)\VMWareTasks.chm" />
-    <MSBuild Projects="Documentation\VMWareTasks.shfbproj" />
+    <Exec Command="$(MSBuild_4_0_ExeFilePath) Documentation\VMWareTasks.shfbproj /p:Configuration=$(Configuration)" />
     <Error Condition="Exists('Documentation\$(Configuration)\LastBuild.log')" Text="Documentation build failed, check Documentation\$(Configuration)\LastBuild.log" />
   </Target>
   <ItemGroup>
