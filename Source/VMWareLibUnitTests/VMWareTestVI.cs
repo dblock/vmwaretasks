@@ -18,18 +18,35 @@ namespace Vestris.VMWareLibUnitTests
             _config = config;
         }
 
+        public VMWareVirtualHost ConnectedVirtualHost
+        {
+            get
+            {
+                if (_host == null)
+                {
+                    _host = new VMWareVirtualHost();
+                }
+
+                if (!_host.IsConnected)
+                {
+                    ConsoleOutput.WriteLine("Connecting to: {0} ...", _config.Host);
+                    _host.ConnectToVMWareVIServer(_config.Host, _config.HostUsername, _config.HostPassword);
+                    ConsoleOutput.WriteLine("Connection established.");
+                }
+
+                return _host;
+            }
+        }
+
         public VMWareVirtualHost VirtualHost
         {
             get
             {
                 if (_host == null)
                 {
-                    VMWareVirtualHost virtualHost = new VMWareVirtualHost();
-                    ConsoleOutput.WriteLine("Connecting to: {0} ...", _config.Host);
-                    virtualHost.ConnectToVMWareVIServer(_config.Host, _config.HostUsername, _config.HostPassword);
-                    ConsoleOutput.WriteLine("Connection established.");
-                    _host = virtualHost;
+                    _host = new VMWareVirtualHost();
                 }
+
                 return _host;
             }
         }
@@ -38,7 +55,7 @@ namespace Vestris.VMWareLibUnitTests
         {
             _virtualMachine = null;
             _host = null;
-            return VirtualHost;
+            return ConnectedVirtualHost;
         }
 
         public VMWareVirtualMachine VirtualMachine
@@ -48,7 +65,7 @@ namespace Vestris.VMWareLibUnitTests
                 if (_virtualMachine == null)
                 {
                     ConsoleOutput.WriteLine("Opening: {0}", _config.File);
-                    _virtualMachine = VirtualHost.Open(_config.File);
+                    _virtualMachine = ConnectedVirtualHost.Open(_config.File);
                 }
                 return _virtualMachine;
             }

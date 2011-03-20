@@ -194,6 +194,11 @@ namespace Vestris.VMWareLib
         /// </example>
         public void ConnectToVMWareVIServer(string hostName, string username, string password, int timeoutInSeconds)
         {
+            if (string.IsNullOrEmpty(hostName))
+            {
+                throw new ArgumentException("The host is required.");
+            }
+
             ConnectToVMWareVIServer(new Uri(string.Format("https://{0}/sdk", hostName)),
                 username, password, timeoutInSeconds);
         }
@@ -207,6 +212,11 @@ namespace Vestris.VMWareLib
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void ConnectToVMWareVIServer(Uri hostUri, string username, string password, int timeoutInSeconds)
         {
+            if (string.IsNullOrEmpty(username))
+            {
+                throw new ArgumentException("The username is required.");
+            }
+
             Connect(ServiceProviderType.VirtualInfrastructureServer,
                 hostUri.ToString(), 0, username, password, timeoutInSeconds);
         }

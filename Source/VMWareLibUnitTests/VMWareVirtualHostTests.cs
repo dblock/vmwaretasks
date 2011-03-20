@@ -72,7 +72,7 @@ namespace Vestris.VMWareLibUnitTests
         [Test]
         public void ShowRunningVirtualMachines()
         {
-            foreach (VMWareVirtualHost virtualHost in _test.VirtualHosts)
+            foreach (VMWareVirtualHost virtualHost in _test.ConnectedVirtualHosts)
             {
                 foreach (VMWareVirtualMachine virtualMachine in virtualHost.RunningVirtualMachines)
                 {
@@ -89,7 +89,7 @@ namespace Vestris.VMWareLibUnitTests
             if (! _test.Config.RunVITests)
                 Assert.Ignore("Skipping, VI tests disabled.");
 
-            foreach (VMWareVirtualHost virtualHost in _test.VirtualHosts)
+            foreach (VMWareVirtualHost virtualHost in _test.ConnectedVirtualHosts)
             {
                 foreach (VMWareVirtualMachine virtualMachine in virtualHost.RegisteredVirtualMachines)
                 {

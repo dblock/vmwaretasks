@@ -10,6 +10,7 @@ namespace Vestris.VMWareLibUnitTests
     public interface IVMWareTestProvider : IDisposable
     {
         VMWareVirtualHost VirtualHost { get; }
+        VMWareVirtualHost ConnectedVirtualHost { get; }
         VMWareVirtualHost Reconnect();
         VMWareVirtualMachine VirtualMachine { get; }
         VMWareVirtualMachine PoweredVirtualMachine { get; }
@@ -79,7 +80,19 @@ namespace Vestris.VMWareLibUnitTests
         }
 
         /// <summary>
-        /// A set of generic virtual hosts.
+        /// A set of generic connected virtual hosts.
+        /// </summary>
+        public IEnumerable<VMWareVirtualHost> ConnectedVirtualHosts
+        {
+            get
+            {
+                foreach (IVMWareTestProvider provider in Providers)
+                    yield return provider.ConnectedVirtualHost;
+            }
+        }
+
+        /// <summary>
+        /// A set of generic discconected virtual hosts.
         /// </summary>
         public IEnumerable<VMWareVirtualHost> VirtualHosts
         {

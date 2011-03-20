@@ -73,7 +73,7 @@ namespace Vestris.VMWareLibUnitTests
                 virtualMachine.Clone(VMWareVirtualMachineCloneType.Linked, vmxFileName);
                 Assert.IsTrue(File.Exists(vmxFileName));
 
-                VMWareVirtualHost virtualHost = testProvider.VirtualHost;
+                VMWareVirtualHost virtualHost = testProvider.ConnectedVirtualHost;
                 VMWareVirtualMachine virtualMachineClone = virtualHost.Open(vmxFileName);
                 virtualMachineClone.Delete(Constants.VIX_VMDELETE_DISK_FILES);
                 Assert.IsFalse(File.Exists(vmxFileName));

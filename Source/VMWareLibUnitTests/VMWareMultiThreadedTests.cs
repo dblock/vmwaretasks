@@ -34,7 +34,7 @@ namespace Vestris.VMWareLibUnitTests
         private void TestVMWareHostConnectDisconnectThreadProc(object o)
         {
             IVMWareTestProvider provider = (IVMWareTestProvider) o;
-            Assert.IsTrue(provider.VirtualHost.IsConnected);
+            Assert.IsTrue(provider.ConnectedVirtualHost.IsConnected);
             for (int i = 0; i < _threadCount; i++)
             {
                 provider.Reconnect();
@@ -54,7 +54,7 @@ namespace Vestris.VMWareLibUnitTests
         private void TestVMWareVirtualMachinePowerThreadProc(object o)
         {
             IVMWareTestProvider provider = (IVMWareTestProvider)o;
-            Assert.IsTrue(provider.VirtualHost.IsConnected);
+            Assert.IsTrue(provider.ConnectedVirtualHost.IsConnected);
             for (int i = 0; i < _threadCount; i++)
             {
                 ConsoleOutput.WriteLine("CPUs: {0}", provider.VirtualMachine.CPUCount);
