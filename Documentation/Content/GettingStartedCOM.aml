@@ -50,6 +50,11 @@
           The following VBScript example creates, restores, powers on and removes a snapshot on a VMWare Workstation host.
           <code language="vbs" source="..\Source\VMWareComLibScriptSamples\GettingStartedWorkstation.vbs" />
         </para>
+        <alert class="important">
+          <para>
+            On 64-bit Windows you must run the 32-bit version of <command>cscript</command> from <command>%WINDIR%\SysWOW64\Cscript.exe</command>.
+          </para>
+        </alert>
       </content>
     </section>
   </developerConceptualDocument>
