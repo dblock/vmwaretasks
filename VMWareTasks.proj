@@ -62,6 +62,8 @@
     <BinaryFiles Include="Source/VMWareLib/bin/$(Configuration)/Interop.VixCOM.dll" />
     <BinaryFiles Include="Source/VMWareComLib/bin/$(Configuration)/Vestris.VMWareComLib.dll.config" />
     <BinaryFiles Include="Source/VMWareComLib/bin/$(Configuration)/Vestris.VMWareComLib.dll" />
+    <BinaryFiles Include="Source/VMWareComTools/bin/$(Configuration)/Vestris.VMWareComTools.dll.config" />
+    <BinaryFiles Include="Source/VMWareComTools/bin/$(Configuration)/Vestris.VMWareComTools.dll" />
     <BinaryFiles Include="Source/VMWareLibMSBuildTasks/bin/$(Configuration)/Vestris.VMWareLib.MSBuildTasks.dll.config" />
     <BinaryFiles Include="Source/VMWareLibMSBuildTasks/bin/$(Configuration)/Vestris.VMWareLib.MSBuildTasks.dll" />
     <BinaryFiles Include="Source/VMWareLibMSBuildTasks/bin/$(Configuration)/Vestris.VMWareLib.MSBuildTasks.Targets" />
