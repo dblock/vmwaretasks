@@ -152,18 +152,27 @@ namespace Vestris.VMWareLib
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public VMWareSnapshot CreateSnapshot(string name, string description, int flags, int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-
-            using (VMWareJob job = new VMWareJob(_vm.CreateSnapshot(
-                name, description, flags, null, callback), callback))
+            try
             {
-                ISnapshot snapshot = (ISnapshot) job.Wait<ISnapshot>(
-                    Constants.VIX_PROPERTY_JOB_RESULT_HANDLE, 
-                    timeoutInSeconds);
-                
-                RemoveAll();
+                VMWareJobCallback callback = new VMWareJobCallback();
 
-                return new VMWareSnapshot(_vm, snapshot, null);
+                using (VMWareJob job = new VMWareJob(_vm.CreateSnapshot(
+                    name, description, flags, null, callback), callback))
+                {
+                    ISnapshot snapshot = (ISnapshot)job.Wait<ISnapshot>(
+                        Constants.VIX_PROPERTY_JOB_RESULT_HANDLE,
+                        timeoutInSeconds);
+
+                    RemoveAll();
+
+                    return new VMWareSnapshot(_vm, snapshot, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to create snapshot: name=\"{0}\" description=\"{1}\" flags={2} timeoutInSeconds={3}", 
+                    name, description, flags, timeoutInSeconds), ex);
             }
         }
     }

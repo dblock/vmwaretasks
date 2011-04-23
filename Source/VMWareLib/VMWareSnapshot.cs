@@ -60,11 +60,20 @@ namespace Vestris.VMWareLib
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void RevertToSnapshot(int powerOnOptions, int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_vm.RevertToSnapshot(
-                _handle, powerOnOptions, null, callback), callback))
+            try
             {
-                job.Wait(timeoutInSeconds);
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_vm.RevertToSnapshot(
+                    _handle, powerOnOptions, null, callback), callback))
+                {
+                    job.Wait(timeoutInSeconds);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to revert to snapshot: powerOnOptions={0} timeoutInSeconds={1}", 
+                    powerOnOptions, timeoutInSeconds), ex);
             }
         }
 
@@ -103,24 +112,33 @@ namespace Vestris.VMWareLib
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void RemoveSnapshot(int timeoutInSeconds)
         {
-            // resolve child snapshots that will move one level up
-            IEnumerable<VMWareSnapshot> childSnapshots = ChildSnapshots;
-            
-            // remove the snapshot
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_vm.RemoveSnapshot(_handle, 0, callback), callback))
+            try
             {
-                job.Wait(timeoutInSeconds);
-            }
+                // resolve child snapshots that will move one level up
+                IEnumerable<VMWareSnapshot> childSnapshots = ChildSnapshots;
 
-            // remove from parent
-            if (_parent != null)
+                // remove the snapshot
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_vm.RemoveSnapshot(_handle, 0, callback), callback))
+                {
+                    job.Wait(timeoutInSeconds);
+                }
+
+                // remove from parent
+                if (_parent != null)
+                {
+                    // child snapshots from this snapshot have now moved one level up
+                    _parent.ChildSnapshots.Remove(this);
+                }
+
+                Close();
+            }
+            catch (Exception ex)
             {
-                // child snapshots from this snapshot have now moved one level up
-                _parent.ChildSnapshots.Remove(this);
+                throw new Exception(
+                    string.Format("Failed to remove snapshot: timeoutInSeconds={0}", 
+                    timeoutInSeconds), ex);
             }
-
-            Close();
         }
 
         /// <summary>
@@ -232,11 +250,20 @@ namespace Vestris.VMWareLib
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void BeginReplay(int powerOnOptions, int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_vm.BeginReplay(
-                _handle, powerOnOptions, null, callback), callback))
+            try
             {
-                job.Wait(timeoutInSeconds);
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_vm.BeginReplay(
+                    _handle, powerOnOptions, null, callback), callback))
+                {
+                    job.Wait(timeoutInSeconds);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to begin replay: powerOnOptions={0} timeoutInSeconds={1}", 
+                    powerOnOptions, timeoutInSeconds), ex);
             }
         }
 
@@ -254,11 +281,20 @@ namespace Vestris.VMWareLib
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void EndReplay(int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_vm.EndReplay(
-                0, null, callback), callback))
+            try
             {
-                job.Wait(timeoutInSeconds);
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_vm.EndReplay(
+                    0, null, callback), callback))
+                {
+                    job.Wait(timeoutInSeconds);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to end replay: timeoutInSeconds={0}", 
+                    timeoutInSeconds), ex);
             }
         }
 
@@ -280,12 +316,21 @@ namespace Vestris.VMWareLib
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void Clone(VMWareVirtualMachineCloneType cloneType, string destConfigPathName, int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_vm.Clone(
-                _handle, (int)cloneType, destConfigPathName, 0, null, callback),
-                callback))
+            try
             {
-                job.Wait(timeoutInSeconds);
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_vm.Clone(
+                    _handle, (int)cloneType, destConfigPathName, 0, null, callback),
+                    callback))
+                {
+                    job.Wait(timeoutInSeconds);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to clone virtual machine snapshot: cloneType=\"{0}\" destConfigPathName=\"{1}\" timeoutInSeconds={2}",
+                    Enum.GetName(cloneType.GetType(), cloneType), destConfigPathName, timeoutInSeconds), ex);
             }
         }
 

@@ -126,24 +126,41 @@ namespace Vestris.VMWareLib
             {
                 get
                 {
-                    VMWareJobCallback callback = new VMWareJobCallback();
-                    using (VMWareJob job = new VMWareJob(_handle.ReadVariable(
-                        _variableType, name, 0, callback),
-                        callback))
+                    try
                     {
-                        return job.Wait<string>(
-                            Constants.VIX_PROPERTY_JOB_RESULT_VM_VARIABLE_STRING,
-                            VMWareInterop.Timeouts.ReadVariableTimeout);
+                        VMWareJobCallback callback = new VMWareJobCallback();
+                        using (VMWareJob job = new VMWareJob(_handle.ReadVariable(
+                            _variableType, name, 0, callback),
+                            callback))
+                        {
+                            return job.Wait<string>(
+                                Constants.VIX_PROPERTY_JOB_RESULT_VM_VARIABLE_STRING,
+                                VMWareInterop.Timeouts.ReadVariableTimeout);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception(
+                            string.Format("Failed to get virtual machine variable: name=\"{0}\"",
+                            name), ex);
                     }
                 }
                 set
                 {
-                    VMWareJobCallback callback = new VMWareJobCallback();
-                    using (VMWareJob job = new VMWareJob(_handle.WriteVariable(
-                        _variableType, name, value, 0, callback),
-                        callback))
+                    try
                     {
-                        job.Wait(VMWareInterop.Timeouts.WriteVariableTimeout);
+                        VMWareJobCallback callback = new VMWareJobCallback();
+                        using (VMWareJob job = new VMWareJob(_handle.WriteVariable(
+                            _variableType, name, value, 0, callback),
+                            callback))
+                        {
+                            job.Wait(VMWareInterop.Timeouts.WriteVariableTimeout);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception(
+                            string.Format("Failed to set virtual machine variable: name=\"{0}\" value=\"{1}\"", name, value), ex);
                     }
                 }
             }
@@ -208,12 +225,21 @@ namespace Vestris.VMWareLib
             /// <param name="timeoutInSeconds">Timeout in seconds.</param>
             public void KillProcessInGuest(int timeoutInSeconds)
             {
-                VMWareJobCallback callback = new VMWareJobCallback();
-                using (VMWareJob job = new VMWareJob(_vm.KillProcessInGuest(
-                    Convert.ToUInt64(Id), 0, callback),
-                    callback))
+                try
                 {
-                    job.Wait(timeoutInSeconds);
+                    VMWareJobCallback callback = new VMWareJobCallback();
+                    using (VMWareJob job = new VMWareJob(_vm.KillProcessInGuest(
+                        Convert.ToUInt64(Id), 0, callback),
+                        callback))
+                    {
+                        job.Wait(timeoutInSeconds);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(
+                        string.Format("Failed to kill process in guest: processId={0}", 
+                        Id), ex);
                 }
             }
         }
@@ -341,11 +367,20 @@ namespace Vestris.VMWareLib
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void PowerOn(int powerOnOptions, int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.PowerOn(
-                powerOnOptions, null, callback), callback))
+            try
             {
-                job.Wait(timeoutInSeconds);
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.PowerOn(
+                    powerOnOptions, null, callback), callback))
+                {
+                    job.Wait(timeoutInSeconds);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to power on virtual machine: powerOnOptions={0} timeoutInSeconds={1}",
+                    powerOnOptions, timeoutInSeconds), ex);
             }
         }
 
@@ -365,12 +400,21 @@ namespace Vestris.VMWareLib
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void WaitForToolsInGuest(int timeoutInSeconds)
         {
-            // wait till the machine boots or times out with an error
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(
-                _handle.WaitForToolsInGuest(timeoutInSeconds, callback), callback))
+            try
             {
-                job.Wait(timeoutInSeconds);
+                // wait till the machine boots or times out with an error
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(
+                    _handle.WaitForToolsInGuest(timeoutInSeconds, callback), callback))
+                {
+                    job.Wait(timeoutInSeconds);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to wait for tools in guest: timeoutInSeconds={0}", 
+                    timeoutInSeconds), ex);
             }
         }
 
@@ -426,12 +470,21 @@ namespace Vestris.VMWareLib
         /// </remarks>
         public void LoginInGuest(string username, string password, int options, int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.LoginInGuest(
-                username, password, options, callback),
-                callback))
+            try
             {
-                job.Wait(timeoutInSeconds);
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.LoginInGuest(
+                    username, password, options, callback),
+                    callback))
+                {
+                    job.Wait(timeoutInSeconds);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to login in guest: username=\"{0}\" options={1} timeoutInSeconds={2}", 
+                    username, options, timeoutInSeconds), ex);
             }
         }
 
@@ -523,11 +576,20 @@ namespace Vestris.VMWareLib
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void CopyFileFromHostToGuest(string hostPathName, string guestPathName, int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.CopyFileFromHostToGuest(
-                hostPathName, guestPathName, 0, null, callback), callback))
+            try
             {
-                job.Wait(timeoutInSeconds);
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.CopyFileFromHostToGuest(
+                    hostPathName, guestPathName, 0, null, callback), callback))
+                {
+                    job.Wait(timeoutInSeconds);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to copy file from host to guest: hostPathName=\"{0}\" guestPathName=\"{1}\" timeoutInSeconds={2}", 
+                    hostPathName, guestPathName, timeoutInSeconds), ex);
             }
         }
 
@@ -547,12 +609,21 @@ namespace Vestris.VMWareLib
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void DeleteFileFromGuest(string guestPathName, int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.DeleteFileInGuest(
-                guestPathName, callback),
-                callback))
+            try
             {
-                job.Wait(timeoutInSeconds);
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.DeleteFileInGuest(
+                    guestPathName, callback),
+                    callback))
+                {
+                    job.Wait(timeoutInSeconds);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to delete file from guest: guestPathName=\"{0}\" timeoutInSeconds={1}",
+                    guestPathName, timeoutInSeconds), ex);
             }
         }
 
@@ -572,12 +643,21 @@ namespace Vestris.VMWareLib
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void DeleteDirectoryFromGuest(string guestPathName, int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.DeleteDirectoryInGuest(
-                guestPathName, 0, callback),
-                callback))
+            try
             {
-                job.Wait(timeoutInSeconds);
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.DeleteDirectoryInGuest(
+                    guestPathName, 0, callback),
+                    callback))
+                {
+                    job.Wait(timeoutInSeconds);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to delete directory from guest: guestPathName=\"{0}\" timeoutInSeconds={1}",
+                    guestPathName, timeoutInSeconds), ex);
             }
         }
 
@@ -601,12 +681,21 @@ namespace Vestris.VMWareLib
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void CopyFileFromGuestToHost(string guestPathName, string hostPathName, int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.CopyFileFromGuestToHost(
-                guestPathName, hostPathName, 0, null, callback),
-                callback))
+            try
             {
-                job.Wait(timeoutInSeconds);
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.CopyFileFromGuestToHost(
+                    guestPathName, hostPathName, 0, null, callback),
+                    callback))
+                {
+                    job.Wait(timeoutInSeconds);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to copy file from guest to host: guestPathName=\"{0}\" hostPathName=\"{1}\" timeoutInSeconds={2}",
+                    guestPathName, hostPathName, timeoutInSeconds), ex);
             }
         }
 
@@ -626,12 +715,21 @@ namespace Vestris.VMWareLib
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void CreateDirectoryInGuest(string guestPathName, int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.CreateDirectoryInGuest(
-                guestPathName, null, callback),
-                callback))
+            try
             {
-                job.Wait(timeoutInSeconds);
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.CreateDirectoryInGuest(
+                    guestPathName, null, callback),
+                    callback))
+                {
+                    job.Wait(timeoutInSeconds);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to create directory in guest: guestPathName=\"{0}\" timeoutInSeconds={1}",
+                    guestPathName, timeoutInSeconds), ex);
             }
         }
 
@@ -651,12 +749,21 @@ namespace Vestris.VMWareLib
         /// <returns>Name of the temporary file created.</returns>
         public string CreateTempFileInGuest(int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.CreateTempFileInGuest(
-                0, null, callback),
-                callback))
+            try
             {
-                return job.Wait<string>(Constants.VIX_PROPERTY_JOB_RESULT_ITEM_NAME, timeoutInSeconds);
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.CreateTempFileInGuest(
+                    0, null, callback),
+                    callback))
+                {
+                    return job.Wait<string>(Constants.VIX_PROPERTY_JOB_RESULT_ITEM_NAME, timeoutInSeconds);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to create temp file in guest: timeoutInSeconds={0}",
+                    timeoutInSeconds), ex);
             }
         }
 
@@ -678,22 +785,31 @@ namespace Vestris.VMWareLib
         /// <returns>Guest file information.</returns>
         public GuestFileInfo GetFileInfoInGuest(string guestPathName, int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.GetFileInfoInGuest(guestPathName, callback), callback))
+            try
             {
-                object[] properties = 
-                { 
-                    Constants.VIX_PROPERTY_JOB_RESULT_FILE_SIZE,
-                    Constants.VIX_PROPERTY_JOB_RESULT_FILE_FLAGS,
-                    Constants.VIX_PROPERTY_JOB_RESULT_FILE_MOD_TIME
-                };
-                object[] propertyValues = job.Wait<object[]>(properties, timeoutInSeconds);
-                GuestFileInfo fileInfo = new GuestFileInfo();
-                fileInfo.GuestPathName = guestPathName;
-                fileInfo.FileSize = (long)propertyValues[0];
-                fileInfo.Flags = (int)propertyValues[1];
-                fileInfo.LastModified = VMWareInterop.FromUnixEpoch((long)propertyValues[2]);
-                return fileInfo;
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.GetFileInfoInGuest(guestPathName, callback), callback))
+                {
+                    object[] properties = 
+                    { 
+                        Constants.VIX_PROPERTY_JOB_RESULT_FILE_SIZE,
+                        Constants.VIX_PROPERTY_JOB_RESULT_FILE_FLAGS,
+                        Constants.VIX_PROPERTY_JOB_RESULT_FILE_MOD_TIME
+                    };
+                    object[] propertyValues = job.Wait<object[]>(properties, timeoutInSeconds);
+                    GuestFileInfo fileInfo = new GuestFileInfo();
+                    fileInfo.GuestPathName = guestPathName;
+                    fileInfo.FileSize = (long)propertyValues[0];
+                    fileInfo.Flags = (int)propertyValues[1];
+                    fileInfo.LastModified = VMWareInterop.FromUnixEpoch((long)propertyValues[2]);
+                    return fileInfo;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to get file info in guest: guestPathName=\"{0}\" timeoutInSeconds={1}",
+                    guestPathName, timeoutInSeconds), ex);
             }
         }
 
@@ -779,29 +895,38 @@ namespace Vestris.VMWareLib
         /// <returns>Process information.</returns>
         public Process RunProgramInGuest(string guestProgramName, string commandLineArgs, int options, int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.RunProgramInGuest(
-                guestProgramName, commandLineArgs, options, null, callback),
-                callback))
+            try
             {
-                object[] properties = 
-                { 
-                    Constants.VIX_PROPERTY_JOB_RESULT_GUEST_PROGRAM_EXIT_CODE, 
-                    Constants.VIX_PROPERTY_JOB_RESULT_PROCESS_ID,
-                    // Constants.VIX_PROPERTY_JOB_RESULT_GUEST_PROGRAM_ELAPSED_TIME
-                };
-                object[] propertyValues = job.Wait<object[]>(properties, timeoutInSeconds);
-                Process process = new Process(_handle);
-                process.Name = Path.GetFileName(guestProgramName);
-                process.Command = guestProgramName;
-                if (!string.IsNullOrEmpty(commandLineArgs))
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.RunProgramInGuest(
+                    guestProgramName, commandLineArgs, options, null, callback),
+                    callback))
                 {
-                    process.Command += " ";
-                    process.Command += commandLineArgs;
+                    object[] properties = 
+                    { 
+                        Constants.VIX_PROPERTY_JOB_RESULT_GUEST_PROGRAM_EXIT_CODE, 
+                        Constants.VIX_PROPERTY_JOB_RESULT_PROCESS_ID,
+                        // Constants.VIX_PROPERTY_JOB_RESULT_GUEST_PROGRAM_ELAPSED_TIME
+                    };
+                    object[] propertyValues = job.Wait<object[]>(properties, timeoutInSeconds);
+                    Process process = new Process(_handle);
+                    process.Name = Path.GetFileName(guestProgramName);
+                    process.Command = guestProgramName;
+                    if (!string.IsNullOrEmpty(commandLineArgs))
+                    {
+                        process.Command += " ";
+                        process.Command += commandLineArgs;
+                    }
+                    process.ExitCode = (int)propertyValues[0];
+                    process.Id = (long)propertyValues[1];
+                    return process;
                 }
-                process.ExitCode = (int)propertyValues[0];
-                process.Id = (long)propertyValues[1];
-                return process;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to run program in guest: guestProgramName=\"{0}\" commandLineArgs=\"{1}\"", 
+                    guestProgramName, commandLineArgs), ex);
             }
         }
 
@@ -853,24 +978,33 @@ namespace Vestris.VMWareLib
         /// <returns>Process information.</returns>
         public Process RunScriptInGuest(string interpreter, string scriptText, int options, int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.RunScriptInGuest(
-                interpreter, scriptText, options, null, callback),
-                callback))
+            try
             {
-                object[] properties = 
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.RunScriptInGuest(
+                    interpreter, scriptText, options, null, callback),
+                    callback))
+                {
+                    object[] properties = 
                 { 
                     Constants.VIX_PROPERTY_JOB_RESULT_GUEST_PROGRAM_EXIT_CODE, 
                     Constants.VIX_PROPERTY_JOB_RESULT_PROCESS_ID,
                     // Constants.VIX_PROPERTY_JOB_RESULT_GUEST_PROGRAM_ELAPSED_TIME
                 };
-                object[] propertyValues = job.Wait<object[]>(properties, timeoutInSeconds);
-                Process process = new Process(_handle);
-                process.Name = Path.GetFileName(interpreter);
-                process.Command = interpreter;
-                process.ExitCode = (int)propertyValues[0];
-                process.Id = (long)propertyValues[1];
-                return process;
+                    object[] propertyValues = job.Wait<object[]>(properties, timeoutInSeconds);
+                    Process process = new Process(_handle);
+                    process.Name = Path.GetFileName(interpreter);
+                    process.Command = interpreter;
+                    process.ExitCode = (int)propertyValues[0];
+                    process.Id = (long)propertyValues[1];
+                    return process;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to run script in guest: interpreter=\"{0}\" scriptText=\"{1}\" options={2} timeoutInSeconds={3}",
+                    interpreter, scriptText, options, timeoutInSeconds), ex);
             }
         }
 
@@ -892,10 +1026,19 @@ namespace Vestris.VMWareLib
         [Obsolete]
         public void OpenUrlInGuest(string url, int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.OpenUrlInGuest(url, 0, null, callback), callback))
+            try
             {
-                job.Wait(timeoutInSeconds);
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.OpenUrlInGuest(url, 0, null, callback), callback))
+                {
+                    job.Wait(timeoutInSeconds);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to open url in guest: url=\"{0}\" timeoutInSeconds={1}",
+                    url, timeoutInSeconds), ex);
             }
         }
 
@@ -917,12 +1060,21 @@ namespace Vestris.VMWareLib
         /// <returns>True if the file exists in the guest operating system.</returns>
         public bool FileExistsInGuest(string guestPathName, int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.FileExistsInGuest(
-                guestPathName, callback),
-                callback))
+            try
             {
-                return job.Wait<bool>(Constants.VIX_PROPERTY_JOB_RESULT_GUEST_OBJECT_EXISTS, timeoutInSeconds);
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.FileExistsInGuest(
+                    guestPathName, callback),
+                    callback))
+                {
+                    return job.Wait<bool>(Constants.VIX_PROPERTY_JOB_RESULT_GUEST_OBJECT_EXISTS, timeoutInSeconds);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to check if file exists in guest: guestPathName=\"{0}\" timeoutInSeconds={1}",
+                    guestPathName, timeoutInSeconds), ex);
             }
         }
 
@@ -944,12 +1096,21 @@ namespace Vestris.VMWareLib
         /// <returns>True if the directory exists in the guest operating system.</returns>
         public bool DirectoryExistsInGuest(string guestPathName, int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.DirectoryExistsInGuest(
-                guestPathName, callback),
-                callback))
+            try
             {
-                return job.Wait<bool>(Constants.VIX_PROPERTY_JOB_RESULT_GUEST_OBJECT_EXISTS, timeoutInSeconds);
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.DirectoryExistsInGuest(
+                    guestPathName, callback),
+                    callback))
+                {
+                    return job.Wait<bool>(Constants.VIX_PROPERTY_JOB_RESULT_GUEST_OBJECT_EXISTS, timeoutInSeconds);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to check if directory exists in guest: guestPathName=\"{0}\" timeoutInSeconds={1}",
+                    guestPathName, timeoutInSeconds), ex);
             }
         }
 
@@ -967,10 +1128,19 @@ namespace Vestris.VMWareLib
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void LogoutFromGuest(int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.LogoutFromGuest(callback), callback))
+            try
             {
-                job.Wait(timeoutInSeconds);
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.LogoutFromGuest(callback), callback))
+                {
+                    job.Wait(timeoutInSeconds);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to logout from guest: timeoutInSeconds={0}",
+                    timeoutInSeconds), ex);
             }
         }
 
@@ -1016,10 +1186,19 @@ namespace Vestris.VMWareLib
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void PowerOff(int powerOffOptions, int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.PowerOff(powerOffOptions, callback), callback))
+            try
             {
-                job.Wait(timeoutInSeconds);
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.PowerOff(powerOffOptions, callback), callback))
+                {
+                    job.Wait(timeoutInSeconds);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to power off virtual machine: powerOffOptions={0} timeoutInSeconds={1}",
+                    powerOffOptions, timeoutInSeconds), ex);
             }
         }
 
@@ -1053,10 +1232,19 @@ namespace Vestris.VMWareLib
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void Reset(int resetOptions, int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.Reset(resetOptions, callback), callback))
+            try
             {
-                job.Wait(timeoutInSeconds);
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.Reset(resetOptions, callback), callback))
+                {
+                    job.Wait(timeoutInSeconds);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to reset virtual machine: resetOptions={0} timeoutInSeconds={1}",
+                    resetOptions, timeoutInSeconds), ex);
             }
         }
 
@@ -1074,10 +1262,19 @@ namespace Vestris.VMWareLib
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void Suspend(int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.Suspend(0, callback), callback))
+            try
             {
-                job.Wait(timeoutInSeconds);
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.Suspend(0, callback), callback))
+                {
+                    job.Wait(timeoutInSeconds);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to suspend virtual machine: timeoutInSeconds={0}",
+                    timeoutInSeconds), ex);
             }
         }
 
@@ -1097,10 +1294,19 @@ namespace Vestris.VMWareLib
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void Pause(int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.Pause(0, null, callback), callback))
+            try
             {
-                job.Wait(timeoutInSeconds);
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.Pause(0, null, callback), callback))
+                {
+                    job.Wait(timeoutInSeconds);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to pause virtual machine: timeoutInSeconds={0}",
+                    timeoutInSeconds), ex);
             }
         }
 
@@ -1118,10 +1324,19 @@ namespace Vestris.VMWareLib
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void Unpause(int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.Unpause(0, null, callback), callback))
+            try
             {
-                job.Wait(timeoutInSeconds);
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.Unpause(0, null, callback), callback))
+                {
+                    job.Wait(timeoutInSeconds);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to unpause virtual machine: timeoutInSeconds={0}",
+                    timeoutInSeconds), ex);
             }
         }
 
@@ -1153,54 +1368,63 @@ namespace Vestris.VMWareLib
             if (!DirectoryExistsInGuest(pathName))
                 throw new VMWareException(2);
 
-            List<string> results = new List<string>();
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.ListDirectoryInGuest(
-                pathName, 0, callback), callback))
+            try
             {
+                List<string> results = new List<string>();
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.ListDirectoryInGuest(
+                    pathName, 0, callback), callback))
+                {
 
-                object[] properties = 
+                    object[] properties = 
                 { 
                     Constants.VIX_PROPERTY_JOB_RESULT_ITEM_NAME, 
                     Constants.VIX_PROPERTY_JOB_RESULT_FILE_FLAGS
                 };
 
-                try
-                {
-                    foreach (object[] fileProperties in job.YieldWait(properties, timeoutInSeconds))
+                    try
                     {
-                        string fileName = (string)fileProperties[0];
-                        int flags = (int)fileProperties[1];
-
-                        if ((flags & 1) > 0)
+                        foreach (object[] fileProperties in job.YieldWait(properties, timeoutInSeconds))
                         {
-                            if (recurse)
+                            string fileName = (string)fileProperties[0];
+                            int flags = (int)fileProperties[1];
+
+                            if ((flags & 1) > 0)
                             {
-                                results.AddRange(ListDirectoryInGuest(Path.Combine(pathName, fileName),
-                                    true, timeoutInSeconds));
+                                if (recurse)
+                                {
+                                    results.AddRange(ListDirectoryInGuest(Path.Combine(pathName, fileName),
+                                        true, timeoutInSeconds));
+                                }
+                            }
+                            else
+                            {
+                                results.Add(Path.Combine(pathName, fileName));
                             }
                         }
-                        else
+                    }
+                    catch (VMWareException ex)
+                    {
+                        switch (ex.ErrorCode)
                         {
-                            results.Add(Path.Combine(pathName, fileName));
+                            case 2:
+                            // file not found? empty directory in ESX
+                            case Constants.VIX_E_UNRECOGNIZED_PROPERTY:
+                                // unrecognized property returned by GetNumProperties, the directory exists, but contains no files
+                                break;
+                            default:
+                                throw;
                         }
                     }
                 }
-                catch (VMWareException ex)
-                {
-                    switch (ex.ErrorCode)
-                    {
-                        case 2:
-                        // file not found? empty directory in ESX
-                        case Constants.VIX_E_UNRECOGNIZED_PROPERTY:
-                            // unrecognized property returned by GetNumProperties, the directory exists, but contains no files
-                            break;
-                        default:
-                            throw;
-                    }
-                }
+                return results;
             }
-            return results;
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to list directory in guest: pathName=\"{0}\" recurse={1} timeoutInSeconds={2}",
+                    pathName, recurse, timeoutInSeconds), ex);
+            }
         }
 
         /// <summary>
@@ -1263,15 +1487,22 @@ namespace Vestris.VMWareLib
         /// <returns>A <see cref="System.Drawing.Image"/> object holding the captured screen image.</returns>
         public Image CaptureScreenImage()
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.CaptureScreenImage(
-                Constants.VIX_CAPTURESCREENFORMAT_PNG, null, callback),
-                callback))
+            try
             {
-                byte[] imageBytes = job.Wait<byte[]>(
-                    Constants.VIX_PROPERTY_JOB_RESULT_SCREEN_IMAGE_DATA,
-                    VMWareInterop.Timeouts.CaptureScreenImageTimeout);
-                return Image.FromStream(new MemoryStream(imageBytes));
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.CaptureScreenImage(
+                    Constants.VIX_CAPTURESCREENFORMAT_PNG, null, callback),
+                    callback))
+                {
+                    byte[] imageBytes = job.Wait<byte[]>(
+                        Constants.VIX_PROPERTY_JOB_RESULT_SCREEN_IMAGE_DATA,
+                        VMWareInterop.Timeouts.CaptureScreenImageTimeout);
+                    return Image.FromStream(new MemoryStream(imageBytes));
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to capture screen image", ex);
             }
         }
 
@@ -1282,12 +1513,14 @@ namespace Vestris.VMWareLib
         {
             get
             {
-                VMWareProcessCollection processes = new VMWareProcessCollection();
-                VMWareJobCallback callback = new VMWareJobCallback();
-                using (VMWareJob job = new VMWareJob(_handle.ListProcessesInGuest(
-                    0, callback), callback))
+                try
                 {
-                    object[] properties = 
+                    VMWareProcessCollection processes = new VMWareProcessCollection();
+                    VMWareJobCallback callback = new VMWareJobCallback();
+                    using (VMWareJob job = new VMWareJob(_handle.ListProcessesInGuest(
+                        0, callback), callback))
+                    {
+                        object[] properties = 
                     { 
                         Constants.VIX_PROPERTY_JOB_RESULT_PROCESS_ID,
                         Constants.VIX_PROPERTY_JOB_RESULT_ITEM_NAME,
@@ -1297,19 +1530,24 @@ namespace Vestris.VMWareLib
                         Constants.VIX_PROPERTY_JOB_RESULT_PROCESS_BEING_DEBUGGED,
                     };
 
-                    foreach (object[] processProperties in job.YieldWait(properties, VMWareInterop.Timeouts.ListProcessesTimeout))
-                    {
-                        Process process = new Process(_handle);
-                        process.Id = (long)processProperties[0];
-                        process.Name = (string)processProperties[1];
-                        process.Owner = (string)processProperties[2];
-                        process.StartDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds((int)processProperties[3]);
-                        process.Command = (string)processProperties[4];
-                        process.IsBeingDebugged = (bool)processProperties[5];
-                        processes.Add(process.Id, process);
-                    }
+                        foreach (object[] processProperties in job.YieldWait(properties, VMWareInterop.Timeouts.ListProcessesTimeout))
+                        {
+                            Process process = new Process(_handle);
+                            process.Id = (long)processProperties[0];
+                            process.Name = (string)processProperties[1];
+                            process.Owner = (string)processProperties[2];
+                            process.StartDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds((int)processProperties[3]);
+                            process.Command = (string)processProperties[4];
+                            process.IsBeingDebugged = (bool)processProperties[5];
+                            processes.Add(process.Id, process);
+                        }
 
-                    return processes;
+                        return processes;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Failed to list processes in guest", ex);
                 }
             }
         }
@@ -1366,14 +1604,23 @@ namespace Vestris.VMWareLib
         /// <returns>Resulting snapshot.</returns>
         public VMWareSnapshot BeginRecording(string name, string description, int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.BeginRecording(name, description, 0, null, callback), callback))
+            try
             {
-                VMWareSnapshot snapshot = new VMWareSnapshot(_handle,
-                    job.Wait<ISnapshot>(Constants.VIX_PROPERTY_JOB_RESULT_HANDLE, timeoutInSeconds),
-                    null);
-                _snapshots.Add(snapshot);
-                return snapshot;
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.BeginRecording(name, description, 0, null, callback), callback))
+                {
+                    VMWareSnapshot snapshot = new VMWareSnapshot(_handle,
+                        job.Wait<ISnapshot>(Constants.VIX_PROPERTY_JOB_RESULT_HANDLE, timeoutInSeconds),
+                        null);
+                    _snapshots.Add(snapshot);
+                    return snapshot;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to begin recording: name=\"{0}\" description=\"{1}\" timeoutInSeconds={2}", 
+                    name, description, timeoutInSeconds), ex);
             }
         }
 
@@ -1391,11 +1638,20 @@ namespace Vestris.VMWareLib
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void EndRecording(int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.EndRecording(
-                0, null, callback), callback))
+            try
             {
-                job.Wait(timeoutInSeconds);
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.EndRecording(
+                    0, null, callback), callback))
+                {
+                    job.Wait(timeoutInSeconds);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to end recording: timeoutInSeconds={0}",
+                    timeoutInSeconds), ex);
             }
         }
 
@@ -1415,11 +1671,20 @@ namespace Vestris.VMWareLib
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void UpgradeVirtualHardware(int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.UpgradeVirtualHardware(
-                0, callback), callback))
+            try
             {
-                job.Wait(timeoutInSeconds);
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.UpgradeVirtualHardware(
+                    0, callback), callback))
+                {
+                    job.Wait(timeoutInSeconds);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to upgrade virtual hardware: timeoutInSeconds={0}",
+                    timeoutInSeconds), ex);
             }
         }
 
@@ -1441,12 +1706,21 @@ namespace Vestris.VMWareLib
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void Clone(VMWareVirtualMachineCloneType cloneType, string destConfigPathName, int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.Clone(
-                null, (int)cloneType, destConfigPathName, 0, null, callback),
-                callback))
+            try
             {
-                job.Wait(timeoutInSeconds);
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.Clone(
+                    null, (int)cloneType, destConfigPathName, 0, null, callback),
+                    callback))
+                {
+                    job.Wait(timeoutInSeconds);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to clone virtual machine: cloneType=\"{0}\" destConfigPathName=\"{1}\" timeoutInSeconds={2}",
+                    Enum.GetName(cloneType.GetType(), cloneType), destConfigPathName, timeoutInSeconds), ex);
             }
         }
 
@@ -1485,10 +1759,19 @@ namespace Vestris.VMWareLib
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void Delete(int deleteOptions, int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.Delete(deleteOptions, callback), callback))
+            try
             {
-                job.Wait(timeoutInSeconds);
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.Delete(deleteOptions, callback), callback))
+                {
+                    job.Wait(timeoutInSeconds);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to delete virtual machine: deleteOptions={0} timeoutInSeconds={1}",
+                    deleteOptions, timeoutInSeconds), ex);
             }
         }
 
@@ -1518,10 +1801,19 @@ namespace Vestris.VMWareLib
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void InstallTools(int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.InstallTools(0, null, callback), callback))
+            try
             {
-                job.Wait(timeoutInSeconds);
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.InstallTools(0, null, callback), callback))
+                {
+                    job.Wait(timeoutInSeconds);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to install tools: timeoutInSeconds={0}",
+                    timeoutInSeconds), ex);
             }
         }
 

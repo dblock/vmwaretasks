@@ -32,14 +32,23 @@ namespace Vestris.VMWareLib
         /// <param name="sharedFolder">The shared folder to add.</param>
         public void Add(VMWareSharedFolder sharedFolder)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_vm.AddSharedFolder(
-                sharedFolder.ShareName, sharedFolder.HostPath, sharedFolder.Flags, callback),
-                callback))
+            try
             {
-                job.Wait(VMWareInterop.Timeouts.AddRemoveSharedFolderTimeout);
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_vm.AddSharedFolder(
+                    sharedFolder.ShareName, sharedFolder.HostPath, sharedFolder.Flags, callback),
+                    callback))
+                {
+                    job.Wait(VMWareInterop.Timeouts.AddRemoveSharedFolderTimeout);
+                }
+                _sharedFolders = null;
             }
-            _sharedFolders = null;
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to add shared folder: shareName=\"{0}\" hostPath=\"{1}\" flags={2}", 
+                    sharedFolder.ShareName, sharedFolder.HostPath, sharedFolder.Flags), ex);
+            }
         }
 
         /// <summary>
@@ -52,20 +61,22 @@ namespace Vestris.VMWareLib
             {
                 if (_sharedFolders == null)
                 {
-                    List<VMWareSharedFolder> sharedFolders = new List<VMWareSharedFolder>();
-                    VMWareJobCallback callback = new VMWareJobCallback();
-                    using (VMWareJob job = new VMWareJob(_vm.GetNumSharedFolders(callback), callback))
+                    try
                     {
-                        int nSharedFolders = job.Wait<int>(
-                            Constants.VIX_PROPERTY_JOB_RESULT_SHARED_FOLDER_COUNT,
-                            VMWareInterop.Timeouts.GetSharedFoldersTimeout);
-
-                        for (int i = 0; i < nSharedFolders; i++)
+                        List<VMWareSharedFolder> sharedFolders = new List<VMWareSharedFolder>();
+                        VMWareJobCallback callback = new VMWareJobCallback();
+                        using (VMWareJob job = new VMWareJob(_vm.GetNumSharedFolders(callback), callback))
                         {
-                            VMWareJobCallback getSharedfolderCallback = new VMWareJobCallback();
-                            using (VMWareJob sharedFolderJob = new VMWareJob(
-                                _vm.GetSharedFolderState(i, getSharedfolderCallback),
-                                getSharedfolderCallback))
+                            int nSharedFolders = job.Wait<int>(
+                                Constants.VIX_PROPERTY_JOB_RESULT_SHARED_FOLDER_COUNT,
+                                VMWareInterop.Timeouts.GetSharedFoldersTimeout);
+
+                            for (int i = 0; i < nSharedFolders; i++)
+                            {
+                                VMWareJobCallback getSharedfolderCallback = new VMWareJobCallback();
+                                using (VMWareJob sharedFolderJob = new VMWareJob(
+                                    _vm.GetSharedFolderState(i, getSharedfolderCallback),
+                                    getSharedfolderCallback))
                                 {
 
                                     object[] sharedFolderProperties = { 
@@ -74,19 +85,24 @@ namespace Vestris.VMWareLib
                                     Constants.VIX_PROPERTY_JOB_RESULT_SHARED_FOLDER_FLAGS
                                 };
 
-                                object[] sharedFolderPropertyValues = sharedFolderJob.Wait<object[]>(
-                                    sharedFolderProperties, VMWareInterop.Timeouts.GetSharedFoldersTimeout);
+                                    object[] sharedFolderPropertyValues = sharedFolderJob.Wait<object[]>(
+                                        sharedFolderProperties, VMWareInterop.Timeouts.GetSharedFoldersTimeout);
 
-                                VMWareSharedFolder sharedFolder = new VMWareSharedFolder(
-                                    (string)sharedFolderPropertyValues[0],
-                                    (string)sharedFolderPropertyValues[1],
-                                    (int)sharedFolderPropertyValues[2]);
+                                    VMWareSharedFolder sharedFolder = new VMWareSharedFolder(
+                                        (string)sharedFolderPropertyValues[0],
+                                        (string)sharedFolderPropertyValues[1],
+                                        (int)sharedFolderPropertyValues[2]);
 
-                                sharedFolders.Add(sharedFolder);
+                                    sharedFolders.Add(sharedFolder);
+                                }
                             }
                         }
+                        _sharedFolders = sharedFolders;
                     }
-                    _sharedFolders = sharedFolders;
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Failed to get shared folders", ex);
+                    }
                 }
 
                 return _sharedFolders;
@@ -132,14 +148,23 @@ namespace Vestris.VMWareLib
         /// <returns>True if the folder was deleted.</returns>
         public bool Remove(VMWareSharedFolder item) 
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_vm.RemoveSharedFolder(
-                item.ShareName, 0, callback),
-                callback))
+            try
             {
-                job.Wait(VMWareInterop.Timeouts.AddRemoveSharedFolderTimeout);
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_vm.RemoveSharedFolder(
+                    item.ShareName, 0, callback),
+                    callback))
+                {
+                    job.Wait(VMWareInterop.Timeouts.AddRemoveSharedFolderTimeout);
+                }
+                return SharedFolders.Remove(item);
             }
-            return SharedFolders.Remove(item); 
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to remove shared folder: shareName=\"{0}\"", 
+                    item.ShareName), ex);
+            }
         }
 
         /// <summary>
@@ -190,12 +215,21 @@ namespace Vestris.VMWareLib
         {
             set
             {
-                VMWareJobCallback callback = new VMWareJobCallback();
-                using (VMWareJob job = new VMWareJob(_vm.EnableSharedFolders(value, 0, callback), callback))
+                try
                 {
-                    job.Wait(VMWareInterop.Timeouts.EnableSharedFoldersTimeout);
+                    VMWareJobCallback callback = new VMWareJobCallback();
+                    using (VMWareJob job = new VMWareJob(_vm.EnableSharedFolders(value, 0, callback), callback))
+                    {
+                        job.Wait(VMWareInterop.Timeouts.EnableSharedFoldersTimeout);
+                    }
+                    _sharedFolders = null;
                 }
-                _sharedFolders = null;
+                catch (Exception ex)
+                {
+                    throw new Exception(
+                        string.Format("Failed to {0} shared folders", 
+                        (value == true) ? "enable" : "disable"), ex);
+                }
             }
         }
 
