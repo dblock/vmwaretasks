@@ -122,7 +122,7 @@ namespace Vestris.VMWareLib
         [VMWareTimeoutAttribute]
         public int DeleteDirectoryTimeout;
         /// <summary>
-        /// Maximum time, in seconds, to wait for a pogram to run in the guest operating system.
+        /// Maximum time, in seconds, to wait for a program to run in the guest operating system.
         /// </summary>
         [VMWareTimeoutAttribute(Multiplier = 5)]
         public int RunProgramTimeout;

@@ -68,7 +68,7 @@ namespace Vestris.VMWareLib
         {
             if (!TryWaitForCompletion(timeoutInMilliseconds))
             {
-                throw new TimeoutException();
+                throw new TimeoutException(string.Format("The operation has timed out after {0} milliseconds.", timeoutInMilliseconds));
             }
         }
 

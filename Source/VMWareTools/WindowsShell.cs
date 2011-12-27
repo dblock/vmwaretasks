@@ -3,6 +3,7 @@ using System.Collections.Specialized;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using Interop.VixCOM;
 
 namespace Vestris.VMWareLib.Tools.Windows
 {
@@ -43,6 +44,30 @@ namespace Vestris.VMWareLib.Tools.Windows
         /// <returns>Standard output.</returns>
         public ShellOutput RunCommandInGuest(string guestCommandLine)
         {
+            return RunCommandInGuest(guestCommandLine, VMWareInterop.Timeouts.RunProgramTimeout);
+        }
+
+        /// <summary>
+        /// Use RunProgramInGuest to execute cmd.exe /C "guestCommandLine" > file and parse the result.
+        /// </summary>
+        /// <param name="guestCommandLine">Guest command line, argument passed to cmd.exe.</param>
+        /// <param name="timeoutInSeconds">The timeout in seconds.</param>
+        /// <returns>Standard output.</returns>
+        public ShellOutput RunCommandInGuest(string guestCommandLine, int timeoutInSeconds)
+        {
+            return RunCommandInGuest(guestCommandLine, Constants.VIX_RUNPROGRAM_ACTIVATE_WINDOW,
+                timeoutInSeconds);
+        }
+
+        /// <summary>
+        /// Use RunProgramInGuest to execute cmd.exe /C "guestCommandLine" > file and parse the result.
+        /// </summary>
+        /// <param name="guestCommandLine">The guest command line.</param>
+        /// <param name="options">The options.</param>
+        /// <param name="timeoutInSeconds">The timeout in seconds.</param>
+        /// <returns></returns>
+        public ShellOutput RunCommandInGuest(string guestCommandLine, int options, int timeoutInSeconds)
+        {
             string guestStdOutFilename = _vm.CreateTempFileInGuest();
             string guestStdErrFilename = _vm.CreateTempFileInGuest();
             string guestCommandBatch = _vm.CreateTempFileInGuest() + ".bat";
@@ -55,7 +80,7 @@ namespace Vestris.VMWareLib.Tools.Windows
             {
                 _vm.CopyFileFromHostToGuest(hostCommandBatch, guestCommandBatch);
                 string cmdArgs = string.Format("> \"{0}\" 2>\"{1}\"", guestStdOutFilename, guestStdErrFilename);
-                _vm.RunProgramInGuest(guestCommandBatch, cmdArgs);
+                _vm.RunProgramInGuest(guestCommandBatch, cmdArgs, options, timeoutInSeconds);
                 ShellOutput output = new ShellOutput();
                 output.StdOut = ReadFile(guestStdOutFilename);
                 output.StdErr = ReadFile(guestStdErrFilename);
