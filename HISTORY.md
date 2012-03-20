@@ -1,3 +1,7 @@
+1.7 (TBD)
+
+* First release off [Github](http://github.com/dblock/vmwaretasks)
+
 1.6 (2/11/2012)
 ---------------
 
@@ -125,9 +129,14 @@ Completed VixCOM API full support.
 1.1 (02/12/2008)
 ----------------
 
-* First release off CodePlex.
+* First release off [CodePlex](http://vmwaretasks.codeplex.com).
 * Improved timeout model from busy to blocking job-based wait.
 * Added support for snapshots with duplicate names.
 * New Sandcastle-generated CHM documentation.
 * Built with Visual Studio 2008, targeting .NET 2.0.
+
+1.0
+---
+
+* [CodePlex Article on Automating VMWareTasks in C# with VIX API](http://www.codeproject.com/Articles/31961/Automating-VMWare-Tasks-in-C-with-the-VIX-API)
 

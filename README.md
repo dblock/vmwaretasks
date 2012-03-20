@@ -152,14 +152,14 @@ Most VMWareTasks objects are IDisposable and should be wrapped in a using constr
 Contributing
 ------------
 
-Fork the project. Make your feature addition or bug fix with tests. Send a pull request. Bonus points for topic branches.
+This project started as a [CodeProject Article](http://www.codeproject.com/Articles/31961/Automating-VMWare-Tasks-in-C-with-the-VIX-API) and grew with the help of many contributors. Fork the project. Make your feature addition or bug fix with tests. Send a pull request. Bonus points for topic branches.
 
 Copyright and License
 ---------------------
 
 MIT License, see [LICENSE](https://github.com/dblock/vmwaretasks/blob/master/LICENSE.md) for details.
 
-(c) 2009-2012 [Daniel Doubrovkine & Vestris Inc.](http://code.dblock.org) and [Contributors](https://github.com/dblock/vmwaretasks/blob/master/HISTORY.md)
+(c) 2009-2012 [Daniel Doubrovkine, Vestris Inc.](http://code.dblock.org) and [Contributors](https://github.com/dblock/vmwaretasks/blob/master/HISTORY.md)
 
 
 
