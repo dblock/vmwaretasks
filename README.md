@@ -7,6 +7,12 @@ VMWareTasks contains a complete VixCOM wrapper Vestris.VMWareLib (Vestris.VMWare
 
 VMWareTasks exposes a C# interface, a COM-enabled interface for script clients, a Java bridge for Java programs and a set of MSBuild tasks.
 
+Resources
+---------
+
+* [Need Help?](http://groups.google.com/group/vmwaretasks)
+* [Latest Stable Release - 1.6](https://github.com/downloads/dblock/vmwaretasks/VMWareTasks-1.6.zip)
+
 Prerequisites
 -------------
 
@@ -15,10 +21,11 @@ In order to use the library you must install the following VMWare software.
 * VMWare VIX. This is the SDK, obtained from [http://www.vmware.com/download/sdk/vmauto.html](http://www.vmware.com/download/sdk/vmauto.html). Version 1.6.2 or newer is required for VI support. Version 1.8.0 or newer is required for VMWare Player support. 
 * Either VMWare Workstation 6.5.2, 7.0 or 7.1, VMWare Server 2.0, VMWare Player 3.0 or 3.1, a Virtual Infrastructure environment (eg. ESXi) or VSphere 4.0 or 4.1. 
 
+
 Getting Started (C#)
 --------------------
 
-In your project add a reference to `Vestris.VMWareLib.dll` and a namespace reference. 
+Download the latest version of this library [here](https://github.com/downloads/dblock/vmwaretasks/). Add a reference to `Vestris.VMWareLib.dll` to your project and a `using`. 
 
 ``` csharp
 using Vestris.VMWareLib;
@@ -139,11 +146,6 @@ using (VMWareVirtualHost virtualHost = new VMWareVirtualHost())
 Note, that because VMWare VixCOM is a native 32-bit application, ensure that the platform target for your program is *x86* and not *Any CPU*. 
  
 Most VMWareTasks objects are IDisposable and should be wrapped in a using construct or properly disposed of before calling `VMWareVirtualHost::Disconnect`. Failure to dispose of all objects, including snapshots and hosts may result in an access violation when VixCOM.dll is unloaded. This is particularly true when working with VMWare ESX 4. 
-
-Resources
----------
-
-* [Need Help?](http://groups.google.com/group/vmwaretasks)
 
 Contributing
 ------------
