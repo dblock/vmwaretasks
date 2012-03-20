@@ -1,6 +1,8 @@
 VMWareTasks
 ===========
 
+![vmwaretasks](https://github.com/dblock/vmwaretasks/raw/master/Documentation/Images/VMWareLogo.jpg "VMWareTasks")
+
 The VMWare SDK, specifically VixCOM, offers a rich set of programmable interfaces that enable developers to drive virtual machines programmatically with an asynchronous, job-based programming model. Unfortunately that turns out to be too complicated for most scenarios where developers want to use a simple object-oriented interface for common VMWare virtual machine automation tasks. The VMWareTasks is a commercial-grade library that implements this simple interface and makes programming against virtual machines a no-brainer. 
 
 VMWareTasks contains a complete VixCOM wrapper Vestris.VMWareLib (Vestris.VMWareLib.dll) and a library Vestris.VMWareLib.Tools (Vestris.VMWareTools.dll) that implements additional commonly needed functionality or addresses known VixCOM API limitations. 
