@@ -29,10 +29,10 @@
         </link>.
       </para>
       <para>
-        The VMWareTasks library is maintained on CodePlex at
+        The VMWareTasks library is maintained on Github at
         <externalLink>
-          <linkHref>http://vmwaretasks.codeplex.com/</linkHref>
-          <linkText>http://vmwaretasks.codeplex.com</linkText>
+          <linkHref>http://github.com/dblock/vmwaretasks</linkHref>
+          <linkText>http://github.com/dblock/vmwaretasks</linkText>
         </externalLink>. See <link xlink:href="676df1d8-3828-44fe-aef3-068760d33f7a" />.
       </para>
     </introduction>

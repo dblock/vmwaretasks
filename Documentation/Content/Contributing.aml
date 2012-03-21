@@ -9,10 +9,14 @@
       <para>
         The project is maintained on
         <externalLink>
-          <linkText>CodePlex</linkText>
-          <linkUri>http://vmwaretasks.codeplex.com/</linkUri>
-        </externalLink>. The website has a bug tracking system and a discussions forum. 
-        Please don't hesitate to post suggestions or questions.
+          <linkText>Github</linkText>
+          <linkUri>http://github.com/dblock/vmwaretasks</linkUri>
+        </externalLink>.
+        Please don't hesitate to post questions to the 
+        <externalLink>
+          <linkText>VMWareTasks Google Group</linkText>
+          <linkUri>http://groups.google.com/group/vmwaretasks</linkUri>
+        </externalLink>.
       </para>
     </introduction>
     <procedure>
@@ -20,7 +24,7 @@
       <steps class="ordered">
         <step>
           <content>
-            <para>Install a command-line Subversion (SVN) client (not TortoiseSVN Shell Extension).</para>
+            <para>Make sure you have a working GIT.</para>
           </content>
         </step>
         <step>
@@ -64,11 +68,11 @@
         <step>
           <content>
             <para>
-              Check out the source code using SVN from
+              Fork the project on
               <externalLink>
-                <linkText>https://vmwaretasks.svn.codeplex.com/svn/trunk</linkText>
-                <linkUri>https://vmwaretasks.svn.codeplex.com/svn/trunk</linkUri>
-              </externalLink>
+                <linkText>Github</linkText>
+                <linkUri>http://github.com/dblock/vmwaretasks</linkUri>
+              </externalLink> and clone locally.
             </para>
           </content>
         </step>

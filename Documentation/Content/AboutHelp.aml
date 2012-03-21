@@ -13,10 +13,10 @@
           <linkHref>http://code.dblock.org/</linkHref>
           <linkText>Daniel Doubrovkine (dB.)</linkText>
         </externalLink>
-        and is maintained on CodePlex at
+        and is maintained on Github at
         <externalLink>
-          <linkHref>http://vmwaretasks.codeplex.com/</linkHref>
-          <linkText>http://vmwaretasks.codeplex.com</linkText>
+          <linkHref>http://github.com/dblock/vmwaretasks</linkHref>
+          <linkText>http://github.com/dblock/vmwaretasks</linkText>
         </externalLink>.
       </para>
       <alert type="note">
@@ -32,8 +32,8 @@
         <para>
           Please post library-specific questions in the
           <externalLink>
-            <linkHref>http://vmwaretasks.codeplex.com/Thread/List.aspx</linkHref>
-            <linkText>discussions section of vmwaretasks.codeplex.com</linkText>
+            <linkHref>http://groups.google.com/group/vmwaretasks</linkHref>
+            <linkText>VMWareTasks Google group</linkText>
           </externalLink>. For general VixCOM API questions, use the
           <externalLink>
             <linkHref>http://communities.vmware.com/community/developer/automationapi</linkHref>
