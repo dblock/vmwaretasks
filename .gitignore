@@ -1,0 +1,8 @@
+Source/Version/GlobalAssemblyInfo.cs
+Source/Interop.VixCOM
+Source/VMWareComLibJava
+Source/VMWareComToolsJava
+bin
+obj
+Debug
+Release

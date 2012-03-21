@@ -98,7 +98,6 @@
     <Copy SourceFiles="@(ArticleFiles)" DestinationFolder="$(ReleaseDir)\Article\%(RecursiveDir)" />
     <Copy SourceFiles="@(DocumentationFiles)" DestinationFolder="$(ReleaseDir)" />
     <Copy SourceFiles="@(LicenseFiles)" DestinationFolder="$(ReleaseDir)" />
-    <TemplateFile Template="Documentation\WhatsNew.html" OutputFilename="..\$(ReleaseDir)\WhatsNew.html" Tokens="@(AssemblyInfoTokens)" />
     <CreateItem Include="$(ReleaseDir)\**\*" Exclude="target\$(Configuration)\*.zip">
       <Output TaskParameter="Include" ItemName="PackageFiles" />
     </CreateItem>
