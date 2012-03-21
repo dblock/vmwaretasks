@@ -12,7 +12,8 @@ VMWareTasks exposes a C# interface, a COM-enabled interface for script clients, 
 Resources
 ---------
 
-* [Need Help?](http://groups.google.com/group/vmwaretasks)
+* [Need Help? VMWareTasks Google Group](http://groups.google.com/group/vmwaretasks)
+* [Need VixCOM Help? VMWare Communities](http://communities.vmware.com/community/developer/automationapi)
 * [Latest Stable Release - 1.6](https://github.com/downloads/dblock/vmwaretasks/VMWareTasks-1.6.zip)
 
 Prerequisites
