@@ -2,6 +2,12 @@
 
 * First release off [Github](http://github.com/dblock/vmwaretasks)
 
+*Misc*
+
+* updated WindowsShell.cs so that RunCommandInGuest does not swallow exceptions in the finally block
+* #10296: using Sandcastle and JDK from Tools directory
+* #10297: updated copyright dates
+
 1.6 (2/11/2012)
 ---------------
 
