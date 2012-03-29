@@ -27,7 +27,7 @@
     <NoWarn>1699</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
+    <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
@@ -35,6 +35,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\Vestris.VMWareTools.xml</DocumentationFile>
     <NoWarn>1699</NoWarn>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Interop.VixCOM, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1a2e7e25925ba452, processorArchitecture=MSIL">
