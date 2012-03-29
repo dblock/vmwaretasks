@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using Interop.VixCOM;
+using System.Diagnostics;
 
 namespace Vestris.VMWareLib.Tools.Windows
 {
@@ -76,6 +77,9 @@ namespace Vestris.VMWareLib.Tools.Windows
             hostCommand.AppendLine("@echo off");
             hostCommand.AppendLine(guestCommandLine);
             File.WriteAllText(hostCommandBatch, hostCommand.ToString());
+
+            bool exceptionThrown = false;
+
             try
             {
                 _vm.CopyFileFromHostToGuest(hostCommandBatch, guestCommandBatch);
@@ -86,12 +90,49 @@ namespace Vestris.VMWareLib.Tools.Windows
                 output.StdErr = ReadFile(guestStdErrFilename);
                 return output;
             }
+            catch (Exception)
+            {
+                exceptionThrown = true;
+                throw;
+            }
             finally
             {
                 File.Delete(hostCommandBatch);
-                _vm.DeleteFileFromGuest(guestCommandBatch);
-                _vm.DeleteFileFromGuest(guestStdOutFilename);
-                _vm.DeleteFileFromGuest(guestStdErrFilename);
+
+                //do not swallow exceptions
+                RunOptionallyThrowingException(() =>
+                {
+                    _vm.DeleteFileFromGuest(guestCommandBatch);
+                }, !exceptionThrown);
+
+                RunOptionallyThrowingException(() =>
+                {
+                    _vm.DeleteFileFromGuest(guestStdOutFilename);
+                }, !exceptionThrown);
+
+                RunOptionallyThrowingException(() =>
+                {
+                    _vm.DeleteFileFromGuest(guestStdErrFilename);
+                }, !exceptionThrown);
+            }
+        }
+
+        private delegate void AnonymousMethod();
+
+        private void RunOptionallyThrowingException(AnonymousMethod action, bool throwException)
+        {
+            try
+            {
+                action();
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex.ToString());
+
+                if (throwException)
+                {
+                    throw;
+                }
             }
         }
 
