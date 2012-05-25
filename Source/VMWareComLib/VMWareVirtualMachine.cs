@@ -572,6 +572,7 @@ namespace Vestris.VMWareComLib
         }
         */
 
+        /*
         public bool IsRecording
         {
             get
@@ -579,15 +580,17 @@ namespace Vestris.VMWareComLib
                 return _vm.IsRecording;
             }
         }
+        */
+        
+        //public bool IsReplaying
+        //{
+        //    get
+        //    {
+        //        return _vm.IsReplaying;
+        //    }
+        //}
 
-        public bool IsReplaying
-        {
-            get
-            {
-                return _vm.IsReplaying;
-            }
-        }
-
+        /*
         public IVMWareSnapshot BeginRecording(string name, string description)
         {
             return new VMWareSnapshot(_vm.BeginRecording(name, description));
@@ -607,7 +610,8 @@ namespace Vestris.VMWareComLib
         {
             _vm.EndRecording(timeoutInSeconds);
         }
-
+        */
+        
         public void UpgradeVirtualHardware()
         {
             _vm.UpgradeVirtualHardware();

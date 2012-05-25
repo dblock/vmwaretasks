@@ -1555,6 +1555,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Returns true if the virtual machine is in the process of recording.
         /// </summary>
+        /*
         public bool IsRecording
         {
             get
@@ -1562,27 +1563,28 @@ namespace Vestris.VMWareLib
                 return GetProperty<bool>(Constants.VIX_PROPERTY_VM_IS_RECORDING);
             }
         }
+        */
 
         /// <summary>
         /// Returns true if the virtual machine is in the process of replaying.
         /// </summary>
-        public bool IsReplaying
-        {
-            get
-            {
-                return GetProperty<bool>(Constants.VIX_PROPERTY_VM_IS_REPLAYING);
-            }
-        }
+        //public bool IsReplaying
+        //{
+        //    get
+        //    {
+        //        return GetProperty<bool>(Constants.VIX_PROPERTY_VM_IS_REPLAYING);
+        //    }
+        //}
 
         /// <summary>
         /// Records a virtual machine's activity as a snapshot object.
         /// </summary>
         /// <param name="name">Snapshot name.</param>
         /// <returns>Resulting snapshot.</returns>
-        public VMWareSnapshot BeginRecording(string name)
-        {
-            return BeginRecording(name, string.Empty);
-        }
+        //public VMWareSnapshot BeginRecording(string name)
+        //{
+        //    return BeginRecording(name, string.Empty);
+        //}
 
         /// <summary>
         /// Records a virtual machine's activity as a snapshot object.
@@ -1590,10 +1592,10 @@ namespace Vestris.VMWareLib
         /// <param name="name">Snapshot name.</param>
         /// <param name="description">Snapshot description.</param>
         /// <returns>Resulting snapshot.</returns>
-        public VMWareSnapshot BeginRecording(string name, string description)
-        {
-            return BeginRecording(name, description, VMWareInterop.Timeouts.RecordingTimeout);
-        }
+        //public VMWareSnapshot BeginRecording(string name, string description)
+        //{
+        //    return BeginRecording(name, description, VMWareInterop.Timeouts.RecordingTimeout);
+        //}
 
         /// <summary>
         /// Records a virtual machine's activity as a snapshot object.
@@ -1602,6 +1604,7 @@ namespace Vestris.VMWareLib
         /// <param name="description">Snapshot description.</param>
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         /// <returns>Resulting snapshot.</returns>
+        /*
         public VMWareSnapshot BeginRecording(string name, string description, int timeoutInSeconds)
         {
             try
@@ -1623,19 +1626,21 @@ namespace Vestris.VMWareLib
                     name, description, timeoutInSeconds), ex);
             }
         }
-
+        */
+        
         /// <summary>
         /// This function stops recording a virtual machine's activity.
         /// </summary>
-        public void EndRecording()
-        {
-            EndRecording(VMWareInterop.Timeouts.RecordingTimeout);
-        }
+        //public void EndRecording()
+        //{
+        //    EndRecording(VMWareInterop.Timeouts.RecordingTimeout);
+        //}
 
         /// <summary>
         /// This function stops recording a virtual machine's activity.
         /// </summary>
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        /*
         public void EndRecording(int timeoutInSeconds)
         {
             try
@@ -1654,7 +1659,8 @@ namespace Vestris.VMWareLib
                     timeoutInSeconds), ex);
             }
         }
-
+        */
+        
         /// <summary>
         /// Upgrades the virtual hardware version of the virtual machine to match the version of the VIX library. 
         /// This has no effect if the virtual machine is already at the same version or at a newer version than the VIX library.

@@ -92,33 +92,33 @@ namespace Vestris.VMWareComLib
             }
         }
 
-        public bool IsReplayable
-        {
-            get
-            {
-                return _snapshot.IsReplayable;
-            }
-        }
+        //public bool IsReplayable
+        //{
+        //    get
+        //    {
+        //        return _snapshot.IsReplayable;
+        //    }
+        //}
 
-        public void BeginReplay()
-        {
-            _snapshot.BeginReplay();
-        }
+        //public void BeginReplay()
+        //{
+        //    _snapshot.BeginReplay();
+        //}
 
-        public void BeginReplay2(int powerOnOptions, int timeoutInSeconds)
-        {
-            _snapshot.BeginReplay(powerOnOptions, timeoutInSeconds);
-        }
+        //public void BeginReplay2(int powerOnOptions, int timeoutInSeconds)
+        //{
+        //    _snapshot.BeginReplay(powerOnOptions, timeoutInSeconds);
+        //}
 
-        public void EndReplay()
-        {
-            _snapshot.EndReplay();
-        }
+        //public void EndReplay()
+        //{
+        //    _snapshot.EndReplay();
+        //}
 
-        public void EndReplay2(int timeoutInSeconds)
-        {
-            _snapshot.EndReplay(timeoutInSeconds);
-        }
+        //public void EndReplay2(int timeoutInSeconds)
+        //{
+        //    _snapshot.EndReplay(timeoutInSeconds);
+        //}
 
         //public void Clone(VMWareVirtualMachineCloneType cloneType, string destConfigPathName)
         //{
