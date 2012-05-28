@@ -20,6 +20,7 @@ namespace Vestris.VMWareLibUnitTests
                 Assert.Ignore("Skipping, long tests disabled.");
         }
 
+        /*
         [Test]
         public void TestRecordingBeginEnd()
         {
@@ -54,6 +55,7 @@ namespace Vestris.VMWareLibUnitTests
                 snapshot.RemoveSnapshot();
             }
         }
+        */
 
         [Test]
         public void TestReset()

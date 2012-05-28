@@ -33,7 +33,11 @@ namespace Vestris.VMWareLib
             /// <summary>
             /// VMWare Player.
             /// </summary>
-            Player = Constants.VIX_SERVICEPROVIDER_VMWARE_PLAYER
+            Player = Constants.VIX_SERVICEPROVIDER_VMWARE_PLAYER,
+            /// <summary>
+            /// VMWare Workstation shared
+            /// </summary>
+            WorkstationShared = Constants.VIX_SERVICEPROVIDER_VMWARE_WORKSTATION_SHARED
         }
 
         private ServiceProviderType _serviceProviderType = ServiceProviderType.None;
@@ -118,10 +122,39 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
+        /// Connect to a WMWare Workstation shared
+        /// </summary>
+        /// <example>
+        /// <code>
+        /// using System;
+        /// using System.Collections.Generic;
+        /// using Vestris.VMWareLib;
+        /// 
+        /// VMWareVirtualHost virtualHost = new VMWareVirtualHost();
+        /// virtualHost.ConnectToVMWareWorkstationShared();
+        /// VMWareVirtualMachine virtualMachine = virtualHost.Open("C:\Virtual Machines\xp\xp.vmx");
+        /// virtualMachine.PowerOn();
+        /// </code>
+        /// </example>
+        public void ConnectToVMWareWorkstationShared()
+        {
+            ConnectToVMWareWorkstationShared(VMWareInterop.Timeouts.ConnectTimeout);
+        }
+
+        /// <summary>
         /// Connect to a WMWare Workstation.
         /// </summary>
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void ConnectToVMWareWorkstation(int timeoutInSeconds)
+        {
+            Connect(ServiceProviderType.Workstation, null, 0, null, null, timeoutInSeconds);
+        }
+
+        /// <summary>
+        /// Connect to a WMWare Workstation (shared).
+        /// </summary>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        public void ConnectToVMWareWorkstationShared(int timeoutInSeconds)
         {
             Connect(ServiceProviderType.Workstation, null, 0, null, null, timeoutInSeconds);
         }

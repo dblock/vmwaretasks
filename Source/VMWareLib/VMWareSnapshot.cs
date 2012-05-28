@@ -226,77 +226,77 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Returns true if the snapshot is replayable.
         /// </summary>
-        public bool IsReplayable
-        {
-            get
-            {
-                return GetProperty<bool>(Constants.VIX_PROPERTY_SNAPSHOT_IS_REPLAYABLE);
-            }
-        }
+        //public bool IsReplayable
+        //{
+        //    get
+        //    {
+        //        return GetProperty<bool>(Constants.VIX_PROPERTY_SNAPSHOT_IS_REPLAYABLE);
+        //    }
+        //}
 
         /// <summary>
         /// Replay a recording of a virtual machine. 
         /// </summary>
-        public void BeginReplay()
-        {
-            BeginReplay(Constants.VIX_VMPOWEROP_NORMAL, 
-                VMWareInterop.Timeouts.ReplayTimeout);
-        }
+        //public void BeginReplay()
+        //{
+        //    BeginReplay(Constants.VIX_VMPOWEROP_NORMAL, 
+        //        VMWareInterop.Timeouts.ReplayTimeout);
+        //}
 
         /// <summary>
         /// Replay a recording of a virtual machine. 
         /// </summary>
         /// <param name="powerOnOptions">One of VIX_VMPOWEROP_NORMAL or VIX_VMPOWEROP_LAUNCH_GUI.</param>
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
-        public void BeginReplay(int powerOnOptions, int timeoutInSeconds)
-        {
-            try
-            {
-                VMWareJobCallback callback = new VMWareJobCallback();
-                using (VMWareJob job = new VMWareJob(_vm.BeginReplay(
-                    _handle, powerOnOptions, null, callback), callback))
-                {
-                    job.Wait(timeoutInSeconds);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(
-                    string.Format("Failed to begin replay: powerOnOptions={0} timeoutInSeconds={1}", 
-                    powerOnOptions, timeoutInSeconds), ex);
-            }
-        }
+        //public void BeginReplay(int powerOnOptions, int timeoutInSeconds)
+        //{
+        //    try
+        //    {
+        //        VMWareJobCallback callback = new VMWareJobCallback();
+        //        using (VMWareJob job = new VMWareJob(_vm.BeginReplay(
+        //            _handle, powerOnOptions, null, callback), callback))
+        //        {
+        //            job.Wait(timeoutInSeconds);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception(
+        //            string.Format("Failed to begin replay: powerOnOptions={0} timeoutInSeconds={1}", 
+        //            powerOnOptions, timeoutInSeconds), ex);
+        //    }
+        //}
 
         /// <summary>
         /// Stop replaying a virtual machine's recording.
         /// </summary>
-        public void EndReplay()
-        {
-            EndReplay(VMWareInterop.Timeouts.ReplayTimeout);
-        }
+        //public void EndReplay()
+        //{
+        //    EndReplay(VMWareInterop.Timeouts.ReplayTimeout);
+        //}
 
         /// <summary>
         /// Stop replaying a virtual machine's recording.
         /// </summary>
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
-        public void EndReplay(int timeoutInSeconds)
-        {
-            try
-            {
-                VMWareJobCallback callback = new VMWareJobCallback();
-                using (VMWareJob job = new VMWareJob(_vm.EndReplay(
-                    0, null, callback), callback))
-                {
-                    job.Wait(timeoutInSeconds);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(
-                    string.Format("Failed to end replay: timeoutInSeconds={0}", 
-                    timeoutInSeconds), ex);
-            }
-        }
+        //public void EndReplay(int timeoutInSeconds)
+        //{
+        //    try
+        //    {
+        //        VMWareJobCallback callback = new VMWareJobCallback();
+        //        using (VMWareJob job = new VMWareJob(_vm.EndReplay(
+        //            0, null, callback), callback))
+        //        {
+        //            job.Wait(timeoutInSeconds);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception(
+        //            string.Format("Failed to end replay: timeoutInSeconds={0}", 
+        //            timeoutInSeconds), ex);
+        //    }
+        //}
 
         /// <summary>
         /// Creates a copy of the virtual machine at the state at which this snapshot was taken.

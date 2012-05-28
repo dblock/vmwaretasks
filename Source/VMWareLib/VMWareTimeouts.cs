@@ -214,13 +214,13 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Maximum time, in seconds, to begin and end a recording.
         /// </summary>
-        [VMWareTimeoutAttribute(Multiplier = 10)]
-        public int RecordingTimeout;
+        //[VMWareTimeoutAttribute(Multiplier = 10)]
+        //public int RecordingTimeout;
         /// <summary>
         /// Maximum time, in seconds, to replay a snapshot.
         /// </summary>
-        [VMWareTimeoutAttribute(Multiplier = 10)]
-        public int ReplayTimeout;
+        //[VMWareTimeoutAttribute(Multiplier = 10)]
+        //public int ReplayTimeout;
         /// <summary>
         /// Maximum time, in seconds, to wait for an upgrade for the virtual hardware.
         /// </summary>

@@ -32,8 +32,8 @@ namespace Vestris.VMWareComLib
         IProcess DetachScriptInGuest2(string interpreter, string scriptText, int timeoutInSeconds);
         bool DirectoryExistsInGuest(string guestPathName);
         bool DirectoryExistsInGuest2(string guestPathName, int timeoutInSeconds);
-        void EndRecording();
-        void EndRecording2(int timeoutInSeconds);
+        //void EndRecording();
+        //void EndRecording2(int timeoutInSeconds);
         bool FileExistsInGuest(string guestPathName);
         bool FileExistsInGuest2(string guestPathName, int timeoutInSeconds);
         IGuestFileInfo GetFileInfoInGuest(string guestPathName);
@@ -43,8 +43,8 @@ namespace Vestris.VMWareComLib
         void InstallTools();
         void InstallTools2(int timeoutInSeconds);
         bool IsPaused { get; }
-        bool IsRecording { get; }
-        bool IsReplaying { get; }
+        //bool IsRecording { get; }
+        //bool IsReplaying { get; }
         bool IsRunning { get; }
         bool IsSuspended { get; }
         string[] ListDirectoryInGuest(string pathName, bool recurse);
@@ -83,7 +83,7 @@ namespace Vestris.VMWareComLib
         void WaitForToolsInGuest();
         void WaitForToolsInGuest2(int timeoutInSeconds);
         IVMWareRootSnapshotCollection Snapshots { get; }
-        IVMWareSnapshot BeginRecording(string name, string description);
-        IVMWareSnapshot BeginRecording2(string name, string description, int timeoutInSeconds);
+        //IVMWareSnapshot BeginRecording(string name, string description);
+        //IVMWareSnapshot BeginRecording2(string name, string description, int timeoutInSeconds);
     }
 }

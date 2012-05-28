@@ -16,6 +16,8 @@ namespace Vestris.VMWareComLib
         void ConnectToVMWareVIServer(string hostName, string username, string password);
         void ConnectToVMWareWorkstation();
         void ConnectToVMWareWorkstation2(int timeoutInSeconds);
+        void ConnectToVMWareWorkstationShared();
+        void ConnectToVMWareWorkstationShared2(int timeoutInSeconds);
         void Disconnect();
         bool IsConnected { get; }
         IVMWareVirtualMachine Open(string fileName);

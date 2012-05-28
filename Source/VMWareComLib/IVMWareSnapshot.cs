@@ -11,13 +11,13 @@ namespace Vestris.VMWareComLib
     [Guid("BBE59046-66AF-458c-AD14-3F25546193E9")]
     public interface IVMWareSnapshot
     {
-        void BeginReplay();
-        void BeginReplay2(int powerOnOptions, int timeoutInSeconds);
+        //void BeginReplay();
+        //void BeginReplay2(int powerOnOptions, int timeoutInSeconds);
         string Description { get; }
         string DisplayName { get; }
-        void EndReplay();
-        void EndReplay2(int timeoutInSeconds);
-        bool IsReplayable { get; }
+        //void EndReplay();
+        //void EndReplay2(int timeoutInSeconds);
+        //bool IsReplayable { get; }
         IVMWareSnapshot Parent { get; }
         string Path { get; }
         int PowerState { get; }
