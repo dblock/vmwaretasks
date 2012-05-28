@@ -31,6 +31,16 @@ namespace Vestris.VMWareComLib
             _host.ConnectToVMWareWorkstation(timeoutInSeconds);
         }
 
+        public void ConnectToVMWareWorkstationShared()
+        {
+            _host.ConnectToVMWareWorkstationShared();
+        }
+
+        public void ConnectToVMWareWorkstationShared2(int timeoutInSeconds)
+        {
+            _host.ConnectToVMWareWorkstationShared(timeoutInSeconds);
+        }
+
         public void ConnectToVMWareVIServer(string hostName, string username, string password)
         {
             _host.ConnectToVMWareVIServer(hostName, username, password);

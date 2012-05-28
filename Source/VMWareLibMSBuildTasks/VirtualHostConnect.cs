@@ -120,6 +120,10 @@ namespace Vestris.VMWareLib.MSBuildTasks
                     Log.LogMessage("Connecting to VMWare Workstation");
                     host.ConnectToVMWareWorkstation(_connectTimeout);
                     break;
+                case VMWareVirtualHost.ServiceProviderType.WorkstationShared:
+                    Log.LogMessage("Connecting to VMWare Workstation (shared)");
+                    host.ConnectToVMWareWorkstationShared(_connectTimeout);
+                    break;
                 default:
                     Log.LogError(string.Format("Invalid connection type: {0}", _type));
                     throw new InvalidOperationException(string.Format("Invalid connection type: {0}", _type));
