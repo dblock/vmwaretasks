@@ -4,6 +4,7 @@ using System.Text;
 using System.IO;
 using System.Runtime.InteropServices;
 using Interop.VixCOM;
+using System.Reflection;
 
 namespace Vestris.VMWareLib
 {
@@ -230,7 +231,14 @@ namespace Vestris.VMWareLib
         {
             get
             {
-                return GetProperty<bool>(Constants.VIX_PROPERTY_SNAPSHOT_IS_REPLAYABLE);
+				FieldInfo field = typeof(Constants).GetField("VIX_PROPERTY_SNAPSHOT_IS_REPLAYABLE");
+				
+				if (field != null)
+				{
+					return GetProperty<bool>((int)field.GetValue(null));
+				}
+				else
+					return false;
             }
         }
 
@@ -239,7 +247,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         public void BeginReplay()
         {
-            BeginReplay(Constants.VIX_VMPOWEROP_NORMAL, 
+        	BeginReplay(Constants.VIX_VMPOWEROP_NORMAL, 
                 VMWareInterop.Timeouts.ReplayTimeout);
         }
 
@@ -251,7 +259,7 @@ namespace Vestris.VMWareLib
         public void BeginReplay(int powerOnOptions, int timeoutInSeconds)
         {
             try
-            {
+            {           	
                 VMWareJobCallback callback = new VMWareJobCallback();
                 using (VMWareJob job = new VMWareJob(_vm.BeginReplay(
                     _handle, powerOnOptions, null, callback), callback))

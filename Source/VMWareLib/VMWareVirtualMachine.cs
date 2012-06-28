@@ -5,6 +5,7 @@ using Interop.VixCOM;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 using System.Drawing;
+using System.Reflection;
 
 namespace Vestris.VMWareLib
 {
@@ -1557,9 +1558,16 @@ namespace Vestris.VMWareLib
         /// </summary>
         public bool IsRecording
         {
-            get
+            get            	
             {
-                return GetProperty<bool>(Constants.VIX_PROPERTY_VM_IS_RECORDING);
+            	FieldInfo field = typeof(Constants).GetField("VIX_PROPERTY_VM_IS_RECORDING");
+            	
+            	if (field != null)
+            	{
+                	return GetProperty<bool>((int)field.GetValue(null));
+            	}
+            	else
+            		return false;
             }
         }
 
@@ -1570,7 +1578,14 @@ namespace Vestris.VMWareLib
         {
             get
             {
-                return GetProperty<bool>(Constants.VIX_PROPERTY_VM_IS_REPLAYING);
+            	FieldInfo field = typeof(Constants).GetField("VIX_PROPERTY_VM_IS_REPLAYING");
+            	
+            	if (field != null)
+            	{
+                	return GetProperty<bool>((int)field.GetValue(null));
+            	}
+            	else
+            		return false;            	
             }
         }
 
