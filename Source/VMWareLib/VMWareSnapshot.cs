@@ -231,20 +231,14 @@ namespace Vestris.VMWareLib
         {
             get
             {
-				FieldInfo field = typeof(Constants).GetField("VIX_PROPERTY_SNAPSHOT_IS_REPLAYABLE");
-				
-				if (field != null)
-				{
-					return GetProperty<bool>((int)field.GetValue(null));
-				}
-				else
-					return false;
+            	return GetProperty<bool>("VIX_PROPERTY_SNAPSHOT_IS_REPLAYABLE", false);
             }
         }
 
         /// <summary>
         /// Replay a recording of a virtual machine. 
         /// </summary>
+        [Obsolete("Deprecated in VixCOM API 1.11")]
         public void BeginReplay()
         {
         	BeginReplay(Constants.VIX_VMPOWEROP_NORMAL, 
@@ -256,6 +250,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         /// <param name="powerOnOptions">One of VIX_VMPOWEROP_NORMAL or VIX_VMPOWEROP_LAUNCH_GUI.</param>
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        [Obsolete("Deprecated in VixCOM API 1.11")]
         public void BeginReplay(int powerOnOptions, int timeoutInSeconds)
         {
             try
@@ -278,6 +273,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Stop replaying a virtual machine's recording.
         /// </summary>
+        [Obsolete("Deprecated in VixCOM API 1.11")]
         public void EndReplay()
         {
             EndReplay(VMWareInterop.Timeouts.ReplayTimeout);
@@ -287,6 +283,7 @@ namespace Vestris.VMWareLib
         /// Stop replaying a virtual machine's recording.
         /// </summary>
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        [Obsolete("Deprecated in VixCOM API 1.11")]
         public void EndReplay(int timeoutInSeconds)
         {
             try

@@ -1558,16 +1558,9 @@ namespace Vestris.VMWareLib
         /// </summary>
         public bool IsRecording
         {
-            get            	
+            get            	            	
             {
-            	FieldInfo field = typeof(Constants).GetField("VIX_PROPERTY_VM_IS_RECORDING");
-            	
-            	if (field != null)
-            	{
-                	return GetProperty<bool>((int)field.GetValue(null));
-            	}
-            	else
-            		return false;
+            	return GetProperty<bool>("VIX_PROPERTY_VM_IS_RECORDING", false);
             }
         }
 
@@ -1578,14 +1571,7 @@ namespace Vestris.VMWareLib
         {
             get
             {
-            	FieldInfo field = typeof(Constants).GetField("VIX_PROPERTY_VM_IS_REPLAYING");
-            	
-            	if (field != null)
-            	{
-                	return GetProperty<bool>((int)field.GetValue(null));
-            	}
-            	else
-            		return false;            	
+            	return GetProperty<bool>("VIX_PROPERTY_VM_IS_REPLAYING", false);           	
             }
         }
 
@@ -1594,6 +1580,7 @@ namespace Vestris.VMWareLib
         /// </summary>
         /// <param name="name">Snapshot name.</param>
         /// <returns>Resulting snapshot.</returns>
+        [Obsolete("Deprecated in VixCOM API 1.11")]
         public VMWareSnapshot BeginRecording(string name)
         {
             return BeginRecording(name, string.Empty);
@@ -1605,6 +1592,7 @@ namespace Vestris.VMWareLib
         /// <param name="name">Snapshot name.</param>
         /// <param name="description">Snapshot description.</param>
         /// <returns>Resulting snapshot.</returns>
+        [Obsolete("Deprecated in VixCOM API 1.11")]
         public VMWareSnapshot BeginRecording(string name, string description)
         {
             return BeginRecording(name, description, VMWareInterop.Timeouts.RecordingTimeout);
@@ -1617,6 +1605,7 @@ namespace Vestris.VMWareLib
         /// <param name="description">Snapshot description.</param>
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         /// <returns>Resulting snapshot.</returns>
+        [Obsolete("Deprecated in VixCOM API 1.11")]
         public VMWareSnapshot BeginRecording(string name, string description, int timeoutInSeconds)
         {
             try
@@ -1642,6 +1631,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// This function stops recording a virtual machine's activity.
         /// </summary>
+        [ObsoleteAttribute("Deprecated in VixCOM API 1.11")]
         public void EndRecording()
         {
             EndRecording(VMWareInterop.Timeouts.RecordingTimeout);
@@ -1651,6 +1641,7 @@ namespace Vestris.VMWareLib
         /// This function stops recording a virtual machine's activity.
         /// </summary>
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        [Obsolete("Deprecated in VixCOM API 1.11")]
         public void EndRecording(int timeoutInSeconds)
         {
             try
