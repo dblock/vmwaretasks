@@ -231,14 +231,7 @@ namespace Vestris.VMWareLib
         {
             get
             {
-				FieldInfo field = typeof(Constants).GetField("VIX_PROPERTY_SNAPSHOT_IS_REPLAYABLE");
-				
-				if (field != null)
-				{
-					return GetProperty<bool>((int)field.GetValue(null));
-				}
-				else
-					return false;
+            	return GetProperty<bool>("VIX_PROPERTY_SNAPSHOT_IS_REPLAYABLE", false);
             }
         }
 

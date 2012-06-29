@@ -1558,16 +1558,9 @@ namespace Vestris.VMWareLib
         /// </summary>
         public bool IsRecording
         {
-            get            	
+            get            	            	
             {
-            	FieldInfo field = typeof(Constants).GetField("VIX_PROPERTY_VM_IS_RECORDING");
-            	
-            	if (field != null)
-            	{
-                	return GetProperty<bool>((int)field.GetValue(null));
-            	}
-            	else
-            		return false;
+            	return GetProperty<bool>("VIX_PROPERTY_VM_IS_RECORDING", false);
             }
         }
 
@@ -1578,14 +1571,7 @@ namespace Vestris.VMWareLib
         {
             get
             {
-            	FieldInfo field = typeof(Constants).GetField("VIX_PROPERTY_VM_IS_REPLAYING");
-            	
-            	if (field != null)
-            	{
-                	return GetProperty<bool>((int)field.GetValue(null));
-            	}
-            	else
-            		return false;            	
+            	return GetProperty<bool>("VIX_PROPERTY_VM_IS_REPLAYING", false);           	
             }
         }
 

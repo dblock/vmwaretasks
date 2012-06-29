@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Interop.VixCOM;
+using System.Reflection;
 
 namespace Vestris.VMWareLib
 {
@@ -84,6 +85,27 @@ namespace Vestris.VMWareLib
             object[] properties = { propertyId };
             return (R)GetProperties(properties)[0];
         }
+              
+        /// <summary>
+        /// Return the value of a single property.
+        /// </summary>
+        /// <param name="propertyName">property name</param>
+        /// <param name="defaultValue"></param>
+        /// <typeparam name="R">property value type</typeparam>
+        /// <returns>The value of a single property of type R.</returns>
+        public R GetProperty<R>(string propertyName, R defaultValue)
+        {
+       		FieldInfo field = typeof(Constants).GetField(propertyName);
+            	
+        	if (field != null)
+        	{      		
+        		return GetProperty<R>((int)field.GetValue(null));
+        	}
+        	else
+        	{
+				return defaultValue;        		
+        	}
+        }        
 
         /// <summary>
         /// Close the handle.
