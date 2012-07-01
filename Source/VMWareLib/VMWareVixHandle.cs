@@ -90,7 +90,7 @@ namespace Vestris.VMWareLib
         /// Return the value of a single property.
         /// </summary>
         /// <param name="propertyName">property name</param>
-        /// <param name="defaultValue"></param>
+        /// <param name="defaultValue">Default value returned if property does not exist</param>
         /// <typeparam name="R">property value type</typeparam>
         /// <returns>The value of a single property of type R.</returns>
         public R GetProperty<R>(string propertyName, R defaultValue)
