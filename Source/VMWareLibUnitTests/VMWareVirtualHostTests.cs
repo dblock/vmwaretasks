@@ -105,5 +105,28 @@ namespace Vestris.VMWareLibUnitTests
         {
             // todo: test on ESX, requires admin privileges
         }
+        
+        [Test]
+        public void TestGetPropertyByName()
+        {
+            if (!_test.Config.RunWorkstationTests)
+                Assert.Ignore("Skipping, Workstation tests disabled.");
+
+            foreach (VMWareVirtualHost virtualHost in _test.ConnectedVirtualHosts)
+            {
+                if (virtualHost.ConnectionType == VMWareVirtualHost.ServiceProviderType.Workstation)
+                {
+                    virtualHost.ConnectToVMWareWorkstation();
+ 
+                    // Should return default is prporty does not exist
+                    var result = virtualHost.GetProperty<int>("VIX_DUMMY_PROPERTY", 99);
+                    Assert.AreEqual(99, result, "Default value incorrect for property that does not exist");
+
+                    // Should return property value for existing property
+                    result = virtualHost.GetProperty<int>("VIX_PROPERTY_HOST_HOSTTYPE", 33);
+                    Assert.AreEqual(3, result, "Incorrect value returned for existing property");
+                }
+            }
+        }  
     }
 }
