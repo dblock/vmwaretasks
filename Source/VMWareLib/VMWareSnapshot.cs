@@ -4,6 +4,7 @@ using System.Text;
 using System.IO;
 using System.Runtime.InteropServices;
 using Interop.VixCOM;
+using System.Reflection;
 
 namespace Vestris.VMWareLib
 {
@@ -230,16 +231,17 @@ namespace Vestris.VMWareLib
         {
             get
             {
-                return GetProperty<bool>(Constants.VIX_PROPERTY_SNAPSHOT_IS_REPLAYABLE);
+            	return GetProperty<bool>("VIX_PROPERTY_SNAPSHOT_IS_REPLAYABLE", false);
             }
         }
 
         /// <summary>
         /// Replay a recording of a virtual machine. 
         /// </summary>
+        [Obsolete("Deprecated in VixCOM API 1.11")]
         public void BeginReplay()
         {
-            BeginReplay(Constants.VIX_VMPOWEROP_NORMAL, 
+        	BeginReplay(Constants.VIX_VMPOWEROP_NORMAL, 
                 VMWareInterop.Timeouts.ReplayTimeout);
         }
 
@@ -248,10 +250,11 @@ namespace Vestris.VMWareLib
         /// </summary>
         /// <param name="powerOnOptions">One of VIX_VMPOWEROP_NORMAL or VIX_VMPOWEROP_LAUNCH_GUI.</param>
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        [Obsolete("Deprecated in VixCOM API 1.11")]
         public void BeginReplay(int powerOnOptions, int timeoutInSeconds)
         {
             try
-            {
+            {           	
                 VMWareJobCallback callback = new VMWareJobCallback();
                 using (VMWareJob job = new VMWareJob(_vm.BeginReplay(
                     _handle, powerOnOptions, null, callback), callback))
@@ -270,6 +273,7 @@ namespace Vestris.VMWareLib
         /// <summary>
         /// Stop replaying a virtual machine's recording.
         /// </summary>
+        [Obsolete("Deprecated in VixCOM API 1.11")]
         public void EndReplay()
         {
             EndReplay(VMWareInterop.Timeouts.ReplayTimeout);
@@ -279,6 +283,7 @@ namespace Vestris.VMWareLib
         /// Stop replaying a virtual machine's recording.
         /// </summary>
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        [Obsolete("Deprecated in VixCOM API 1.11")]
         public void EndReplay(int timeoutInSeconds)
         {
             try
