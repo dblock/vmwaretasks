@@ -1,13 +1,14 @@
 1.7 (TBD)
 
-* First release off [Github](http://github.com/dblock/vmwaretasks)
+*Features*
+
+* First release off [Github](http://github.com/dblock/vmwaretasks) - [@dblock](https://github.com/dblock).
+* Added support for VixCOM 1.11. Record/Replay has been deprecated, see [VixCOM Release Notes](http://www.vmware.com/support/developer/vix-api/VIX-1.11-ReleaseNotes.html) - [@mikewalker](https://github.com/mikewalker).
 
 *Misc*
 
-* updated WindowsShell.cs so that RunCommandInGuest does not swallow exceptions in the finally block
-* #10296: using Sandcastle and JDK from Tools directory
-* #10297: updated copyright dates
-* Added support for VixCOM 1.11 (Record/Replay deprecated - See [Release Notes](http://www.vmware.com/support/developer/vix-api/VIX-1.11-ReleaseNotes.html)
+* `Vestris.VMWareLib.Tools.Windows.Shell.RunCommandInGuest` does not swallow exceptions in the finally block - [@icnocop](https://github.com/icnocop).
+* #10296: Using Sandcastle and JDK from Tools directory - [@icnocop](https://github.com/icnocop).
 
 1.6 (2/11/2012)
 ---------------
