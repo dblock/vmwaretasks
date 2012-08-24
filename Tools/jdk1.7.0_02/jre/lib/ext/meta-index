@@ -20,6 +20,10 @@ META-INF/ORACLE_J.SF
 sun/security
 META-INF/ORACLE_J.RSA
 META-INF/ORACLE_J.SF
+# sunpkcs11.jar
+sun/security
+META-INF/ORACLE_J.RSA
+META-INF/ORACLE_J.SF
 # zipfs.jar
 META-INF/services/java.nio.file.spi.FileSystemProvider
 com/sun/nio/
