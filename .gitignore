@@ -2,6 +2,7 @@ Source/Version/GlobalAssemblyInfo.cs
 Source/Interop.VixCOM
 Source/VMWareComLibJava
 Source/VMWareComToolsJava
+Source/*/*.csproj.user
 bin
 obj
 Debug
