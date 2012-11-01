@@ -22,7 +22,15 @@ namespace Vestris.VMWareLib
         {
             if (new VixLib().ErrorIndicatesFailure(errCode))
             {
-                throw new VMWareException(errCode);
+                switch (errCode)
+                {
+                    case Constants.VIX_E_TOOLS_NOT_RUNNING:
+                        throw new VMWareToolsNotRunningException();
+                    case Constants.VIX_E_INTERACTIVE_SESSION_NOT_PRESENT:
+                        throw new VMWareInteractiveSessionNotPresentException();
+                    default:
+                        throw new VMWareException(errCode);
+                }
             }
         }
 
