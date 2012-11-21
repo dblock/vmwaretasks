@@ -4,10 +4,10 @@ using System.Text;
 
 namespace Vestris.VMWareLib
 {
-    public class VMWareInteractiveSessionNotPresentException : Exception
+    public class VMWareInteractiveSessionNotPresentException : VMWareException
     {
-        public VMWareInteractiveSessionNotPresentException()
-            : base()
+        public VMWareInteractiveSessionNotPresentException(ulong code)
+            : base(code)
         {
         }
     }

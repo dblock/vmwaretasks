@@ -4,10 +4,10 @@ using System.Text;
 
 namespace Vestris.VMWareLib
 {
-    public class VMWareToolsNotRunningException : Exception
+    public class VMWareToolsNotRunningException : VMWareException
     {
-        public VMWareToolsNotRunningException()
-            : base()
+        public VMWareToolsNotRunningException(ulong code)
+            : base(code)
         {
         }
     }

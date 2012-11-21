@@ -25,9 +25,9 @@ namespace Vestris.VMWareLib
                 switch (errCode)
                 {
                     case Constants.VIX_E_TOOLS_NOT_RUNNING:
-                        throw new VMWareToolsNotRunningException();
+                        throw new VMWareToolsNotRunningException(errCode);
                     case Constants.VIX_E_INTERACTIVE_SESSION_NOT_PRESENT:
-                        throw new VMWareInteractiveSessionNotPresentException();
+                        throw new VMWareInteractiveSessionNotPresentException(errCode);
                     default:
                         throw new VMWareException(errCode);
                 }
