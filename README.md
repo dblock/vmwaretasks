@@ -14,7 +14,7 @@ Resources
 
 * [Need Help? VMWareTasks Google Group](http://groups.google.com/group/vmwaretasks)
 * [Need VixCOM Help? VMWare Communities](http://communities.vmware.com/community/vmtn/developer/forums/automationapi)
-* [Latest Stable Release - 1.7](https://github.com/downloads/dblock/vmwaretasks/VMWareTasks-1.7.zip)
+* [Latest Stable Release - 1.7](http://code.dblock.org/downloads/vmwaretasks/VMWareTasks-1.7.zip)
 * [Downlod VixCOM 1.11](https://my.vmware.com/group/vmware/get-download?downloadGroup=VIX-API-1110)
 * [VixCOM API 1.11 Reference](http://www.vmware.com/support/developer/vix-api/vix111_reference/index2.html)
 
