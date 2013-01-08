@@ -4,7 +4,6 @@
 *Misc*
 
 * #7: VMWareTasks.proj's vixcom target needs to be updated to use Visual Studio 2005's tlbimp.exe - [@icnocop](https://github.com/icnocop)
-* Throwing some more meaningful exceptions - [@icnocop](https://github.com/icnocop)
 
 1.7 (8/24/2012)
 ---------------

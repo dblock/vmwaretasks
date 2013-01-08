@@ -896,29 +896,38 @@ namespace Vestris.VMWareLib
         /// <returns>Process information.</returns>
         public Process RunProgramInGuest(string guestProgramName, string commandLineArgs, int options, int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.RunProgramInGuest(
-                guestProgramName, commandLineArgs, options, null, callback),
-                callback))
+            try
             {
-                object[] properties = 
-                { 
-                    Constants.VIX_PROPERTY_JOB_RESULT_GUEST_PROGRAM_EXIT_CODE, 
-                    Constants.VIX_PROPERTY_JOB_RESULT_PROCESS_ID,
-                    // Constants.VIX_PROPERTY_JOB_RESULT_GUEST_PROGRAM_ELAPSED_TIME
-                };
-                object[] propertyValues = job.Wait<object[]>(properties, timeoutInSeconds);
-                Process process = new Process(_handle);
-                process.Name = Path.GetFileName(guestProgramName);
-                process.Command = guestProgramName;
-                if (!string.IsNullOrEmpty(commandLineArgs))
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.RunProgramInGuest(
+                    guestProgramName, commandLineArgs, options, null, callback),
+                    callback))
                 {
-                    process.Command += " ";
-                    process.Command += commandLineArgs;
+                    object[] properties = 
+                    { 
+                        Constants.VIX_PROPERTY_JOB_RESULT_GUEST_PROGRAM_EXIT_CODE, 
+                        Constants.VIX_PROPERTY_JOB_RESULT_PROCESS_ID,
+                        // Constants.VIX_PROPERTY_JOB_RESULT_GUEST_PROGRAM_ELAPSED_TIME
+                    };
+                    object[] propertyValues = job.Wait<object[]>(properties, timeoutInSeconds);
+                    Process process = new Process(_handle);
+                    process.Name = Path.GetFileName(guestProgramName);
+                    process.Command = guestProgramName;
+                    if (!string.IsNullOrEmpty(commandLineArgs))
+                    {
+                        process.Command += " ";
+                        process.Command += commandLineArgs;
+                    }
+                    process.ExitCode = (int)propertyValues[0];
+                    process.Id = (long)propertyValues[1];
+                    return process;
                 }
-                process.ExitCode = (int)propertyValues[0];
-                process.Id = (long)propertyValues[1];
-                return process;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to run program in guest: guestProgramName=\"{0}\" commandLineArgs=\"{1}\"", 
+                    guestProgramName, commandLineArgs), ex);
             }
         }
 
@@ -1052,12 +1061,21 @@ namespace Vestris.VMWareLib
         /// <returns>True if the file exists in the guest operating system.</returns>
         public bool FileExistsInGuest(string guestPathName, int timeoutInSeconds)
         {
-            VMWareJobCallback callback = new VMWareJobCallback();
-            using (VMWareJob job = new VMWareJob(_handle.FileExistsInGuest(
-                guestPathName, callback),
-                callback))
+            try
             {
-                return job.Wait<bool>(Constants.VIX_PROPERTY_JOB_RESULT_GUEST_OBJECT_EXISTS, timeoutInSeconds);
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_handle.FileExistsInGuest(
+                    guestPathName, callback),
+                    callback))
+                {
+                    return job.Wait<bool>(Constants.VIX_PROPERTY_JOB_RESULT_GUEST_OBJECT_EXISTS, timeoutInSeconds);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to check if file exists in guest: guestPathName=\"{0}\" timeoutInSeconds={1}",
+                    guestPathName, timeoutInSeconds), ex);
             }
         }
 
