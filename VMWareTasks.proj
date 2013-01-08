@@ -50,7 +50,6 @@
     <SourceCodeFiles Include="Source/**/*.csproj" />
     <SourceCodeFiles Include="Source/**/App.config" />
     <SourceCodeFiles Include="Source/**/*.vbs" />
-    <SourceCodeFiles Include="Source/License.txt" />
     <SourceCodeFiles Include="Source/**/*.java" />
     <SourceCodeFiles Include="Source/**/*.Targets" />
     <SourceCodeFiles Include="Source/**/*.proj" />
@@ -89,7 +88,9 @@
     <DocumentationFiles Include="Documentation/$(Configuration)/VMWareTasks.chm" />    
   </ItemGroup>
   <ItemGroup>
-    <LicenseFiles Include="Source/License.txt" />    
+    <ReadmeFiles Include="README.md" />    
+    <ReadmeFiles Include="HISTORY.md" />    
+    <ReadmeFiles Include="LICENSE.md" />    
   </ItemGroup>
   <Target Name="zip" DependsOnTargets="version">
     <Copy SourceFiles="@(SourceCodeProjects)" DestinationFolder="$(ReleaseDir)\Source\%(RecursiveDir)" />
@@ -98,7 +99,7 @@
     <Copy SourceFiles="@(JavaBinaryFiles)" DestinationFolder="$(ReleaseDir)\JavaBin" />
     <Copy SourceFiles="@(ArticleFiles)" DestinationFolder="$(ReleaseDir)\Article\%(RecursiveDir)" />
     <Copy SourceFiles="@(DocumentationFiles)" DestinationFolder="$(ReleaseDir)" />
-    <Copy SourceFiles="@(LicenseFiles)" DestinationFolder="$(ReleaseDir)" />
+    <Copy SourceFiles="@(ReadmeFiles)" DestinationFolder="$(ReleaseDir)" />
     <CreateItem Include="$(ReleaseDir)\**\*" Exclude="target\$(Configuration)\*.zip">
       <Output TaskParameter="Include" ItemName="PackageFiles" />
     </CreateItem>
