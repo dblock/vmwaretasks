@@ -143,6 +143,6 @@
   </Target>
   <Target Name="vixcom">
     <Message Text="Importing VixCOM Type Library ..." />
-    <Exec Command="tlbimp.exe &quot;$(ProgramFiles)\VMWare\VMWare VIX\VixCOM.dll&quot; /keyfile:master.snk /out:Source\Interop.VixCOM\Interop.VixCOM.dll" />
+    <Exec Command="&quot;$(ProgramFiles)\Microsoft SDKs\Windows\v7.0A\Bin\TlbImp.exe&quot; &quot;$(ProgramFiles)\VMWare\VMWare VIX\VixCOM.dll&quot; /keyfile:master.snk /out:Source\Interop.VixCOM\Interop.VixCOM.dll" />
   </Target>
 </Project>
