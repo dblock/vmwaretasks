@@ -27,6 +27,10 @@ namespace Vestris.VMWareLib
             /// </summary>
             Workstation = Constants.VIX_SERVICEPROVIDER_VMWARE_WORKSTATION,
             /// <summary>
+            /// VMWare Workstation Shared
+            /// </summary>
+            WorkstationShared = Constants.VIX_SERVICEPROVIDER_VMWARE_WORKSTATION_SHARED,
+            /// <summary>
             /// Virtual Infrastructure Server, eg. ESX.
             /// </summary>
             VirtualInfrastructureServer = Constants.VIX_SERVICEPROVIDER_VMWARE_VI_SERVER,
@@ -69,7 +73,7 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// Connect to a WMWare Player.
+        /// Connect to a VMWare Player.
         /// </summary>
         /// <example>
         /// <code>
@@ -89,7 +93,7 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// Connect to a WMWare Player.
+        /// Connect to a VMWare Player.
         /// </summary>
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void ConnectToVMWarePlayer(int timeoutInSeconds)
@@ -98,7 +102,7 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// Connect to a WMWare Workstation.
+        /// Connect to a VMWare Workstation.
         /// </summary>
         /// <example>
         /// <code>
@@ -118,7 +122,7 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// Connect to a WMWare Workstation.
+        /// Connect to a VMWare Workstation.
         /// </summary>
         /// <param name="timeoutInSeconds">Timeout in seconds.</param>
         public void ConnectToVMWareWorkstation(int timeoutInSeconds)
@@ -127,7 +131,30 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// Connect to a WMWare Virtual Infrastructure Server (eg. ESX or VMWare Server 2.x).
+        /// Connects to VMWare Workstation (shared mode).
+        /// </summary>
+        /// <param name="hostName">Name of the host.</param>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
+        public void ConnectToVMWareWorkstation(string hostName, string username, string password)
+        {
+            ConnectToVMWareWorkstation(hostName, username, password, VMWareInterop.Timeouts.ConnectTimeout);
+        }
+
+        /// <summary>
+        /// Connects to VMWare Workstation (shared mode).
+        /// </summary>
+        /// <param name="hostName">Name of the host.</param>
+        /// <param name="username">The username.</param>
+        /// <param name="password">The password.</param>
+        /// <param name="timeoutInSeconds">The timeout in seconds.</param>
+        public void ConnectToVMWareWorkstation(string hostName, string username, string password, int timeoutInSeconds)
+        {
+            Connect(ServiceProviderType.WorkstationShared, string.Format("https://{0}/sdk", hostName), 0, username, password, timeoutInSeconds);
+        }
+
+        /// <summary>
+        /// Connect to a VMWare Virtual Infrastructure Server (eg. ESX or VMWare Server 2.x).
         /// </summary>
         /// <param name="hostName">VMWare host name and optional port.</param>
         /// <param name="username">Username.</param>
@@ -162,7 +189,7 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// Connect to a WMWare Virtual Infrastructure Server (eg. ESX or VMWare Server 2.x).
+        /// Connect to a VMWare Virtual Infrastructure Server (eg. ESX or VMWare Server 2.x).
         /// </summary>
         /// <param name="hostName">VMWare host name and optional port.</param>
         /// <param name="username">Username.</param>
@@ -204,7 +231,7 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// Connect to a WMWare Virtual Infrastructure Server (eg. ESX).
+        /// Connect to a VMWare Virtual Infrastructure Server (eg. ESX).
         /// </summary>
         /// <param name="hostUri">Host SDK uri, eg. http://server/sdk.</param>
         /// <param name="username">Username.</param>
@@ -222,7 +249,7 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// Connect to a WMWare Server.
+        /// Connect to a VMWare Server.
         /// </summary>
         /// <param name="username">Username.</param>
         /// <param name="password">Password.</param>
@@ -233,7 +260,7 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
-        /// Connect to a WMWare Server.
+        /// Connect to a VMWare Server.
         /// </summary>
         /// <param name="hostName">DNS name or IP address of a VMWare host, leave blank for localhost.</param>
         /// <param name="username">Username.</param>
