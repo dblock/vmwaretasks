@@ -10,7 +10,8 @@ namespace Vestris.VMWareLibUnitTests
     public enum VMWareVirtualMachineType
     {
         Workstation,
-        ESX
+        ESX,
+        WorkstationShared
     };
 
     /// <summary>
@@ -200,6 +201,9 @@ namespace Vestris.VMWareLibUnitTests
                                 break;
                             case VMWareVirtualMachineType.Workstation:
                                 _provider = new TestWorkstation(this);
+                                break;
+                            case VMWareVirtualMachineType.WorkstationShared:
+                                _provider = new TestWorkstationShared(this);
                                 break;
                         }
                     }

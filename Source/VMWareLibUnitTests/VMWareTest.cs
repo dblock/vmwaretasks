@@ -115,7 +115,9 @@ namespace Vestris.VMWareLibUnitTests
                     if (_config.RunVITests && virtualMachineConfig.Type == VMWareVirtualMachineType.ESX)
                         yield return virtualMachineConfig.Provider;
 
-                    if (_config.RunWorkstationTests && virtualMachineConfig.Type == VMWareVirtualMachineType.Workstation)
+                    if (_config.RunWorkstationTests
+                        && ((virtualMachineConfig.Type == VMWareVirtualMachineType.Workstation)
+                        || (virtualMachineConfig.Type == VMWareVirtualMachineType.WorkstationShared)))
                         yield return virtualMachineConfig.Provider;
                 }
             }
