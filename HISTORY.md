@@ -1,6 +1,10 @@
 1.8 (TBD)
 ---------
 
+*Features*
+
+* #10378: Added support for VMware Workstation Shared Mode
+
 *Misc*
 
 * #7: VMWareTasks.proj's vixcom target needs to be updated to use Visual Studio 2005's tlbimp.exe - [@icnocop](https://github.com/icnocop)

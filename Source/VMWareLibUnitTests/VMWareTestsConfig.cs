@@ -33,8 +33,9 @@ namespace Vestris.VMWareLibUnitTests
         {
             get
             {
-                return (bool)this["runWorkstationTests"] 
-                    && VirtualMachines.HasType(VMWareVirtualMachineType.Workstation);
+                return (bool)this["runWorkstationTests"]
+                    && ((VirtualMachines.HasType(VMWareVirtualMachineType.Workstation))
+                    || (VirtualMachines.HasType(VMWareVirtualMachineType.WorkstationShared)));
             }
             set
             {
