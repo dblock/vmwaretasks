@@ -156,7 +156,7 @@ namespace Vestris.VMWareLib.Tools.Windows
                 string[] nameValuePair = line.Split("=".ToCharArray(), 2);
                 if (nameValuePair.Length != 2)
                 {
-                    throw new Exception(string.Format("Invalid environment string: \"{0}\"", line));
+                    throw new VMWareInvalidEnvironmentStringException(line);
                 }
 
                 environmentVariables[nameValuePair[0]] = nameValuePair[1];

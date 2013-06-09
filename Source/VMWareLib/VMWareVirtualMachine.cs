@@ -1243,9 +1243,7 @@ namespace Vestris.VMWareLib
             }
             catch (Exception ex)
             {
-                throw new Exception(
-                    string.Format("Failed to reset virtual machine: resetOptions={0} timeoutInSeconds={1}",
-                    resetOptions, timeoutInSeconds), ex);
+                throw new VMWareFailedToResetVirtualMachineException(resetOptions, ex);
             }
         }
 
@@ -1817,9 +1815,7 @@ namespace Vestris.VMWareLib
             }
             catch (Exception ex)
             {
-                throw new Exception(
-                    string.Format("Failed to install tools: timeoutInSeconds={0}",
-                    timeoutInSeconds), ex);
+                throw new VMWareInstallToolsException(ex);
             }
         }
 
