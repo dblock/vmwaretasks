@@ -51,6 +51,7 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="GuestOS.cs" />
+    <Compile Include="VMWareInvalidEnvironmentStringException.cs" />
     <Compile Include="WindowsMappedNetworkDrive.cs" />
     <Compile Include="WindowsShell.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

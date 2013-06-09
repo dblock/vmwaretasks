@@ -94,7 +94,7 @@
   </ItemGroup>
   <Target Name="zip" DependsOnTargets="version">
     <Copy SourceFiles="@(SourceCodeProjects)" DestinationFolder="$(ReleaseDir)\Source\%(RecursiveDir)" />
-    <Copy SourceFiles="@(SourceCodeFiles)" DestinationFolder="$(ReleaseDir)\Source\Source\%(RecursiveDir)" />
+    <Copy SourceFiles="@(SourceCodeFiles)" DestinationFolder="$(ReleaseDir)\Source\%(RecursiveDir)" />
     <Copy SourceFiles="@(BinaryFiles)" DestinationFolder="$(ReleaseDir)\Bin" />
     <Copy SourceFiles="@(JavaBinaryFiles)" DestinationFolder="$(ReleaseDir)\JavaBin" />
     <Copy SourceFiles="@(ArticleFiles)" DestinationFolder="$(ReleaseDir)\Article\%(RecursiveDir)" />
