@@ -29,6 +29,8 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\master.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -87,6 +89,9 @@
     <Compile Include="VMWareVixHandle.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\master.snk">
+      <Link>master.snk</Link>
+    </None>
     <None Include="App.config" />
     <None Include="VMWareLib.cd" />
   </ItemGroup>

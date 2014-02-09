@@ -14,6 +14,8 @@
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkSubset>
     </TargetFrameworkSubset>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\master.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -71,6 +73,9 @@
     <Compile Include="VMWareVirtualMachine.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\master.snk">
+      <Link>master.snk</Link>
+    </None>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>

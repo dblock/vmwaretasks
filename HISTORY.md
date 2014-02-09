@@ -1,9 +1,9 @@
-1.8 (TBD)
+1.9 (TBD)
 ---------
 
 *Features*
 
-* #10378: Added support for VMware Workstation Shared Mode
+* #10378: Added support for VMware Workstation Shared Mode - [@icnocop](https://github.com/icnocop)
 
 *Misc*
 

@@ -364,6 +364,7 @@ namespace Vestris.VMWareLib
             {
                 case ServiceProviderType.VirtualInfrastructureServer:
                 case ServiceProviderType.Server:
+                case ServiceProviderType.WorkstationShared:
                     break;
                 default:
                     throw new NotSupportedException(string.Format("Register is not supported on {0}",
@@ -411,6 +412,7 @@ namespace Vestris.VMWareLib
             {
                 case ServiceProviderType.VirtualInfrastructureServer:
                 case ServiceProviderType.Server:
+                case ServiceProviderType.WorkstationShared:
                     break;
                 default:
                     throw new NotSupportedException(string.Format("Unregister is not supported on {0}",
@@ -533,6 +535,7 @@ namespace Vestris.VMWareLib
                 {
                     case ServiceProviderType.VirtualInfrastructureServer:
                     case ServiceProviderType.Server:
+                    case ServiceProviderType.WorkstationShared:
                         break;
                     default:
                         throw new NotSupportedException(string.Format("RegisteredVirtualMachines is not supported on {0}",
