@@ -9,7 +9,11 @@
     <Copyright>Copyright (c) 2008-$([System.DateTime]::Now.ToString(`yyyy`)) Daniel Doubrovkine, Vestris Inc.</Copyright>
     <Trademark>All Rights Reserved</Trademark>
     <MajorVersion>1</MajorVersion>
-    <MinorVersion>7</MinorVersion>
+    <!--
+    The minor version number should be incremented at least once a year (i.e. on January 1)
+    because otherwise the build version number may overlap with previous (unofficial) releases
+    -->
+    <MinorVersion>9</MinorVersion>
   </PropertyGroup>
   <Import Project="Version.proj"/>
   <PropertyGroup>
