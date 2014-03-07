@@ -267,6 +267,18 @@ namespace Vestris.VMWareLib
 
 
         /// <summary>
+        /// Display name of the virtual machine.
+        /// </summary>
+        public string Name
+        {
+            get
+            {
+                return GetProperty<string>(Constants.VIX_PROPERTY_VM_NAME);
+            }
+        }
+
+
+        /// <summary>
         /// The path to the virtual machine configuration file.
         /// </summary>
         public string PathName

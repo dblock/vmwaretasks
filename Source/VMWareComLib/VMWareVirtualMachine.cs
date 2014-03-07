@@ -203,6 +203,14 @@ namespace Vestris.VMWareComLib
             _vm = vm;
         }
 
+        public string Name
+        {
+            get
+            {
+                return _vm.Name;
+            }
+        }
+
         public string PathName
         {
             get
