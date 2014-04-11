@@ -3,9 +3,9 @@ VMWareTasks
 
 ![vmwaretasks](https://github.com/dblock/vmwaretasks/raw/master/Documentation/Images/VMWareLogo.jpg "VMWareTasks")
 
-The VMWare SDK, specifically VixCOM, offers a rich set of programmable interfaces that enable developers to drive virtual machines programmatically with an asynchronous, job-based programming model. Unfortunately that turns out to be too complicated for most scenarios where developers want to use a simple object-oriented interface for common VMWare virtual machine automation tasks. The VMWareTasks is a commercial-grade library that implements this simple interface and makes programming against virtual machines a no-brainer. 
+The VMWare SDK, specifically VixCOM, offers a rich set of programmable interfaces that enable developers to drive virtual machines programmatically with an asynchronous, job-based programming model. Unfortunately that turns out to be too complicated for most scenarios where developers want to use a simple object-oriented interface for common VMWare virtual machine automation tasks. The VMWareTasks is a commercial-grade library that implements this simple interface and makes programming against virtual machines a no-brainer.
 
-VMWareTasks contains a complete VixCOM wrapper Vestris.VMWareLib (Vestris.VMWareLib.dll) and a library Vestris.VMWareLib.Tools (Vestris.VMWareTools.dll) that implements additional commonly needed functionality or addresses known VixCOM API limitations. 
+VMWareTasks contains a complete VixCOM wrapper Vestris.VMWareLib (Vestris.VMWareLib.dll) and a library Vestris.VMWareLib.Tools (Vestris.VMWareTools.dll) that implements additional commonly needed functionality or addresses known VixCOM API limitations.
 
 VMWareTasks exposes a C# interface, a COM-enabled interface for script clients, a Java bridge for Java programs and a set of MSBuild tasks.
 
@@ -21,22 +21,22 @@ Resources
 Prerequisites
 -------------
 
-In order to use the library you must install the following VMWare software. 
+In order to use the library you must install the following VMWare software.
 
-* VMWare VIX. This is the SDK, obtained from [http://www.vmware.com/download/sdk/vmauto.html](http://www.vmware.com/download/sdk/vmauto.html). Version 1.6.2 or newer is required for VI support. Version 1.8.0 or newer is required for VMWare Player support. 
-* Either VMWare Workstation 6.5.2 or later, VMWare Server 2.0, VMWare Player 3.0 or 3.1, a Virtual Infrastructure environment (eg. ESXi) or VSphere 4.0 or 4.1. 
+* VMWare VIX. This is the SDK, obtained from [http://www.vmware.com/download/sdk/vmauto.html](http://www.vmware.com/download/sdk/vmauto.html). Version 1.6.2 or newer is required for VI support. Version 1.8.0 or newer is required for VMWare Player support.
+* Either VMWare Workstation 6.5.2 or later, VMWare Server 2.0, VMWare Player 3.0 or 3.1, a Virtual Infrastructure environment (eg. ESXi) or VSphere 4.0 or 4.1.
 
 
 Getting Started (C#)
 --------------------
 
-Download the latest version of this library [here](http://code.dblock.org/downloads/vmwaretasks/VMWareTasks-1.7.zip). Add a reference to `Vestris.VMWareLib.dll` to your project and a `using`. 
+Download the latest version of this library [here](http://code.dblock.org/downloads/vmwaretasks/VMWareTasks-1.7.zip). Add a reference to `Vestris.VMWareLib.dll` to your project and a `using`.
 
 ``` csharp
 using Vestris.VMWareLib;
 ```
 
-You can now connect to a local VMWare Workstation, local or remote VMWare Server or a remote ESX server and perform VMWare client and server tasks. The following example creates, restores, powers on and removes a snapshot on a VMWare Workstation host. 
+You can now connect to a local VMWare Workstation, local or remote VMWare Server or a remote ESX server and perform VMWare client and server tasks. The following example creates, restores, powers on and removes a snapshot on a VMWare Workstation host.
 
 ``` csharp
 // declare a virtual host
@@ -74,7 +74,7 @@ using (VMWareVirtualHost virtualHost = new VMWareVirtualHost())
 }
 ```
 
-The following example creates, restores, powers on and removes a snapshot on a local VMWare Server 2.x host. VMWare Server 2.x generally behaves like an ESX host, replace "localhost" with a real host name to make a remote connection. 
+The following example creates, restores, powers on and removes a snapshot on a local VMWare Server 2.x host. VMWare Server 2.x generally behaves like an ESX host, replace "localhost" with a real host name to make a remote connection.
 
 ``` csharp
 // declare a virtual host
@@ -111,7 +111,7 @@ using (VMWareVirtualHost virtualHost = new VMWareVirtualHost())
 }
 ```
 
-The following example creates, restores, powers on and removes a snapshot on a remote VMWare ESX host. 
+The following example creates, restores, powers on and removes a snapshot on a remote VMWare ESX host.
 
 ``` csharp
 // declare a virtual host
@@ -148,9 +148,9 @@ using (VMWareVirtualHost virtualHost = new VMWareVirtualHost())
 }
 ```
 
-Note, that because VMWare VixCOM is a native 32-bit application, ensure that the platform target for your program is *x86* and not *Any CPU*. 
- 
-Most VMWareTasks objects are IDisposable and should be wrapped in a using construct or properly disposed of before calling `VMWareVirtualHost::Disconnect`. Failure to dispose of all objects, including snapshots and hosts may result in an access violation when VixCOM.dll is unloaded. This is particularly true when working with VMWare ESX 4. 
+Note, that because VMWare VixCOM is a native 32-bit application, ensure that the platform target for your program is *x86* and not *Any CPU*.
+
+Most VMWareTasks objects are IDisposable and should be wrapped in a using construct or properly disposed of before calling `VMWareVirtualHost::Disconnect`. Failure to dispose of all objects, including snapshots and hosts may result in an access violation when VixCOM.dll is unloaded. This is particularly true when working with VMWare ESX 4.
 
 Contributing
 ------------
@@ -162,7 +162,7 @@ Copyright and License
 
 MIT License, see [LICENSE](https://github.com/dblock/vmwaretasks/blob/master/LICENSE.md) for details.
 
-(c) 2009-2012 [Daniel Doubrovkine, Vestris Inc.](http://code.dblock.org) and [Contributors](https://github.com/dblock/vmwaretasks/blob/master/HISTORY.md)
+(c) 2009-2012 [Daniel Doubrovkine, Vestris Inc.](http://code.dblock.org) and [Contributors](https://github.com/dblock/vmwaretasks/blob/master/CHANGELOG.md)
 
 
 

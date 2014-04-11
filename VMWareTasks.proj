@@ -29,7 +29,7 @@
     <CallTarget Targets="doc" />
     <CallTarget Targets="javas" />
     <CallTarget Targets="zip" />
-  </Target>  
+  </Target>
   <Target Name="clean">
     <MSBuild Projects="VMWareTasks.sln" Targets="Clean" />
     <DeleteTree Directories="Documentation\$(Configuration)" />
@@ -89,12 +89,12 @@
     <ArticleFiles Include="Article/**/*.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <DocumentationFiles Include="Documentation/$(Configuration)/VMWareTasks.chm" />    
+    <DocumentationFiles Include="Documentation/$(Configuration)/VMWareTasks.chm" />
   </ItemGroup>
   <ItemGroup>
-    <ReadmeFiles Include="README.md" />    
-    <ReadmeFiles Include="HISTORY.md" />    
-    <ReadmeFiles Include="LICENSE.md" />    
+    <ReadmeFiles Include="README.md" />
+    <ReadmeFiles Include="CHANGELOG.md" />
+    <ReadmeFiles Include="LICENSE.md" />
   </ItemGroup>
   <Target Name="zip" DependsOnTargets="version">
     <Copy SourceFiles="@(SourceCodeProjects)" DestinationFolder="$(ReleaseDir)\Source\%(RecursiveDir)" />
