@@ -137,6 +137,17 @@ namespace Vestris.VMWareLibUnitTests
         }
 
         [Test]
+        public void TestGetDisplayName()
+        {
+            foreach (VMWareVirtualMachine virtualMachine in _test.PoweredVirtualMachines)
+            {
+                string displayName = virtualMachine.Name;
+                ConsoleOutput.WriteLine("Display name: {0}", displayName);
+                Assert.IsFalse(string.IsNullOrEmpty(displayName));
+            }
+        }
+
+        [Test]
         public void TestGetAddRemoveSharedFolders()
         {
             foreach (VMWareVirtualMachine virtualMachine in _test.PoweredVirtualMachines)

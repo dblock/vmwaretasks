@@ -4,6 +4,7 @@
 *Features*
 
 * #10378: Added support for VMware Workstation Shared Mode - [@icnocop](https://github.com/icnocop)
+* #15: Add support for getting the Display Name of a Virtual Machine - [@neilgierman](https://github.com/neilgierman)
 
 *Misc*
 

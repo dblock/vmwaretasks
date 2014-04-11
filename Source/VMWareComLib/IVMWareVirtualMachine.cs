@@ -59,6 +59,7 @@ namespace Vestris.VMWareComLib
         void OpenUrlInGuest(string url);
         void OpenUrlInGuest2(string url, int timeoutInSeconds);
         string PathName { get; }
+        string Name { get; }
         void Pause();
         void Pause2(int timeoutInSeconds);
         void PowerOff();
