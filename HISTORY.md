@@ -3,12 +3,13 @@
 
 *Features*
 
-* #10378: Added support for VMware Workstation Shared Mode - [@icnocop](https://github.com/icnocop)
+* #10378: Added support for VMware Workstation Shared Mode - [@icnocop](https://github.com/icnocop).
+* [#15](https://github.com/dblock/vmwaretasks/pull/15): Added support for getting the display name of a virtual machine - [@neilgierman](https://github.com/neilgierman).
 
 *Misc*
 
-* #7: VMWareTasks.proj's vixcom target needs to be updated to use Visual Studio 2005's tlbimp.exe - [@icnocop](https://github.com/icnocop)
-* Throwing specific exceptions derived from VMWareException - [@icnocop](https://github.com/icnocop)
+* #7: VMWareTasks.proj's vixcom target needs to be updated to use Visual Studio 2005's tlbimp.exe - [@icnocop](https://github.com/icnocop).
+* Throwing specific exceptions derived from VMWareException - [@icnocop](https://github.com/icnocop).
 
 1.7 (8/24/2012)
 ---------------
