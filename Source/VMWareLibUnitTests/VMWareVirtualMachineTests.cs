@@ -137,7 +137,7 @@ namespace Vestris.VMWareLibUnitTests
         }
 
         [Test]
-        public void TestGetDisplaName()
+        public void TestGetDisplayName()
         {
             foreach (VMWareVirtualMachine virtualMachine in _test.PoweredVirtualMachines)
             {
