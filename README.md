@@ -49,10 +49,10 @@ using (VMWareVirtualHost virtualHost = new VMWareVirtualHost())
     {
         // power on this virtual machine
         virtualMachine.PowerOn();
-        // wait for VMWare Tools
-        virtualMachine.WaitForToolsInGuest();
         // login to the virtual machine
         virtualMachine.LoginInGuest("Administrator", "password");
+        // wait for VMWare Tools
+        virtualMachine.WaitForToolsInGuest();
         // run notepad
         virtualMachine.RunProgramInGuest("notepad.exe", string.Empty);
         // create a new snapshot
@@ -60,8 +60,7 @@ using (VMWareVirtualHost virtualHost = new VMWareVirtualHost())
         // take a snapshot at the current state
         VMWareSnapshot createdSnapshot = virtualMachine.Snapshots.CreateSnapshot(name, "test snapshot");
         createdSnapshot.Dispose();
-        // power off
-        virtualMachine.PowerOff();
+       
         // find the newly created snapshot
         using (VMWareSnapshot foundSnapshot = virtualMachine.Snapshots.GetNamedSnapshot(name))
         {
@@ -70,6 +69,9 @@ using (VMWareVirtualHost virtualHost = new VMWareVirtualHost())
             // delete snapshot
             foundSnapshot.RemoveSnapshot();
         }
+        
+         // power off
+        virtualMachine.PowerOff();
     }
 }
 ```
