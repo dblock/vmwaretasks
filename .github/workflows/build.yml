@@ -1,0 +1,95 @@
+name: Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+    branches: [ main ]
+    inputs:
+      release:
+        description: 'Create release in GitHub?'
+        required: true
+        default: 'false'
+
+env:
+  VERSION: 1.9
+  VMWARE_VIX_EXPECTED_HASH: 65deda154babfc0ae1f713f45370544d6586d926
+
+jobs:
+  build:
+
+    runs-on: windows-2019
+    
+    strategy:
+      matrix:
+        Configuration: [Debug, Release]
+
+    steps:
+
+    - name: Set version number for pre-release
+      if: ${{ github.event.inputs.release == '' || github.event.inputs.release == 'false' }}
+      run: echo "VERSION=${{ env.VERSION }}-ci${{ github.RUN_NUMBER }}" >> $env:GITHUB_ENV
+
+    - name: Read environmental variables
+      run: echo VERSION=${{ env.VERSION }}
+
+    - name: Checkout
+      uses: actions/checkout@v2
+    
+    - name: Extract VMware VIX API 1.11
+      run: 7z x ".\Tools\VMware VIX API 1.11.0\VMware-vix-1.11.0-471780.zip.001" -o".\Tools\VMware VIX API 1.11.0"
+
+    - name: Get VMware VIX API 1.11 Checksum
+      shell: powershell
+      run: |
+        $fileHash = $(Get-FileHash ".\Tools\VMware VIX API 1.11.0\VMware-vix-1.11.0-471780.exe" -Algorithm SHA1).Hash
+        echo "VMWARE_VIX_ACTUAL_HASH=$fileHash" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+        
+    - name: Verify VMware VIX API 1.11 Checksum
+      if: ${{ env.VMWARE_VIX_EXPECTED_HASH != env.VMWARE_VIX_ACTUAL_HASH }}
+      run: exit 1
+
+    - name: Install VMware VIX API 1.11.0
+      shell: powershell
+      run: Start-Process -Wait ".\Tools\VMware VIX API 1.11.0\VMware-vix-1.11.0-471780.exe" -ArgumentList "/s", "/v", "/qn"
+
+    - name: Install Java Runtime 1.7.0.75
+      run: choco install javaruntime --version=7.0.75
+
+    - name: Troubleshooting
+      shell: powershell
+      run: |
+        dir "C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A"
+        dir "C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin"
+        dir "C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools"
+        dir "C:\Program Files (x86)\VMWare\VMWare VIX"
+        dir "C:\Program Files (x86)\Java"
+        
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.2
+      
+    - name: Install MSBuild Community Tasks
+      run: choco install msbuild.communitytasks --version=1.5.0.235
+      
+    - name: Build
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: msbuild /t:all /m /p:Configuration=${{ matrix.Configuration }} .\VMWareTasks.proj
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v2.3.1
+      with:
+        name: VMWareTasks-${{ env.VERSION }}-${{ matrix.Configuration }}
+        path: .\target\${{ matrix.Configuration }}\VMWareTasks\
+        if-no-files-found: error
+
+    - name: Publish GitHub Release
+      if: ${{ matrix.Configuration == 'Release' && github.event.inputs.release == 'true' }}
+      uses: softprops/action-gh-release@v1
+      with:
+        name: ${{ env.VERSION }}
+        draft: true
+        prerelease: false
+        fail_on_unmatched_files: true
+        files: .\target\${{ matrix.Configuration }}\VMWareTasks-${{ env.VERSION }}.zip

@@ -7,4 +7,5 @@ bin
 obj
 Debug
 Release
-VMWareTasks.suo
+*.suo
+/packages
