@@ -1,9 +1,10 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{6BD93AF1-12C7-49C8-A7C5-C2833344B8CA}"
 	ProjectSection(SolutionItems) = preProject
 		build.cmd = build.cmd
+		.github\workflows\build.yml = .github\workflows\build.yml
 		Version.proj = Version.proj
 		VMWareTasks.proj = VMWareTasks.proj
 	EndProjectSection
@@ -13,18 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Article", "Article", "{B0F0
 		Article\VMWareLogo.jpg = Article\VMWareLogo.jpg
 		Article\VMWareTasks.html = Article\VMWareTasks.html
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VMWareLib", "Source\VMWareLib\VMWareLib.csproj", "{76CDB55D-55E3-4B53-AE33-12EC31430826}"
-	ProjectSection(ProjectDependencies) = postProject
-		{DF9B8E13-AD32-4FEA-83CB-5048234FC2F3} = {DF9B8E13-AD32-4FEA-83CB-5048234FC2F3}
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VMWareLibUnitTests", "Source\VMWareLibUnitTests\VMWareLibUnitTests.csproj", "{9CB4E334-90E7-4F52-BD04-DE9ACF943580}"
-	ProjectSection(ProjectDependencies) = postProject
-		{DF9B8E13-AD32-4FEA-83CB-5048234FC2F3} = {DF9B8E13-AD32-4FEA-83CB-5048234FC2F3}
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Version", "Source\Version\Version.csproj", "{DF9B8E13-AD32-4FEA-83CB-5048234FC2F3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{D318F9F3-0299-4F6A-8CAC-C25725FC2F5D}"
 	ProjectSection(SolutionItems) = preProject
@@ -48,6 +37,34 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Content", "Content", "{748E
 		Documentation\Content\Main.aml = Documentation\Content\Main.aml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VMWareComLibScriptSamples", "VMWareComLibScriptSamples", "{30F8230C-657D-4D98-8602-994B8E1D562E}"
+	ProjectSection(SolutionItems) = preProject
+		Source\VMWareComLibScriptSamples\GettingStartedWorkstation.vbs = Source\VMWareComLibScriptSamples\GettingStartedWorkstation.vbs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{55DD74D6-6DFD-431D-AABC-07978089B0AA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VMWareLibMSBuildTasksSamples", "VMWareLibMSBuildTasksSamples", "{DCDF3EE9-62A4-4DBD-868F-8BB96F11B569}"
+	ProjectSection(SolutionItems) = preProject
+		Source\VMWareLibMSBuildTasksSamples\ESX.properties = Source\VMWareLibMSBuildTasksSamples\ESX.properties
+		Source\VMWareLibMSBuildTasksSamples\Guest.proj = Source\VMWareLibMSBuildTasksSamples\Guest.proj
+		Source\VMWareLibMSBuildTasksSamples\Power.proj = Source\VMWareLibMSBuildTasksSamples\Power.proj
+		Source\VMWareLibMSBuildTasksSamples\Snapshot.proj = Source\VMWareLibMSBuildTasksSamples\Snapshot.proj
+		Source\VMWareLibMSBuildTasksSamples\Workstation.properties = Source\VMWareLibMSBuildTasksSamples\Workstation.properties
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VMWareLib", "Source\VMWareLib\VMWareLib.csproj", "{76CDB55D-55E3-4B53-AE33-12EC31430826}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DF9B8E13-AD32-4FEA-83CB-5048234FC2F3} = {DF9B8E13-AD32-4FEA-83CB-5048234FC2F3}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VMWareLibUnitTests", "Source\VMWareLibUnitTests\VMWareLibUnitTests.csproj", "{9CB4E334-90E7-4F52-BD04-DE9ACF943580}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DF9B8E13-AD32-4FEA-83CB-5048234FC2F3} = {DF9B8E13-AD32-4FEA-83CB-5048234FC2F3}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Version", "Source\Version\Version.csproj", "{DF9B8E13-AD32-4FEA-83CB-5048234FC2F3}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VMWareTools", "Source\VMWareTools\VMWareTools.csproj", "{A8924671-F2CB-4B39-960F-A73A9188135F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VMWareToolsUnitTests", "Source\VMWareToolsUnitTests\VMWareToolsUnitTests.csproj", "{6D7A0540-143C-4641-8BC7-1C7417F72669}"
@@ -61,25 +78,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VMWareComLib", "Source\VMWa
 		{DF9B8E13-AD32-4FEA-83CB-5048234FC2F3} = {DF9B8E13-AD32-4FEA-83CB-5048234FC2F3}
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VMWareComLibScriptSamples", "VMWareComLibScriptSamples", "{30F8230C-657D-4D98-8602-994B8E1D562E}"
-	ProjectSection(SolutionItems) = preProject
-		Source\VMWareComLibScriptSamples\GettingStartedWorkstation.vbs = Source\VMWareComLibScriptSamples\GettingStartedWorkstation.vbs
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VMWareComTools", "Source\VMWareComTools\VMWareComTools.csproj", "{27E9AB63-A19F-4C85-AEB7-D2AAF5C721E4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{55DD74D6-6DFD-431D-AABC-07978089B0AA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VMWareLibMSBuildTasks", "Source\VMWareLibMSBuildTasks\VMWareLibMSBuildTasks.csproj", "{35517CB2-6EE3-43DB-B7F0-D55E39C41C10}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VMWareLibMSBuildTasksSamples", "VMWareLibMSBuildTasksSamples", "{DCDF3EE9-62A4-4DBD-868F-8BB96F11B569}"
-	ProjectSection(SolutionItems) = preProject
-		Source\VMWareLibMSBuildTasksSamples\ESX.properties = Source\VMWareLibMSBuildTasksSamples\ESX.properties
-		Source\VMWareLibMSBuildTasksSamples\Guest.proj = Source\VMWareLibMSBuildTasksSamples\Guest.proj
-		Source\VMWareLibMSBuildTasksSamples\Power.proj = Source\VMWareLibMSBuildTasksSamples\Power.proj
-		Source\VMWareLibMSBuildTasksSamples\Snapshot.proj = Source\VMWareLibMSBuildTasksSamples\Snapshot.proj
-		Source\VMWareLibMSBuildTasksSamples\Workstation.properties = Source\VMWareLibMSBuildTasksSamples\Workstation.properties
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -133,9 +134,9 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{748E0786-A7ED-4B61-AFA6-B67A07E6CE24} = {D318F9F3-0299-4F6A-8CAC-C25725FC2F5D}
-		{3AC08947-61C7-46D7-B7EA-9CDE37351453} = {55DD74D6-6DFD-431D-AABC-07978089B0AA}
 		{30F8230C-657D-4D98-8602-994B8E1D562E} = {55DD74D6-6DFD-431D-AABC-07978089B0AA}
-		{B6B7DD17-C9BA-4166-971B-665736882322} = {55DD74D6-6DFD-431D-AABC-07978089B0AA}
 		{DCDF3EE9-62A4-4DBD-868F-8BB96F11B569} = {55DD74D6-6DFD-431D-AABC-07978089B0AA}
+		{B6B7DD17-C9BA-4166-971B-665736882322} = {55DD74D6-6DFD-431D-AABC-07978089B0AA}
+		{3AC08947-61C7-46D7-B7EA-9CDE37351453} = {55DD74D6-6DFD-431D-AABC-07978089B0AA}
 	EndGlobalSection
 EndGlobal

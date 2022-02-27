@@ -19,12 +19,14 @@
   <PropertyGroup>
     <ReleaseDir>target\$(Configuration)\VMWareTasks</ReleaseDir>
     <MSBuild_4_0_ExeFilePath>%SystemRoot%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe</MSBuild_4_0_ExeFilePath>
+    <NuGetExeFilePath>$(MSBuildProjectDirectory)\.nuget\nuget.exe</NuGetExeFilePath>
     <JAVA_HOME>$(MSBuildProjectDirectory)\Tools\jdk1.7.0_02</JAVA_HOME>
   </PropertyGroup>
   <Target Name="all">
     <CallTarget Targets="clean" />
     <CallTarget Targets="version" />
     <CallTarget Targets="vixcom" />
+    <CallTarget Targets="restore" />
     <CallTarget Targets="build" />
     <CallTarget Targets="doc" />
     <CallTarget Targets="javas" />
@@ -38,6 +40,9 @@
     <DeleteTree Directories="Source\Interop.VixCOM" />
     <Delete Files="Source\Version\GlobalAssemblyInfo.cs" />
     <DeleteTree Directories="Source\**\bin;Source\**\obj" Recursive="true" />
+  </Target>
+  <Target Name="restore">
+    <Exec Command="$(NuGetExeFilePath) restore VMWareTasks.sln" />
   </Target>
   <Target Name="build">
     <MSBuild Projects="VMWareTasks.sln" />
@@ -135,9 +140,9 @@
   <Target Name="javas" DependsOnTargets="version" Inputs="@(ComInterface)" Outputs="%(ComInterface.Identity)">
     <Message Text="Extracting Java interface from %(ComInterface.DllName) ..." />
     <!-- register the assembly -->
-    <Exec Command="regasm.exe /codebase %(ComInterface.InputDir)\%(ComInterface.DllName) /tlb:%(ComInterface.FileName).tlb" />
+    <Exec Command="&quot;$(WinDir)\Microsoft.NET\Framework\v4.0.30319\RegAsm.exe&quot; /codebase %(ComInterface.InputDir)\%(ComInterface.DllName) /tlb:%(ComInterface.FileName).tlb" />
     <!-- export to com4j and compile generated java code -->
-    <Exec Command="java -jar Tools\Com4j\tlbimp.jar -p %(ComInterface.PackageName) -o %(ComInterface.OutputDir) %(ComInterface.InputDir)\%(ComInterface.FileName).tlb" />
+    <Exec Command="&quot;$(ProgramFiles)\Java\jre7\bin\java.exe&quot; -jar Tools\Com4j\tlbimp.jar -p %(ComInterface.PackageName) -o %(ComInterface.OutputDir) %(ComInterface.InputDir)\%(ComInterface.FileName).tlb" />
     <MakeDir Directories="$(ReleaseDir)\Bin" />
     <Exec WorkingDirectory="%(ComInterface.OutputDir)" Command="&quot;$(JAVA_HOME)\bin\javac.exe&quot; %(ComInterface.PackageDir)\*.java -cp &quot;$(MSBuildProjectDirectory)\Tools\Com4j\com4j.jar&quot;" />
     <!-- make compiled and source jars -->
@@ -147,6 +152,6 @@
   </Target>
   <Target Name="vixcom">
     <Message Text="Importing VixCOM Type Library ..." />
-    <Exec Command="&quot;$(ProgramFiles)\Microsoft SDKs\Windows\v7.0A\Bin\TlbImp.exe&quot; &quot;$(ProgramFiles)\VMWare\VMWare VIX\VixCOM.dll&quot; /keyfile:master.snk /out:Source\Interop.VixCOM\Interop.VixCOM.dll" />
+    <Exec Command="&quot;$(ProgramFiles)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\TlbImp.exe&quot; &quot;$(ProgramFiles)\VMWare\VMWare VIX\VixCOM.dll&quot; /keyfile:master.snk /out:Source\Interop.VixCOM\Interop.VixCOM.dll" />
   </Target>
 </Project>
