@@ -2,11 +2,14 @@ name: Build
 
 on:
   push:
-    branches: [ master ]
+    branches-ignore:
+      - 'downloads'
   pull_request:
-    branches: [ master ]
+    branches-ignore:
+      - 'downloads'
   workflow_dispatch:
-    branches: [ main ]
+    branches-ignore:
+      - 'downloads'
     inputs:
       release:
         description: 'Create release in GitHub?'
