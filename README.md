@@ -9,6 +9,11 @@ VMWareTasks contains a complete VixCOM wrapper Vestris.VMWareLib (Vestris.VMWare
 
 VMWareTasks exposes a C# interface, a COM-enabled interface for script clients, a Java bridge for Java programs and a set of MSBuild tasks.
 
+Build Status
+------------
+
+[![Build status](https://github.com/dblock/vmwaretasks/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/dblock/vmwaretasks/actions/workflows/build.yml)
+
 Resources
 ---------
 
