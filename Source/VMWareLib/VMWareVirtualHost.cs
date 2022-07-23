@@ -54,6 +54,17 @@ namespace Vestris.VMWareLib
         }
 
         /// <summary>
+        /// An IHost3 handle, where supported.
+        /// </summary>
+        protected IHost3 _host3
+        {
+            get
+            {
+                return _handle as IHost3;
+            }
+        }
+
+        /// <summary>
         /// A VMWare virtual host.
         /// </summary>
         public VMWareVirtualHost()
@@ -336,6 +347,49 @@ namespace Vestris.VMWareLib
                 throw new Exception(
                     string.Format("Failed to open virtual machine: fileName=\"{0}\" timeoutInSeconds={1}",
                     fileName, timeoutInSeconds), ex);
+            }
+        }
+
+        /// <summary>
+        /// Open a virtual machine.
+        /// </summary>
+        /// <param name="fileName">Virtual Machine file, local .vmx or [storage] .vmx.</param>
+        /// <param name="timeoutInSeconds">Timeout in seconds.</param>
+        /// <param name="encryptionPassword">Password to decrypt encrypted vmx.</param>
+        /// <returns>An instance of a virtual machine.</returns>
+        public VMWareVirtualMachine OpenEx(string fileName, int timeoutInSeconds, string encryptionPassword)
+        {
+            try
+            {
+                if (_handle == null)
+                {
+                    throw new InvalidOperationException("No connection established");
+                }
+
+                IPropertyList propertyList;
+
+                ulong err = _host3.CreatePropertyList(out propertyList);
+                if (new VixLib().ErrorIndicatesFailure(err))
+                {
+                    throw new Exception(new VixLib().GetErrorText(err, null));
+                }
+
+                propertyList.SetProperty(Constants.VIX_PROPERTY_VM_ENCRYPTION_PASSWORD,
+                    encryptionPassword);
+
+                VMWareJobCallback callback = new VMWareJobCallback();
+                using (VMWareJob job = new VMWareJob(_host3.OpenVMEx(fileName, 0, propertyList, callback), callback))
+                {
+                    return new VMWareVirtualMachine(job.Wait<IVM2>(
+                        Constants.VIX_PROPERTY_JOB_RESULT_HANDLE,
+                        timeoutInSeconds));
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    string.Format("Failed to open virtual machine: fileName=\"{0}\" timeoutInSeconds={1}",
+                        fileName, timeoutInSeconds), ex);
             }
         }
 
